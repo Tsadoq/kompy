@@ -14,6 +14,12 @@ from kompy.constants.urls import KomootUrl
 from kompy.errors.initialisation_errors import NotEmailError
 from kompy.errors.privacy_errors import PrivacyError
 
+logger = logging.getLogger('KomootConnector')
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
 
 class KomootConnector:
 
@@ -50,9 +56,11 @@ class KomootConnector:
             )
         self.token = response.json()['password']
         self.logged_username = json.loads(response.content.decode('utf-8'))['username']
+        logger.info(f'Logged in as {self.logged_username}.')
 
     def get_tours(
         self,
+        limit: Optional[int] = None,
         user_identifier: Optional[str] = None,
         page: Optional[int] = None,
         status: Optional[str] = PrivacyStatus.PUBLIC,
@@ -69,6 +77,7 @@ class KomootConnector:
     ):
         """
         Get a list of tours.
+        :param limit: The maximum number of tours to retrieve, if not provided, all tours are returned
         :param user_identifier: The user identifier, if not provided, the logged in user is used
         :param page: The page to retrieve, if not provided, the first page is used
         :param status: The privacy status of the tour, if not provided, only public tours are returned
@@ -85,7 +94,7 @@ class KomootConnector:
         :return: A list of tours
         """
         if user_identifier is None:
-            logging.warning(f'No user identifier provided, using the currently logged user: {self.logged_username}')
+            logger.warning(f'No user identifier provided, using the currently logged user: {self.logged_username}')
             user_identifier = self.logged_username
         if status is None:
             status = PrivacyStatus.PUBLIC
@@ -105,7 +114,7 @@ class KomootConnector:
         if max_distance is None and center is not None:
             raise ValueError('Max distance must be provided if center is provided.')
         if max_distance is not None and center is None:
-            logging.warning('Max distance provided but no center, ignoring max distance.')
+            logger.warning('Max distance provided but no center, ignoring max distance.')
         if sport_types is not None:
             if not isinstance(sport_types, list):
                 raise TypeError(f'Invalid sport types provided: {sport_types}. Please provide a list of strings.')
@@ -126,12 +135,12 @@ class KomootConnector:
         if sort_field is not None and sort_field not in TourSortField.list_all():
             raise ValueError(f'Invalid sort field provided: {sort_field}. Please provide a valid sort field.')
         if not sort_field:
-            logging.warning('No sort field provided, using default sort field: date')
+            logger.warning('No sort field provided, using default sort field: date')
         if sort_field == TourSortField.PROXIMITY and center is None:
             raise ValueError('Sort field proximity requires a center to be provided.')
 
         query_parameters = TourQueryParameters.construct_tour_query(
-            limit=TourQueryParameters.LIMIT,
+            limit=limit,
             page=page,
             status=status,
             tour_type=tour_type,
@@ -145,3 +154,37 @@ class KomootConnector:
             sort_direction=sort,
             sort_field=sort_field,
         )
+
+        fetch_more = True
+        current_page = 0
+        tours = []
+        while fetch_more:
+            query_parameters[TourQueryParameters.PAGE] = current_page
+            response = self._get_page_of_tours(
+                query_parameters=query_parameters,
+                user_identifier=user_identifier,
+            ).json()
+            tour_list = response['_embedded']
+            tours.extend(tour_list['tours'])
+            max_page = response['page']['totalPages']
+            current_page = response['page']['number'] + 1
+            logger.info(f'Fetched page {current_page} of {max_page}.')
+            fetch_more = current_page < max_page
+        return tours
+
+    def _get_page_of_tours(self, query_parameters, user_identifier):
+        try:
+            response = requests.get(
+                url=KomootUrl.LIST_TOURS_URL.format(user_identifier=user_identifier),
+                auth=(self.email, self.token),
+                params=query_parameters,
+            )
+            if response.status_code == 403:
+                raise ConnectionError(
+                    'Connection to Komoot API failed. Please check your credentials.'
+                )
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(
+                'Connection to Komoot API failed. Please check your internet connection.'
+            )
+        return response
