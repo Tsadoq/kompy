@@ -1,4 +1,4 @@
-from typing import Final
+from typing import Final, List
 
 
 class SupportedActivities:
@@ -37,3 +37,13 @@ class SupportedActivities:
     UNICYCLING: Final[str] = 'unicycle'
     BIKE: Final[str] = 'citybike'
     OTHER: Final[str] = 'other'
+
+    @classmethod
+    def list_all(cls) -> List[str]:
+        """
+        List all supported activities.
+        :return: A list of all supported activities
+        """
+        return [
+            getattr(cls, attr) for attr in dir(cls) if not attr.startswith('__') and not callable(getattr(cls, attr))
+        ]

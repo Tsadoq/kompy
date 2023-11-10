@@ -1,4 +1,4 @@
-from typing import Final
+from typing import Final, List
 
 
 class TourTypes:
@@ -26,3 +26,13 @@ class TourSortField:
     DURATION: Final[str] = 'duration'
     DATE: Final[str] = 'date'
     PROXIMITY: Final[str] = 'proximity'
+
+    @classmethod
+    def list_all(cls) -> List[str]:
+        """
+        List all supported activities.
+        :return: A list of all supported activities
+        """
+        return [
+            getattr(cls, attr) for attr in dir(cls) if not attr.startswith('__') and not callable(getattr(cls, attr))
+        ]
