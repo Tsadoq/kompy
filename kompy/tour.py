@@ -1,66 +1,144 @@
 import logging
-from datetime import datetime
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, List
 
 from dateutil import parser
-from pydantic import BaseModel
 
 from kompy.constants.activities import SupportedActivities
+from kompy.constants.difficulty_grade import DifficultyGrade
 from kompy.constants.segment import Segment
+from kompy.constants.surface import SurfaceType
 from kompy.constants.tour_constants import SmartTourTypes
+from kompy.constants.way_type import PossibleWayType
 from kompy.constants.waypoint import Waypoint
 from kompy.coordinate import Coordinate
 from kompy.image import KomootImage
 
 
-class SegmentInformation(BaseModel):
-    """
-    Segment Information.
-    """
-    start_index_point: int
-    end_index_point: int
+class SegmentInformation:
+
+    def __init__(
+        self,
+        start_index_point: int,
+        end_index_point: int,
+    ):
+        """
+        Initialize the segment information.
+        :param start_index_point: start index point
+        :param end_index_point: end index point
+        """
+        self.start_index_point = start_index_point
+        self.end_index_point = end_index_point
 
 
-class TourInformation(BaseModel):
-    """
-    Tour Information.
-    """
-    tour_information_type: str
-    segments: List[SegmentInformation]
+class TourInformation:
+    def __init__(self, tour_information_type: str, segments: List['SegmentInformation']):
+        """
+        Initialize the tour information.
+        :param tour_information_type: Type of the tour information.
+        :param segments: List of segment information.
+        """
+        self.tour_information_type = tour_information_type
+        self.segments = segments
 
 
-class Tour(BaseModel):
-    tour: Dict[str, Any]
-    id: Optional[str]
-    type: Optional[str]
-    source: Optional[str]
-    start_date: datetime
-    changed_at: datetime
-    name: Optional[str]
-    kcal_active: Optional[int]
-    kcal_resting: Optional[int]
-    start_point: Coordinate
-    distance: Optional[int]
-    total_duration: Optional[int]
-    elevation_up: Optional[int]
-    elevation_down: Optional[int]
-    sport: Optional[str]
-    vector_map_image: Optional[KomootImage]
-    time_in_motion: Optional[int]
-    constitution: Optional[int]
-    query: Optional[str]
-    poor_quality: Optional[bool]
-    smart_tour_type: Optional[str]
-    path: Optional[List[Waypoint]]
-    segments: Optional[List[Segment]]
-    tour_information: Optional[List[TourInformation]]
+class Surface:
+    def __init__(self, surface_type: str, amount: float):
+        """
+        Initialize the surface information.
+        :param surface_type: Type of the surface.
+        :param amount: Amount, must be greater than 0 and less than 1.
+        """
+        if surface_type not in SurfaceType.list_all():
+            raise ValueError(f'Invalid surface type provided: {surface_type}. Please provide a valid surface type.')
+        if not (0 < amount < 1):
+            raise ValueError('Amount must be greater than 0 and less than 1.')
+        self.type = surface_type
+        self.amount = amount
 
-    def load_from_dict(self, tour: Dict[str, Any]):
-        self.tour = tour['_embedded']
-        self.id = self.tour['id']
-        self.type = self.tour['type']
-        if 'source' in self.tour:
-            self.source = self.tour['source']
+
+class WayType:
+    def __init__(self, way_type: str, amount: float):
+        """
+        Initialize the way type information.
+        :param way_type: Type of the way.
+        :param amount: Amount, must be greater than 0 and less than 1.
+        """
+        if way_type not in PossibleWayType.list_all():  # Assuming WayType.list_all() exists
+            raise ValueError(f'Invalid way type provided: {way_type}. Please provide a valid way type.')
+        if not (0 < amount < 1):
+            raise ValueError('Amount must be greater than 0 and less than 1.')
+        self.type = way_type
+        self.amount = amount
+
+
+class TourSummary:
+    def __init__(self, surfaces: List[Surface], way_types: List[WayType]):
+        """
+        Initialize the tour summary.
+        :param surfaces: List of surfaces.
+        :param way_types: List of way types.
+        """
+        self.surfaces = surfaces
+        self.way_types = way_types
+
+
+class Difficulty:
+    def __init__(self, grade: str, technical_explanation: str, fitness_explanation: str):
+        """
+        Initialize the difficulty information.
+        :param grade: Difficulty grade.
+        :param technical_explanation: Technical explanation of the difficulty.
+        :param fitness_explanation: Fitness explanation of the difficulty.
+        """
+        if grade not in DifficultyGrade.list_all():
+            raise ValueError(f'Invalid difficulty grade provided: {grade}. Please provide a valid difficulty grade.')
+        self.grade = grade
+        self.technical_explanation = technical_explanation
+        self.fitness_explanation = fitness_explanation
+
+
+class Tour:
+    def __init__(self, tour: Dict[str, Any]):
+        """
+        Representation of a tour.
+
+        A representation with the list of the native fields can be found at:
+        https://static.komoot.de/doc/external-api/v007/docson/index.html#../schemas/users_tours.schema.json
+
+        It contains the following attributes:
+        - id: the id of the tour
+        - type: the type of the tour
+        - source: the source of the tour
+        - start_date: the start date of the tour
+        - changed_at: the date the tour was changed at
+        - name: the name of the tour
+        - kcal_active: the active kcal of the tour
+        - kcal_resting: the resting kcal of the tour
+        - start_point: the start point of the tour
+        - distance: the distance of the tour, in meters
+        - total_duration: the total duration of the tour, in seconds
+        - elevation_up: the elevation up of the tour
+        - elevation_down: the elevation down of the tour
+        - sport: the sport type of the tour
+        - vector_map_image: the vector map image of the tour
+        - time_in_motion: the time in motion of the tour, in seconds
+        - constitution: the constitution of the tour
+        - query: the query of the tour
+        - poor_quality: SEO info, the quality of creation of the tour
+        - smart_tour_type: the smart tour type of the tour
+        - path: the path of the tour
+        - segments: the segments of the tour
+        - tour_information: the tour information of the tour
+        - tour_summary: the tour summary of the tour
+        - difficulty: the difficulty of the tour
+        - master_share_url: the master share url of the tour
+        :param tour: the tour dictionary
+        :return: None
+        """
+        self.id = tour['id']
+        self.type = tour['type']
+        if 'source' in tour:
+            self.source = tour['source']
         else:
             self.source = None
         self.start_date = parser.parse(tour['date'])
@@ -72,7 +150,7 @@ class Tour(BaseModel):
             lat=tour['start_point']['lat'],
             lon=tour['start_point']['lng'],
             alt=tour['start_point']['alt'],
-            time=tour['start_point']['time'],
+            time=None,
         )
         self.distance = tour['distance']
         self.total_duration = tour['duration']
@@ -84,7 +162,7 @@ class Tour(BaseModel):
             self.sport = tour['sport']
         if 'vector_map_image' in tour:
             self.vector_map_image = KomootImage(
-                src=tour['vector_map_image']['src'],
+                image_url=tour['vector_map_image']['src'],
                 templated=tour['vector_map_image']['templated'] if 'templated' in tour['vector_map_image'] else None,
                 client_hash=tour['vector_map_image']['client_hash'] if 'client_hash' in tour[
                     'vector_map_image'] else None,
@@ -92,7 +170,7 @@ class Tour(BaseModel):
                     'vector_map_image'] else None,
                 attribution_url=tour['vector_map_image']['attribution_url'] if ('attribution_url' in
                                                                                 tour['vector_map_image']) else None,
-                type=tour['vector_map_image']['type'] if 'type' in tour['vector_map_image'] else None,
+                media_type=tour['vector_map_image']['type'] if 'type' in tour['vector_map_image'] else None,
             )
         else:
             self.vector_map_image = None
@@ -113,6 +191,13 @@ class Tour(BaseModel):
         self.tour_information = self._create_tour_information(
             tour_information_array=tour['tour_information'],
         ) if 'tour_information' in tour else None
+        self.tour_summary = self._create_tour_summary(tour['tour_summary']) if 'tour_summary' in tour else None
+        self.difficulty = Difficulty(
+            grade=tour['difficulty']['grade'],
+            technical_explanation=tour['difficulty']['explanation_technical'],
+            fitness_explanation=tour['difficulty']['explanation_fitness'],
+        ) if 'difficulty' in tour else None
+        self.master_share_url = tour['master_share_url'] if 'master_share_url' in tour else None
 
     @staticmethod
     def _create_list_waypoints(path: List[Dict[str, Any]]) -> List[Waypoint]:
@@ -126,12 +211,12 @@ class Tour(BaseModel):
             waypoints.append(
                 Waypoint(
                     location=Coordinate(
-                        lat=waypoint['lat'],
-                        lon=waypoint['lon'],
+                        lat=waypoint['location']['lat'],
+                        lon=waypoint['location']['lng'],
                     ),
                     index=waypoint['index'],
                     end_index=waypoint['end_index'] if 'end_index' in waypoint else None,
-                    refernce=waypoint['reference'] if 'reference' in waypoint else None,
+                    reference=waypoint['reference'] if 'reference' in waypoint else None,
                 )
             )
         return waypoints
@@ -149,8 +234,8 @@ class Tour(BaseModel):
                 Segment(
                     segment_type=segment['type'],
                     segment_boundaries=SegmentInformation(
-                        start_index_point=segment['index'],
-                        end_index_point=segment['end_index'] if 'end_index' in segment else None,
+                        start_index_point=segment['from'],
+                        end_index_point=segment['to'],
                     ),
                     reference=segment['reference'] if 'reference' in segment else None,
                 )
@@ -172,10 +257,32 @@ class Tour(BaseModel):
                     tour_information_type=tour_information['type'],
                     segments=[
                         SegmentInformation(
-                            start_index_point=segment['index'],
-                            end_index_point=segment['end_index'] if 'end_index' in segment else None,
+                            start_index_point=segment['from'],
+                            end_index_point=segment['to'],
                         ) for segment in tour_information['segments']
                     ],
                 )
             )
         return tour_information_list
+
+    @staticmethod
+    def _create_tour_summary(tour_summary: Dict[str, Any]) -> TourSummary:
+        """
+        Create a tour summary from the tour summary.
+        :param tour_summary: the tour summary
+        :return: a TourSummary object
+        """
+        return TourSummary(
+            surfaces=[
+                Surface(
+                    surface_type=surface['type'],
+                    amount=surface['amount'],
+                ) for surface in tour_summary['surfaces']
+            ],
+            way_types=[
+                WayType(
+                    way_type=way_type['type'],
+                    amount=way_type['amount'],
+                ) for way_type in tour_summary['way_types']
+            ],
+        )

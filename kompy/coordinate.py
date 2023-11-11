@@ -1,38 +1,41 @@
 from typing import Optional
 
-from pydantic import BaseModel, field_validator
 
+class Coordinate:
+    def __init__(self, lat: float, lon: float, alt: Optional[float] = None, time: Optional[float] = None):
+        """
+        Initialize the Coordinate object.
+        :param lat: Latitude, must be between -90 and 90.
+        :param lon: Longitude, must be between -180 and 180.
+        :param alt: Altitude in meters (optional), must be between -10000 and 10000 if provided.
+        :param time: Time (optional), must be equal or above 0 if provided.
+        """
+        self.validate_lat(lat=lat)
+        self.validate_lon(lon=lon)
+        self.validate_alt(alt=alt)
+        self.validate_time(time=time)
 
-class Coordinate(BaseModel):
-    """
-    Coordinate object.
+        self.lat = lat
+        self.lon = lon
+        self.alt = alt
+        self.time = time
 
-    :param lat: latitude
-    :param lon: longitude
-    :param alt: altitude (in meters), if not provided, set to none
-    :param time: time, if not provided, set to none
-    """
-    lat: float
-    lon: float
-    alt: Optional[float]
-    time: Optional[float]
-
-    @field_validator('lat')
-    def check_lat(cls, lat):
+    @staticmethod
+    def validate_lat(lat: float):
         if not -90 <= lat <= 90:
             raise ValueError(f'Invalid latitude provided: {lat}. Please provide a latitude between -90 and 90.')
 
-    @field_validator('lon')
-    def check_lon(cls, lon):
+    @staticmethod
+    def validate_lon(lon: float):
         if not -180 <= lon <= 180:
             raise ValueError(f'Invalid longitude provided: {lon}. Please provide a longitude between -180 and 180.')
 
-    @field_validator('alt')
-    def check_alt(cls, alt):
-        if not -10000 <= alt <= 10000 and not alt:
+    @staticmethod
+    def validate_alt(alt: float):
+        if alt is not None and not -10000 <= alt <= 10000:
             raise ValueError(f'Invalid altitude provided: {alt}. Please provide an altitude between -10000 and 10000.')
 
-    @field_validator('time')
-    def check_time(cls, time):
-        if not 0 <= time and not time:
+    @staticmethod
+    def validate_time(time: float):
+        if time is not None and time < 0:
             raise ValueError(f'Invalid time provided: {time}. Please provide a time equal or above 0.')

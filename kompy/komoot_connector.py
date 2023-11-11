@@ -13,6 +13,7 @@ from kompy.constants.tour_constants import TourSort, TourSortField, TourTypes
 from kompy.constants.urls import KomootUrl
 from kompy.errors.initialisation_errors import NotEmailError
 from kompy.errors.privacy_errors import PrivacyError
+from kompy.tour import Tour
 
 logger = logging.getLogger('KomootConnector')
 ch = logging.StreamHandler()
@@ -74,24 +75,24 @@ class KomootConnector:
         tour_name: Optional[str] = None,
         sort: Optional[str] = None,
         sort_field: Optional[str] = None,
-    ):
+    ) -> List[Tour]:
         """
         Get a list of tours.
         :param limit: The maximum number of tours to retrieve, if not provided, all tours are returned
         :param user_identifier: The user identifier, if not provided, the logged in user is used
         :param page: The page to retrieve, if not provided, the first page is used
         :param status: The privacy status of the tour, if not provided, only public tours are returned
-        :param tour_type: The tour type, if not provided, all tours are returned
-        :param only_unlocked: Whether to only return unlocked tours, if not provided, all tours are returned
-        :param center: The center of the search area, if not provided, all tours are returned
-        :param max_distance: The maximum distance to the center, if not provided, all tours are returned
-        :param sport_types: The sport types to filter by, if not provided, all tours are returned
-        :param start_date: The start date to filter by, if not provided, all tours are returned
-        :param end_date: The end date to filter by, if not provided, all tours are returned
-        :param tour_name: The tour name to filter by, if not provided, all tours are returned
-        :param sort: The sort direction, if not provided, all tours are returned
-        :param sort_field: The field to sort by, if not provided, all tours are returned
-        :return: A list of tours
+        :param tour_type: The tour type, if not provided, return all tours
+        :param only_unlocked: Whether to only return unlocked tours, if not provided, return all tours
+        :param center: The center of the search area, if not provided, return all tours
+        :param max_distance: The maximum distance to the center, if not provided, return all tours
+        :param sport_types: The sport types to filter by, if not provided, return all tours
+        :param start_date: The start date to filter by, if not provided, return all tours
+        :param end_date: The end date to filter by, if not provided, return all tours
+        :param tour_name: The tour name to filter by, if not provided, return all tours
+        :param sort: The sort direction, if not provided, return all tours
+        :param sort_field: The field to sort by, if not provided, return all tours
+        :return: A list of tour objects
         """
         if user_identifier is None:
             logger.warning(f'No user identifier provided, using the currently logged user: {self.logged_username}')
@@ -170,7 +171,10 @@ class KomootConnector:
             current_page = response['page']['number'] + 1
             logger.info(f'Fetched page {current_page} of {max_page}.')
             fetch_more = current_page < max_page
-        return tours
+        tour_objects = [
+            Tour(tour_dict) for tour_dict in tours
+        ]
+        return tour_objects
 
     def _get_page_of_tours(self, query_parameters, user_identifier):
         try:
