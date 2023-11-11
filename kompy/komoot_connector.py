@@ -244,7 +244,17 @@ class KomootConnector:
         if object_type == TourObjectTypes.FIT:
             return FitFile.from_bytes(response.content)
 
-    def _get_page_of_tours(self, query_parameters, user_identifier):
+    def _get_page_of_tours(
+        self,
+        query_parameters,
+        user_identifier,
+    ) -> requests.Response:
+        """
+        Get a page of tours.
+        :param query_parameters: parameters to filter the tours by
+        :param user_identifier: The user identifier
+        :return: A page of tours as a response object
+        """
         try:
             response = requests.get(
                 url=KomootUrl.LIST_TOURS_URL.format(user_identifier=user_identifier),
