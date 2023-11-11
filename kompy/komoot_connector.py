@@ -6,6 +6,7 @@ from typing import Optional, List
 import dateutil.parser as parser
 import requests
 
+from kompy.authentication import Authentication
 from kompy.constants.activities import SupportedActivities
 from kompy.constants.privacy_status import PrivacyStatus
 from kompy.constants.query_parameters import TourQueryParameters
@@ -39,13 +40,15 @@ class KomootConnector:
             string=email,
         ):
             raise NotEmailError(email)
-        else:
-            self.email = email
-        self.password = password
+
+        self.authentication = Authentication(
+            email_address=email,
+            password=password,
+        )
         try:
             response = requests.get(
-                url=KomootUrl.USER_LOGIN_URL.format(email_address=self.email),
-                auth=(self.email, self.password),
+                url=KomootUrl.USER_LOGIN_URL.format(email_address=self.authentication.get_email_address()),
+                auth=(self.authentication.get_email_address(), self.authentication.get_password()),
             )
             if response.status_code == 403:
                 raise ConnectionError(
@@ -55,9 +58,13 @@ class KomootConnector:
             raise ConnectionError(
                 'Connection to Komoot API failed. Please check your internet connection.'
             )
-        self.token = response.json()['password']
-        self.logged_username = json.loads(response.content.decode('utf-8'))['username']
-        logger.info(f'Logged in as {self.logged_username}.')
+        self.authentication.set_token(
+            token=response.json()['password']
+        )
+        self.authentication.set_username(
+            username=json.loads(response.content.decode('utf-8'))['username']
+        )
+        logger.info(f'Logged in as {self.authentication.get_username()}.')
 
     def get_tours(
         self,
@@ -95,11 +102,12 @@ class KomootConnector:
         :return: A list of tour objects
         """
         if user_identifier is None:
-            logger.warning(f'No user identifier provided, using the currently logged user: {self.logged_username}')
-            user_identifier = self.logged_username
+            logger.warning(f'No user identifier provided, '
+                           f'using the currently logged user: {self.authentication.get_username()}')
+            user_identifier = self.authentication.get_username()
         if status is None:
             status = PrivacyStatus.PUBLIC
-        if status is not PrivacyStatus.PUBLIC and self.logged_username != user_identifier:
+        if status is not PrivacyStatus.PUBLIC and self.authentication.get_username() != user_identifier:
             raise PrivacyError(user_identifier)
         if tour_type is not None and tour_type not in [TourTypes.TOUR_PLANNED, TourTypes.TOUR_RECORDED]:
             raise ValueError(f'Invalid tour type provided: {tour_type}. Please provide a valid tour type.')
@@ -180,7 +188,7 @@ class KomootConnector:
         try:
             response = requests.get(
                 url=KomootUrl.LIST_TOURS_URL.format(user_identifier=user_identifier),
-                auth=(self.email, self.token),
+                auth=(self.authentication.get_email_address(), self.authentication.get_password()),
                 params=query_parameters,
             )
             if response.status_code == 403:

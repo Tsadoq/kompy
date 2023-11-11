@@ -1,8 +1,10 @@
 import logging
 from typing import Dict, Any, List
 
+import requests
 from dateutil import parser
 
+from kompy.authentication import Authentication
 from kompy.constants.activities import SupportedActivities
 from kompy.constants.difficulty_grade import DifficultyGrade
 from kompy.constants.segment import Segment
@@ -198,6 +200,10 @@ class Tour:
             fitness_explanation=tour['difficulty']['explanation_fitness'],
         ) if 'difficulty' in tour else None
         self.master_share_url = tour['master_share_url'] if 'master_share_url' in tour else None
+        self.links_dict = tour['_links'] if '_links' in tour else None
+        if self.links_dict is not None:
+            self.coordinates_link = self.links_dict['coordinates']['href'] if 'coordinates' in self.links_dict else None
+        self.coordinates = []
 
     @staticmethod
     def _create_list_waypoints(path: List[Dict[str, Any]]) -> List[Waypoint]:
@@ -286,3 +292,29 @@ class Tour:
                 ) for way_type in tour_summary['way_types']
             ],
         )
+
+    def get_coordinates(self, authentication: Authentication) -> bool:
+        """
+        Fetch the coordinates of the tour.
+        :param authentication: The authentication object.
+        :return: True if the coordinates were fetched successfully, False otherwise
+        """
+        if self.coordinates_link is not None:
+            coord_request = requests.get(
+                url=self.coordinates_link,
+                auth=(authentication.get_email_address(), authentication.get_password()),
+            ).json()['items']
+        else:
+            logging.warning('No coordinates link found.')
+            return False
+
+        self.coordinates = [
+            Coordinate(
+                lat=coord_dict['lat'],
+                lon=coord_dict['lng'],
+                alt=coord_dict['alt'],
+                time=coord_dict['t'],
+            ) for coord_dict in coord_request
+        ]
+
+        return True
