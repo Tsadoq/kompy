@@ -2,3 +2,5 @@ dateutils==0.6.12
 python-dateutil~=2.8.2
 requests~=2.31.0
 pillow~=10.1.0
+gpxpy==1.6.1
+fit_tool==0.9.13

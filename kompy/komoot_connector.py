@@ -1,16 +1,20 @@
 import json
 import logging
 import re
-from typing import Optional, List
+from typing import Optional, List, Union
 
 import dateutil.parser as parser
+import gpxpy
 import requests
+from fit_tool.fit_file import FitFile
+from gpxpy.gpx import GPX
 
 from kompy.authentication import Authentication
 from kompy.constants.activities import SupportedActivities
 from kompy.constants.privacy_status import PrivacyStatus
 from kompy.constants.query_parameters import TourQueryParameters
 from kompy.constants.tour_constants import TourSort, TourSortField, TourTypes
+from kompy.constants.tour_object_types import TourObjectTypes
 from kompy.constants.urls import KomootUrl
 from kompy.errors.initialisation_errors import NotEmailError
 from kompy.errors.privacy_errors import PrivacyError
@@ -183,6 +187,62 @@ class KomootConnector:
             Tour(tour_dict) for tour_dict in tours
         ]
         return tour_objects
+
+    def get_tour_by_id(
+        self,
+        tour_identifier: str,
+        share_token: Optional[str] = None,
+        object_type: Optional[str] = None,
+    ) -> Union[Tour, GPX, FitFile]:
+        """
+        Get a tour by its ID.
+        :param tour_identifier: The ID of the tour
+        :param share_token: share token which always grants access to a specific tour, ignoring visibility rules.
+        :param object_type: The type of tour object to return, if not provided, return the kompy object
+        :return: A tour object, gpx object or fit object depending on the object type provided
+        """
+
+        params = {
+            'Type': 'application/hal+json',
+        }
+        if share_token:
+            params['share_token'] = share_token
+
+        if not object_type or object_type == TourObjectTypes.KOMPY:
+            format_append = ''
+        elif object_type == TourObjectTypes.GPX:
+            format_append = '.gpx'
+        elif object_type == TourObjectTypes.FIT:
+            format_append = '.fit'
+        else:
+            raise ValueError(f'Invalid object type provided: {object_type}. Please provide a valid object type.')
+
+        try:
+            response = requests.get(
+                url=KomootUrl.DOWNLOAD_TOUR_URL.format(tour_identifier=tour_identifier) + format_append,
+                auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+                params=params,
+            )
+            if response.status_code == 403:
+                raise ConnectionError(
+                    'Connection to Komoot API failed. Please check your credentials.'
+                )
+            if response.status_code == 500:
+                raise ConnectionError(
+                    'Internal Server Error. if you requested a FIT file, '
+                    'please try again later or try fetching another format.'
+                )
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(
+                'Connection to Komoot API failed. Please check your internet connection.'
+            )
+        if object_type == TourObjectTypes.KOMPY:
+            resp = json.loads(response.content.decode('utf-8'))
+            return Tour(resp)
+        if object_type == TourObjectTypes.GPX:
+            return gpxpy.parse(response.content)
+        if object_type == TourObjectTypes.FIT:
+            return FitFile.from_bytes(response.content)
 
     def _get_page_of_tours(self, query_parameters, user_identifier):
         try:
