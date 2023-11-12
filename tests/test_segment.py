@@ -1,6 +1,9 @@
 import unittest
 
-from kompy import Segment, SegmentInformation
+from kompy import (
+    Segment,
+    SegmentInformation,
+)
 from kompy.constants import SegmentType
 
 

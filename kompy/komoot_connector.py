@@ -1,7 +1,11 @@
 import json
 import logging
 import re
-from typing import List, Optional, Union
+from typing import (
+    List,
+    Optional,
+    Union,
+)
 
 import dateutil.parser as parser
 import gpxpy
@@ -13,7 +17,11 @@ from kompy.authentication import Authentication
 from kompy.constants.activities import SupportedActivities
 from kompy.constants.privacy_status import PrivacyStatus
 from kompy.constants.query_parameters import TourQueryParameters
-from kompy.constants.tour_constants import TourSort, TourSortField, TourTypes
+from kompy.constants.tour_constants import (
+    TourSort,
+    TourSortField,
+    TourTypes,
+)
 from kompy.constants.tour_object_types import TourObjectTypes
 from kompy.constants.urls import KomootUrl
 from kompy.errors.initialisation_errors import NotEmailError

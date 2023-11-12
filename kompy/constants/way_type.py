@@ -1,4 +1,7 @@
-from typing import Final, List
+from typing import (
+    Final,
+    List,
+)
 
 
 class PossibleWayType:

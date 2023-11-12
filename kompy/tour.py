@@ -1,5 +1,9 @@
 import logging
-from typing import Any, Dict, List
+from typing import (
+    Any,
+    Dict,
+    List,
+)
 
 import requests
 from dateutil import parser
@@ -11,7 +15,10 @@ from kompy.constants.waypoint import Waypoint
 from kompy.coordinate import Coordinate
 from kompy.difficulty import Difficulty
 from kompy.image import KomootImage
-from kompy.segment import SegmentInformation, Segment
+from kompy.segment import (
+    Segment,
+    SegmentInformation,
+)
 from kompy.surface import Surface
 from kompy.way_type import WayType
 

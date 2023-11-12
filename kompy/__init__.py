@@ -7,7 +7,6 @@ from .segment import (
     Segment,
     SegmentInformation,
 )
-from .segment import SegmentInformation
 from .surface import Surface
 from .tour import (
     Tour,

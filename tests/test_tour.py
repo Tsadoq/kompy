@@ -1,7 +1,10 @@
 import os
 import unittest
 
-from kompy import KomootConnector, Coordinate
+from kompy import (
+    Coordinate,
+    KomootConnector,
+)
 
 
 class TestTour(unittest.TestCase):
