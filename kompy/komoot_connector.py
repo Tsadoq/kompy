@@ -182,7 +182,7 @@ class KomootConnector:
             max_page = response['page']['totalPages']
             current_page = response['page']['number'] + 1
             logger.info(f'Fetched page {current_page} of {max_page}.')
-            fetch_more = current_page < max_page
+            fetch_more = (current_page < max_page) if limit is None else False
         tour_objects = [
             Tour(tour_dict) for tour_dict in tours
         ]
@@ -227,6 +227,9 @@ class KomootConnector:
                 raise ConnectionError(
                     'Connection to Komoot API failed. Please check your credentials.'
                 )
+            if response.status_code == 404:
+                raise ValueError(f'Invalid tour identifier provided: {tour_identifier}. '
+                                 f'Please provide a valid tour identifier.')
             if response.status_code == 500:
                 raise ConnectionError(
                     'Internal Server Error. if you requested a FIT file, '
@@ -236,7 +239,7 @@ class KomootConnector:
             raise ConnectionError(
                 'Connection to Komoot API failed. Please check your internet connection.'
             )
-        if object_type == TourObjectTypes.KOMPY:
+        if not object_type or object_type == TourObjectTypes.KOMPY:
             resp = json.loads(response.content.decode('utf-8'))
             return Tour(resp)
         if object_type == TourObjectTypes.GPX:

@@ -9,6 +9,10 @@ class Authentication:
         :param email_address: The email address.
         :param password: The password.
         """
+        if not email_address:
+            raise ValueError('Email address cannot be empty.')
+        if not password:
+            raise ValueError('Password cannot be empty.')
         self._email_address = email_address
         self._password = password
         self._token = None
@@ -59,3 +63,17 @@ class Authentication:
         :param username: The username to set.
         """
         self._username = username
+
+    def __str__(self) -> str:
+        """
+        Return a string representation of the authentication object with masked password and token and partially masked
+        email address and username.
+        :return: A string representation of the authentication object.
+        """
+        return f"""
+        Authentication object:
+        Email address: {self._email_address[0:3]}...{self._email_address[-5:]}
+        Password: {len(self._password) * '*'}
+        Token: {len(self._token) * '*'}
+        Username: {self._username[0:2]}...{self._username[-1:]}
+        """

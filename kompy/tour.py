@@ -6,13 +6,12 @@ from dateutil import parser
 
 from kompy.authentication import Authentication
 from kompy.constants.activities import SupportedActivities
-from kompy.constants.segment import Segment
 from kompy.constants.tour_constants import SmartTourTypes
 from kompy.constants.waypoint import Waypoint
 from kompy.coordinate import Coordinate
 from kompy.difficulty import Difficulty
 from kompy.image import KomootImage
-from kompy.segment import SegmentInformation
+from kompy.segment import SegmentInformation, Segment
 from kompy.surface import Surface
 from kompy.way_type import WayType
 
