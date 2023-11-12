@@ -1,0 +1,1284 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, minimum-scale=1" name="viewport"/>
+    <meta content="pdoc 0.10.0" name="generator"/>
+    <title>kompy.komoot_connector API documentation</title>
+    <meta content="" name="description"/>
+    <link as="style" crossorigin
+          href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css"
+          integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" rel="preload stylesheet">
+    <link as="style" crossorigin
+          href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css"
+          integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" rel="preload stylesheet">
+    <link as="style" crossorigin
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" rel="stylesheet preload">
+    <style>:root {
+        --highlight-color: #fe9
+    }
+
+    .flex {
+        display: flex !important
+    }
+
+    body {
+        line-height: 1.5em
+    }
+
+    #content {
+        padding: 20px
+    }
+
+    #sidebar {
+        padding: 30px;
+        overflow: hidden
+    }
+
+    #sidebar > *:last-child {
+        margin-bottom: 2cm
+    }
+
+    .http-server-breadcrumbs {
+        font-size: 130%;
+        margin: 0 0 15px 0
+    }
+
+    #footer {
+        font-size: .75em;
+        padding: 5px 30px;
+        border-top: 1px solid #ddd;
+        text-align: right
+    }
+
+    #footer p {
+        margin: 0 0 0 1em;
+        display: inline-block
+    }
+
+    #footer p:last-child {
+        margin-right: 30px
+    }
+
+    h1, h2, h3, h4, h5 {
+        font-weight: 300
+    }
+
+    h1 {
+        font-size: 2.5em;
+        line-height: 1.1em
+    }
+
+    h2 {
+        font-size: 1.75em;
+        margin: 1em 0 .50em 0
+    }
+
+    h3 {
+        font-size: 1.4em;
+        margin: 25px 0 10px 0
+    }
+
+    h4 {
+        margin: 0;
+        font-size: 105%
+    }
+
+    h1:target, h2:target, h3:target, h4:target, h5:target, h6:target {
+        background: var(--highlight-color);
+        padding: .2em 0
+    }
+
+    a {
+        color: #058;
+        text-decoration: none;
+        transition: color .3s ease-in-out
+    }
+
+    a:hover {
+        color: #e82
+    }
+
+    .title code {
+        font-weight: bold
+    }
+
+    h2[id^="header-"] {
+        margin-top: 2em
+    }
+
+    .ident {
+        color: #900
+    }
+
+    pre code {
+        background: #f8f8f8;
+        font-size: .8em;
+        line-height: 1.4em
+    }
+
+    code {
+        background: #f2f2f1;
+        padding: 1px 4px;
+        overflow-wrap: break-word
+    }
+
+    h1 code {
+        background: transparent
+    }
+
+    pre {
+        background: #f8f8f8;
+        border: 0;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        margin: 1em 0;
+        padding: 1ex
+    }
+
+    #http-server-module-list {
+        display: flex;
+        flex-flow: column
+    }
+
+    #http-server-module-list div {
+        display: flex
+    }
+
+    #http-server-module-list dt {
+        min-width: 10%
+    }
+
+    #http-server-module-list p {
+        margin-top: 0
+    }
+
+    .toc ul, #index {
+        list-style-type: none;
+        margin: 0;
+        padding: 0
+    }
+
+    #index code {
+        background: transparent
+    }
+
+    #index h3 {
+        border-bottom: 1px solid #ddd
+    }
+
+    #index ul {
+        padding: 0
+    }
+
+    #index h4 {
+        margin-top: .6em;
+        font-weight: bold
+    }
+
+    @media (min-width: 200ex) {
+        #index .two-column {
+            column-count: 2
+        }
+    }
+
+    @media (min-width: 300ex) {
+        #index .two-column {
+            column-count: 3
+        }
+    }
+
+    dl {
+        margin-bottom: 2em
+    }
+
+    dl dl:last-child {
+        margin-bottom: 4em
+    }
+
+    dd {
+        margin: 0 0 1em 3em
+    }
+
+    #header-classes + dl > dd {
+        margin-bottom: 3em
+    }
+
+    dd dd {
+        margin-left: 2em
+    }
+
+    dd p {
+        margin: 10px 0
+    }
+
+    .name {
+        background: #eee;
+        font-weight: bold;
+        font-size: .85em;
+        padding: 5px 10px;
+        display: inline-block;
+        min-width: 40%
+    }
+
+    .name:hover {
+        background: #e0e0e0
+    }
+
+    dt:target .name {
+        background: var(--highlight-color)
+    }
+
+    .name > span:first-child {
+        white-space: nowrap
+    }
+
+    .name.class > span:nth-child(2) {
+        margin-left: .4em
+    }
+
+    .inherited {
+        color: #999;
+        border-left: 5px solid #eee;
+        padding-left: 1em
+    }
+
+    .inheritance em {
+        font-style: normal;
+        font-weight: bold
+    }
+
+    .desc h2 {
+        font-weight: 400;
+        font-size: 1.25em
+    }
+
+    .desc h3 {
+        font-size: 1em
+    }
+
+    .desc dt code {
+        background: inherit
+    }
+
+    .source summary, .git-link-div {
+        color: #666;
+        text-align: right;
+        font-weight: 400;
+        font-size: .8em;
+        text-transform: uppercase
+    }
+
+    .source summary > * {
+        white-space: nowrap;
+        cursor: pointer
+    }
+
+    .git-link {
+        color: inherit;
+        margin-left: 1em
+    }
+
+    .source pre {
+        max-height: 500px;
+        overflow: auto;
+        margin: 0
+    }
+
+    .source pre code {
+        font-size: 12px;
+        overflow: visible
+    }
+
+    .hlist {
+        list-style: none
+    }
+
+    .hlist li {
+        display: inline
+    }
+
+    .hlist li:after {
+        content: ',\2002'
+    }
+
+    .hlist li:last-child:after {
+        content: none
+    }
+
+    .hlist .hlist {
+        display: inline;
+        padding-left: 1em
+    }
+
+    img {
+        max-width: 100%
+    }
+
+    td {
+        padding: 0 .5em
+    }
+
+    .admonition {
+        padding: .1em .5em;
+        margin-bottom: 1em
+    }
+
+    .admonition-title {
+        font-weight: bold
+    }
+
+    .admonition.note, .admonition.info, .admonition.important {
+        background: #aef
+    }
+
+    .admonition.todo, .admonition.versionadded, .admonition.tip, .admonition.hint {
+        background: #dfd
+    }
+
+    .admonition.warning, .admonition.versionchanged, .admonition.deprecated {
+        background: #fd4
+    }
+
+    .admonition.error, .admonition.danger, .admonition.caution {
+        background: lightpink
+    }</style>
+    <style media="screen and (min-width: 700px)">@media screen and (min-width: 700px) {
+        #sidebar {
+            width: 30%;
+            height: 100vh;
+            overflow: auto;
+            position: sticky;
+            top: 0
+        }
+
+        #content {
+            width: 70%;
+            max-width: 100ch;
+            padding: 3em 4em;
+            border-left: 1px solid #ddd
+        }
+
+        pre code {
+            font-size: 1em
+        }
+
+        .item .name {
+            font-size: 1em
+        }
+
+        main {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end
+        }
+
+        .toc ul ul, #index ul {
+            padding-left: 1.5em
+        }
+
+        .toc > ul > li {
+            margin-top: .5em
+        }
+    }</style>
+    <style media="print">@media print {
+        #sidebar h1 {
+            page-break-before: always
+        }
+
+        .source {
+            display: none
+        }
+    }
+
+    @media print {
+        * {
+            background: transparent !important;
+            color: #000 !important;
+            box-shadow: none !important;
+            text-shadow: none !important
+        }
+
+        a[href]:after {
+            content: " (" attr(href) ")";
+            font-size: 90%
+        }
+
+        a[href][title]:after {
+            content: none
+        }
+
+        abbr[title]:after {
+            content: " (" attr(title) ")"
+        }
+
+        .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after {
+            content: ""
+        }
+
+        pre, blockquote {
+            border: 1px solid #999;
+            page-break-inside: avoid
+        }
+
+        thead {
+            display: table-header-group
+        }
+
+        tr, img {
+            page-break-inside: avoid
+        }
+
+        img {
+            max-width: 100% !important
+        }
+
+        @page {
+            margin: 0.5cm
+        }
+
+        p, h2, h3 {
+            orphans: 3;
+            widows: 3
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            page-break-after: avoid
+        }
+    }</style>
+    <script crossorigin defer
+            integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+    <script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+    <article id="content">
+        <header>
+            <h1 class="title">Module <code>kompy.komoot_connector</code></h1>
+        </header>
+        <section id="section-intro">
+            <details class="source">
+                <summary>
+                    <span>Expand source code</span>
+                </summary>
+                <pre><code class="python">import json
+import logging
+import re
+from typing import (
+    List,
+    Optional,
+    Union,
+)
+
+import dateutil.parser as parser
+import gpxpy
+import requests
+from fit_tool.fit_file import FitFile
+from gpxpy.gpx import GPX
+
+from kompy.authentication import Authentication
+from kompy.constants.activities import SupportedActivities
+from kompy.constants.privacy_status import PrivacyStatus
+from kompy.constants.query_parameters import TourQueryParameters
+from kompy.constants.tour_constants import (
+    TourSort,
+    TourSortField,
+    TourTypes,
+)
+from kompy.constants.tour_object_types import TourObjectTypes
+from kompy.constants.urls import KomootUrl
+from kompy.errors.initialisation_errors import NotEmailError
+from kompy.errors.privacy_errors import PrivacyError
+from kompy.tour import Tour
+
+logger = logging.getLogger(&#39;KomootConnector&#39;)
+ch = logging.StreamHandler()
+formatter = logging.Formatter(&#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;)
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+
+class KomootConnector:
+
+    def __init__(
+        self,
+        email: str,
+        password: str,
+    ):
+        &#34;&#34;&#34;
+        Connector to Komoot API.
+        :param email: email address used to log in to Komoot
+        :param password: password used to log in to Komoot
+        &#34;&#34;&#34;
+        if not re.match(
+            pattern=r&#39;\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b&#39;,
+            string=email,
+        ):
+            raise NotEmailError(email)
+
+        self.authentication = Authentication(
+            email_address=email,
+            password=password,
+        )
+        try:
+            response = requests.get(
+                url=KomootUrl.USER_LOGIN_URL.format(email_address=self.authentication.get_email_address()),
+                auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+            )
+            if response.status_code == 403:
+                raise ConnectionError(
+                    &#39;Connection to Komoot API failed. Please check your credentials.&#39;
+                )
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(
+                &#39;Connection to Komoot API failed. Please check your internet connection.&#39;
+            )
+        self.authentication.set_token(
+            token=response.json()[&#39;password&#39;]
+        )
+        self.authentication.set_username(
+            username=json.loads(response.content.decode(&#39;utf-8&#39;))[&#39;username&#39;]
+        )
+        logger.info(f&#39;Logged in as {self.authentication.get_username()}.&#39;)
+
+    def get_tours(
+        self,
+        limit: Optional[int] = None,
+        user_identifier: Optional[str] = None,
+        page: Optional[int] = None,
+        status: Optional[str] = PrivacyStatus.PUBLIC,
+        tour_type: Optional[str] = None,
+        only_unlocked: Optional[bool] = False,
+        center: Optional[str] = None,
+        max_distance: Optional[int] = None,
+        sport_types: Optional[List[str]] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        tour_name: Optional[str] = None,
+        sort: Optional[str] = None,
+        sort_field: Optional[str] = None,
+    ) -&gt; List[Tour]:
+        &#34;&#34;&#34;
+        Get a list of tours.
+        :param limit: The maximum number of tours to retrieve, if not provided, all tours are returned
+        :param user_identifier: The user identifier, if not provided, the logged in user is used
+        :param page: The page to retrieve, if not provided, the first page is used
+        :param status: The privacy status of the tour, if not provided, only public tours are returned
+        :param tour_type: The tour type, if not provided, return all tours
+        :param only_unlocked: Whether to only return unlocked tours, if not provided, return all tours
+        :param center: The center of the search area, if not provided, return all tours
+        :param max_distance: The maximum distance to the center, if not provided, return all tours
+        :param sport_types: The sport types to filter by, if not provided, return all tours
+        :param start_date: The start date to filter by, if not provided, return all tours
+        :param end_date: The end date to filter by, if not provided, return all tours
+        :param tour_name: The tour name to filter by, if not provided, return all tours
+        :param sort: The sort direction, if not provided, return all tours
+        :param sort_field: The field to sort by, if not provided, return all tours
+        :return: A list of tour objects
+        &#34;&#34;&#34;
+        if user_identifier is None:
+            logger.warning(f&#39;No user identifier provided, &#39;
+                           f&#39;using the currently logged user: {self.authentication.get_username()}&#39;)
+            user_identifier = self.authentication.get_username()
+        if status is None:
+            status = PrivacyStatus.PUBLIC
+        if status is not PrivacyStatus.PUBLIC and self.authentication.get_username() != user_identifier:
+            raise PrivacyError(user_identifier)
+        if tour_type is not None and tour_type not in [TourTypes.TOUR_PLANNED, TourTypes.TOUR_RECORDED]:
+            raise ValueError(f&#39;Invalid tour type provided: {tour_type}. Please provide a valid tour type.&#39;)
+        if center is not None:
+            if not re.match(
+                pattern=r&#39;^[-+]?\d{1,2}(\.\d+)?,\s*[-+]?\d{1,3}(\.\d+)?$&#39;,
+                string=center,
+            ):
+                raise ValueError(
+                    f&#39;Invalid center provided: {center}. &#39;
+                    f&#39;Please provide a valid center in the format &#34;lat, lon&#34; (e.g. &#34;52.520008, 13.404954&#34;).&#39;
+                )
+        if max_distance is None and center is not None:
+            raise ValueError(&#39;Max distance must be provided if center is provided.&#39;)
+        if max_distance is not None and center is None:
+            logger.warning(&#39;Max distance provided but no center, ignoring max distance.&#39;)
+        if sport_types is not None:
+            if not isinstance(sport_types, list):
+                raise TypeError(f&#39;Invalid sport types provided: {sport_types}. Please provide a list of strings.&#39;)
+            for sport_type in sport_types:
+                if not isinstance(sport_type, str):
+                    raise TypeError(f&#39;Invalid sport type provided: {sport_type}. Please provide a string.&#39;)
+                if sport_type not in SupportedActivities.list_all():
+                    raise ValueError(f&#39;Invalid sport type provided: {sport_type}. Please provide a valid sport type.&#39;)
+        if start_date is not None:
+            start_date = parser.parse(start_date)
+        if end_date is not None:
+            end_date = parser.parse(end_date)
+        if start_date is not None and end_date is not None and start_date &gt; end_date:
+            raise ValueError(f&#39;Start date ({start_date}) must be before end date ({end_date}).&#39;)
+        if sort is not None and sort not in [TourSort.ASCENDING, TourSort.DESCENDING]:
+            raise ValueError(f&#39;Invalid sort provided: {sort}. Please provide a valid sort (can be &#39;
+                             f&#39;{TourSort.ASCENDING} or {TourSort.DESCENDING}&#39;)
+        if sort_field is not None and sort_field not in TourSortField.list_all():
+            raise ValueError(f&#39;Invalid sort field provided: {sort_field}. Please provide a valid sort field.&#39;)
+        if not sort_field:
+            logger.warning(&#39;No sort field provided, using default sort field: date&#39;)
+        if sort_field == TourSortField.PROXIMITY and center is None:
+            raise ValueError(&#39;Sort field proximity requires a center to be provided.&#39;)
+
+        query_parameters = TourQueryParameters.construct_tour_query(
+            limit=limit,
+            page=page,
+            status=status,
+            tour_type=tour_type,
+            only_unlocked=only_unlocked,
+            center=center,
+            max_distance=max_distance,
+            sport_types=sport_types,
+            start_date=start_date,
+            end_date=end_date,
+            name=tour_name,
+            sort_direction=sort,
+            sort_field=sort_field,
+        )
+
+        fetch_more = True
+        current_page = 0
+        tours = []
+        while fetch_more:
+            query_parameters[TourQueryParameters.PAGE] = current_page
+            response = self._get_page_of_tours(
+                query_parameters=query_parameters,
+                user_identifier=user_identifier,
+            ).json()
+            tour_list = response[&#39;_embedded&#39;]
+            tours.extend(tour_list[&#39;tours&#39;])
+            max_page = response[&#39;page&#39;][&#39;totalPages&#39;]
+            current_page = response[&#39;page&#39;][&#39;number&#39;] + 1
+            logger.info(f&#39;Fetched page {current_page} of {max_page}.&#39;)
+            fetch_more = (current_page &lt; max_page) if limit is None else False
+        tour_objects = [
+            Tour(tour_dict) for tour_dict in tours
+        ]
+        return tour_objects
+
+    def get_tour_by_id(
+        self,
+        tour_identifier: str,
+        share_token: Optional[str] = None,
+        object_type: Optional[str] = None,
+    ) -&gt; Union[Tour, GPX, FitFile]:
+        &#34;&#34;&#34;
+        Get a tour by its ID.
+        :param tour_identifier: The ID of the tour
+        :param share_token: share token which always grants access to a specific tour, ignoring visibility rules.
+        :param object_type: The type of tour object to return, if not provided, return the kompy object
+        :return: A tour object, gpx object or fit object depending on the object type provided
+        &#34;&#34;&#34;
+
+        params = {
+            &#39;Type&#39;: &#39;application/hal+json&#39;,
+        }
+        if share_token:
+            params[&#39;share_token&#39;] = share_token
+
+        if not object_type or object_type == TourObjectTypes.KOMPY:
+            format_append = &#39;&#39;
+        elif object_type == TourObjectTypes.GPX:
+            format_append = &#39;.gpx&#39;
+        elif object_type == TourObjectTypes.FIT:
+            format_append = &#39;.fit&#39;
+        else:
+            raise ValueError(f&#39;Invalid object type provided: {object_type}. Please provide a valid object type.&#39;)
+
+        try:
+            response = requests.get(
+                url=KomootUrl.DOWNLOAD_TOUR_URL.format(tour_identifier=tour_identifier) + format_append,
+                auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+                params=params,
+            )
+            if response.status_code == 403:
+                raise ConnectionError(
+                    &#39;Connection to Komoot API failed. Please check your credentials.&#39;
+                )
+            if response.status_code == 404:
+                raise ValueError(f&#39;Invalid tour identifier provided: {tour_identifier}. &#39;
+                                 f&#39;Please provide a valid tour identifier.&#39;)
+            if response.status_code == 500:
+                raise ConnectionError(
+                    &#39;Internal Server Error. if you requested a FIT file, &#39;
+                    &#39;please try again later or try fetching another format.&#39;
+                )
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(
+                &#39;Connection to Komoot API failed. Please check your internet connection.&#39;
+            )
+        if not object_type or object_type == TourObjectTypes.KOMPY:
+            resp = json.loads(response.content.decode(&#39;utf-8&#39;))
+            return Tour(resp)
+        if object_type == TourObjectTypes.GPX:
+            return gpxpy.parse(response.content)
+        if object_type == TourObjectTypes.FIT:
+            return FitFile.from_bytes(response.content)
+
+    def _get_page_of_tours(
+        self,
+        query_parameters,
+        user_identifier,
+    ) -&gt; requests.Response:
+        &#34;&#34;&#34;
+        Get a page of tours.
+        :param query_parameters: parameters to filter the tours by
+        :param user_identifier: The user identifier
+        :return: A page of tours as a response object
+        &#34;&#34;&#34;
+        try:
+            response = requests.get(
+                url=KomootUrl.LIST_TOURS_URL.format(user_identifier=user_identifier),
+                auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+                params=query_parameters,
+            )
+            if response.status_code == 403:
+                raise ConnectionError(
+                    &#39;Connection to Komoot API failed. Please check your credentials.&#39;
+                )
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(
+                &#39;Connection to Komoot API failed. Please check your internet connection.&#39;
+            )
+        return response</code></pre>
+            </details>
+        </section>
+        <section>
+        </section>
+        <section>
+        </section>
+        <section>
+        </section>
+        <section>
+            <h2 class="section-title" id="header-classes">Classes</h2>
+            <dl>
+                <dt id="kompy.komoot_connector.KomootConnector"><code class="flex name class">
+                    <span>class <span class="ident">KomootConnector</span></span>
+                    <span>(</span><span>email: str, password: str)</span>
+                </code></dt>
+                <dd>
+                    <div class="desc"><p>Connector to Komoot API.
+                        :param email: email address used to log in to Komoot
+                        :param password: password used to log in to Komoot</p></div>
+                    <details class="source">
+                        <summary>
+                            <span>Expand source code</span>
+                        </summary>
+                        <pre><code class="python">class KomootConnector:
+
+    def __init__(
+        self,
+        email: str,
+        password: str,
+    ):
+        &#34;&#34;&#34;
+        Connector to Komoot API.
+        :param email: email address used to log in to Komoot
+        :param password: password used to log in to Komoot
+        &#34;&#34;&#34;
+        if not re.match(
+            pattern=r&#39;\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b&#39;,
+            string=email,
+        ):
+            raise NotEmailError(email)
+
+        self.authentication = Authentication(
+            email_address=email,
+            password=password,
+        )
+        try:
+            response = requests.get(
+                url=KomootUrl.USER_LOGIN_URL.format(email_address=self.authentication.get_email_address()),
+                auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+            )
+            if response.status_code == 403:
+                raise ConnectionError(
+                    &#39;Connection to Komoot API failed. Please check your credentials.&#39;
+                )
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(
+                &#39;Connection to Komoot API failed. Please check your internet connection.&#39;
+            )
+        self.authentication.set_token(
+            token=response.json()[&#39;password&#39;]
+        )
+        self.authentication.set_username(
+            username=json.loads(response.content.decode(&#39;utf-8&#39;))[&#39;username&#39;]
+        )
+        logger.info(f&#39;Logged in as {self.authentication.get_username()}.&#39;)
+
+    def get_tours(
+        self,
+        limit: Optional[int] = None,
+        user_identifier: Optional[str] = None,
+        page: Optional[int] = None,
+        status: Optional[str] = PrivacyStatus.PUBLIC,
+        tour_type: Optional[str] = None,
+        only_unlocked: Optional[bool] = False,
+        center: Optional[str] = None,
+        max_distance: Optional[int] = None,
+        sport_types: Optional[List[str]] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        tour_name: Optional[str] = None,
+        sort: Optional[str] = None,
+        sort_field: Optional[str] = None,
+    ) -&gt; List[Tour]:
+        &#34;&#34;&#34;
+        Get a list of tours.
+        :param limit: The maximum number of tours to retrieve, if not provided, all tours are returned
+        :param user_identifier: The user identifier, if not provided, the logged in user is used
+        :param page: The page to retrieve, if not provided, the first page is used
+        :param status: The privacy status of the tour, if not provided, only public tours are returned
+        :param tour_type: The tour type, if not provided, return all tours
+        :param only_unlocked: Whether to only return unlocked tours, if not provided, return all tours
+        :param center: The center of the search area, if not provided, return all tours
+        :param max_distance: The maximum distance to the center, if not provided, return all tours
+        :param sport_types: The sport types to filter by, if not provided, return all tours
+        :param start_date: The start date to filter by, if not provided, return all tours
+        :param end_date: The end date to filter by, if not provided, return all tours
+        :param tour_name: The tour name to filter by, if not provided, return all tours
+        :param sort: The sort direction, if not provided, return all tours
+        :param sort_field: The field to sort by, if not provided, return all tours
+        :return: A list of tour objects
+        &#34;&#34;&#34;
+        if user_identifier is None:
+            logger.warning(f&#39;No user identifier provided, &#39;
+                           f&#39;using the currently logged user: {self.authentication.get_username()}&#39;)
+            user_identifier = self.authentication.get_username()
+        if status is None:
+            status = PrivacyStatus.PUBLIC
+        if status is not PrivacyStatus.PUBLIC and self.authentication.get_username() != user_identifier:
+            raise PrivacyError(user_identifier)
+        if tour_type is not None and tour_type not in [TourTypes.TOUR_PLANNED, TourTypes.TOUR_RECORDED]:
+            raise ValueError(f&#39;Invalid tour type provided: {tour_type}. Please provide a valid tour type.&#39;)
+        if center is not None:
+            if not re.match(
+                pattern=r&#39;^[-+]?\d{1,2}(\.\d+)?,\s*[-+]?\d{1,3}(\.\d+)?$&#39;,
+                string=center,
+            ):
+                raise ValueError(
+                    f&#39;Invalid center provided: {center}. &#39;
+                    f&#39;Please provide a valid center in the format &#34;lat, lon&#34; (e.g. &#34;52.520008, 13.404954&#34;).&#39;
+                )
+        if max_distance is None and center is not None:
+            raise ValueError(&#39;Max distance must be provided if center is provided.&#39;)
+        if max_distance is not None and center is None:
+            logger.warning(&#39;Max distance provided but no center, ignoring max distance.&#39;)
+        if sport_types is not None:
+            if not isinstance(sport_types, list):
+                raise TypeError(f&#39;Invalid sport types provided: {sport_types}. Please provide a list of strings.&#39;)
+            for sport_type in sport_types:
+                if not isinstance(sport_type, str):
+                    raise TypeError(f&#39;Invalid sport type provided: {sport_type}. Please provide a string.&#39;)
+                if sport_type not in SupportedActivities.list_all():
+                    raise ValueError(f&#39;Invalid sport type provided: {sport_type}. Please provide a valid sport type.&#39;)
+        if start_date is not None:
+            start_date = parser.parse(start_date)
+        if end_date is not None:
+            end_date = parser.parse(end_date)
+        if start_date is not None and end_date is not None and start_date &gt; end_date:
+            raise ValueError(f&#39;Start date ({start_date}) must be before end date ({end_date}).&#39;)
+        if sort is not None and sort not in [TourSort.ASCENDING, TourSort.DESCENDING]:
+            raise ValueError(f&#39;Invalid sort provided: {sort}. Please provide a valid sort (can be &#39;
+                             f&#39;{TourSort.ASCENDING} or {TourSort.DESCENDING}&#39;)
+        if sort_field is not None and sort_field not in TourSortField.list_all():
+            raise ValueError(f&#39;Invalid sort field provided: {sort_field}. Please provide a valid sort field.&#39;)
+        if not sort_field:
+            logger.warning(&#39;No sort field provided, using default sort field: date&#39;)
+        if sort_field == TourSortField.PROXIMITY and center is None:
+            raise ValueError(&#39;Sort field proximity requires a center to be provided.&#39;)
+
+        query_parameters = TourQueryParameters.construct_tour_query(
+            limit=limit,
+            page=page,
+            status=status,
+            tour_type=tour_type,
+            only_unlocked=only_unlocked,
+            center=center,
+            max_distance=max_distance,
+            sport_types=sport_types,
+            start_date=start_date,
+            end_date=end_date,
+            name=tour_name,
+            sort_direction=sort,
+            sort_field=sort_field,
+        )
+
+        fetch_more = True
+        current_page = 0
+        tours = []
+        while fetch_more:
+            query_parameters[TourQueryParameters.PAGE] = current_page
+            response = self._get_page_of_tours(
+                query_parameters=query_parameters,
+                user_identifier=user_identifier,
+            ).json()
+            tour_list = response[&#39;_embedded&#39;]
+            tours.extend(tour_list[&#39;tours&#39;])
+            max_page = response[&#39;page&#39;][&#39;totalPages&#39;]
+            current_page = response[&#39;page&#39;][&#39;number&#39;] + 1
+            logger.info(f&#39;Fetched page {current_page} of {max_page}.&#39;)
+            fetch_more = (current_page &lt; max_page) if limit is None else False
+        tour_objects = [
+            Tour(tour_dict) for tour_dict in tours
+        ]
+        return tour_objects
+
+    def get_tour_by_id(
+        self,
+        tour_identifier: str,
+        share_token: Optional[str] = None,
+        object_type: Optional[str] = None,
+    ) -&gt; Union[Tour, GPX, FitFile]:
+        &#34;&#34;&#34;
+        Get a tour by its ID.
+        :param tour_identifier: The ID of the tour
+        :param share_token: share token which always grants access to a specific tour, ignoring visibility rules.
+        :param object_type: The type of tour object to return, if not provided, return the kompy object
+        :return: A tour object, gpx object or fit object depending on the object type provided
+        &#34;&#34;&#34;
+
+        params = {
+            &#39;Type&#39;: &#39;application/hal+json&#39;,
+        }
+        if share_token:
+            params[&#39;share_token&#39;] = share_token
+
+        if not object_type or object_type == TourObjectTypes.KOMPY:
+            format_append = &#39;&#39;
+        elif object_type == TourObjectTypes.GPX:
+            format_append = &#39;.gpx&#39;
+        elif object_type == TourObjectTypes.FIT:
+            format_append = &#39;.fit&#39;
+        else:
+            raise ValueError(f&#39;Invalid object type provided: {object_type}. Please provide a valid object type.&#39;)
+
+        try:
+            response = requests.get(
+                url=KomootUrl.DOWNLOAD_TOUR_URL.format(tour_identifier=tour_identifier) + format_append,
+                auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+                params=params,
+            )
+            if response.status_code == 403:
+                raise ConnectionError(
+                    &#39;Connection to Komoot API failed. Please check your credentials.&#39;
+                )
+            if response.status_code == 404:
+                raise ValueError(f&#39;Invalid tour identifier provided: {tour_identifier}. &#39;
+                                 f&#39;Please provide a valid tour identifier.&#39;)
+            if response.status_code == 500:
+                raise ConnectionError(
+                    &#39;Internal Server Error. if you requested a FIT file, &#39;
+                    &#39;please try again later or try fetching another format.&#39;
+                )
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(
+                &#39;Connection to Komoot API failed. Please check your internet connection.&#39;
+            )
+        if not object_type or object_type == TourObjectTypes.KOMPY:
+            resp = json.loads(response.content.decode(&#39;utf-8&#39;))
+            return Tour(resp)
+        if object_type == TourObjectTypes.GPX:
+            return gpxpy.parse(response.content)
+        if object_type == TourObjectTypes.FIT:
+            return FitFile.from_bytes(response.content)
+
+    def _get_page_of_tours(
+        self,
+        query_parameters,
+        user_identifier,
+    ) -&gt; requests.Response:
+        &#34;&#34;&#34;
+        Get a page of tours.
+        :param query_parameters: parameters to filter the tours by
+        :param user_identifier: The user identifier
+        :return: A page of tours as a response object
+        &#34;&#34;&#34;
+        try:
+            response = requests.get(
+                url=KomootUrl.LIST_TOURS_URL.format(user_identifier=user_identifier),
+                auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+                params=query_parameters,
+            )
+            if response.status_code == 403:
+                raise ConnectionError(
+                    &#39;Connection to Komoot API failed. Please check your credentials.&#39;
+                )
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(
+                &#39;Connection to Komoot API failed. Please check your internet connection.&#39;
+            )
+        return response</code></pre>
+                    </details>
+                    <h3>Methods</h3>
+                    <dl>
+                        <dt id="kompy.komoot_connector.KomootConnector.get_tour_by_id"><code class="name flex">
+                            <span>def <span class="ident">get_tour_by_id</span></span>(<span>self, tour_identifier: str, share_token: Optional[str] = None, object_type: Optional[str] = None) ‑> Union[<a
+                                href="tour.html#kompy.tour.Tour" title="kompy.tour.Tour">Tour</a>, gpxpy.gpx.GPX, fit_tool.fit_file.FitFile]</span>
+                        </code></dt>
+                        <dd>
+                            <div class="desc"><p>Get a tour by its ID.
+                                :param tour_identifier: The ID of the tour
+                                :param share_token: share token which always grants access to a specific tour, ignoring
+                                visibility rules.
+                                :param object_type: The type of tour object to return, if not provided, return the kompy
+                                object
+                                :return: A tour object, gpx object or fit object depending on the object type
+                                provided</p></div>
+                            <details class="source">
+                                <summary>
+                                    <span>Expand source code</span>
+                                </summary>
+                                <pre><code class="python">def get_tour_by_id(
+    self,
+    tour_identifier: str,
+    share_token: Optional[str] = None,
+    object_type: Optional[str] = None,
+) -&gt; Union[Tour, GPX, FitFile]:
+    &#34;&#34;&#34;
+    Get a tour by its ID.
+    :param tour_identifier: The ID of the tour
+    :param share_token: share token which always grants access to a specific tour, ignoring visibility rules.
+    :param object_type: The type of tour object to return, if not provided, return the kompy object
+    :return: A tour object, gpx object or fit object depending on the object type provided
+    &#34;&#34;&#34;
+
+    params = {
+        &#39;Type&#39;: &#39;application/hal+json&#39;,
+    }
+    if share_token:
+        params[&#39;share_token&#39;] = share_token
+
+    if not object_type or object_type == TourObjectTypes.KOMPY:
+        format_append = &#39;&#39;
+    elif object_type == TourObjectTypes.GPX:
+        format_append = &#39;.gpx&#39;
+    elif object_type == TourObjectTypes.FIT:
+        format_append = &#39;.fit&#39;
+    else:
+        raise ValueError(f&#39;Invalid object type provided: {object_type}. Please provide a valid object type.&#39;)
+
+    try:
+        response = requests.get(
+            url=KomootUrl.DOWNLOAD_TOUR_URL.format(tour_identifier=tour_identifier) + format_append,
+            auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+            params=params,
+        )
+        if response.status_code == 403:
+            raise ConnectionError(
+                &#39;Connection to Komoot API failed. Please check your credentials.&#39;
+            )
+        if response.status_code == 404:
+            raise ValueError(f&#39;Invalid tour identifier provided: {tour_identifier}. &#39;
+                             f&#39;Please provide a valid tour identifier.&#39;)
+        if response.status_code == 500:
+            raise ConnectionError(
+                &#39;Internal Server Error. if you requested a FIT file, &#39;
+                &#39;please try again later or try fetching another format.&#39;
+            )
+    except requests.exceptions.ConnectionError:
+        raise ConnectionError(
+            &#39;Connection to Komoot API failed. Please check your internet connection.&#39;
+        )
+    if not object_type or object_type == TourObjectTypes.KOMPY:
+        resp = json.loads(response.content.decode(&#39;utf-8&#39;))
+        return Tour(resp)
+    if object_type == TourObjectTypes.GPX:
+        return gpxpy.parse(response.content)
+    if object_type == TourObjectTypes.FIT:
+        return FitFile.from_bytes(response.content)</code></pre>
+                            </details>
+                        </dd>
+                        <dt id="kompy.komoot_connector.KomootConnector.get_tours"><code class="name flex">
+                            <span>def <span class="ident">get_tours</span></span>(<span>self, limit: Optional[int] = None, user_identifier: Optional[str] = None, page: Optional[int] = None, status: Optional[str] = 'public', tour_type: Optional[str] = None, only_unlocked: Optional[bool] = False, center: Optional[str] = None, max_distance: Optional[int] = None, sport_types: Optional[List[str]] = None, start_date: Optional[str] = None, end_date: Optional[str] = None, tour_name: Optional[str] = None, sort: Optional[str] = None, sort_field: Optional[str] = None) ‑> List[<a
+                                href="tour.html#kompy.tour.Tour" title="kompy.tour.Tour">Tour</a>]</span>
+                        </code></dt>
+                        <dd>
+                            <div class="desc"><p>Get a list of tours.
+                                :param limit: The maximum number of tours to retrieve, if not provided, all tours are
+                                returned
+                                :param user_identifier: The user identifier, if not provided, the logged in user is used
+                                :param page: The page to retrieve, if not provided, the first page is used
+                                :param status: The privacy status of the tour, if not provided, only public tours are
+                                returned
+                                :param tour_type: The tour type, if not provided, return all tours
+                                :param only_unlocked: Whether to only return unlocked tours, if not provided, return all
+                                tours
+                                :param center: The center of the search area, if not provided, return all tours
+                                :param max_distance: The maximum distance to the center, if not provided, return all
+                                tours
+                                :param sport_types: The sport types to filter by, if not provided, return all tours
+                                :param start_date: The start date to filter by, if not provided, return all tours
+                                :param end_date: The end date to filter by, if not provided, return all tours
+                                :param tour_name: The tour name to filter by, if not provided, return all tours
+                                :param sort: The sort direction, if not provided, return all tours
+                                :param sort_field: The field to sort by, if not provided, return all tours
+                                :return: A list of tour objects</p></div>
+                            <details class="source">
+                                <summary>
+                                    <span>Expand source code</span>
+                                </summary>
+                                <pre><code class="python">def get_tours(
+    self,
+    limit: Optional[int] = None,
+    user_identifier: Optional[str] = None,
+    page: Optional[int] = None,
+    status: Optional[str] = PrivacyStatus.PUBLIC,
+    tour_type: Optional[str] = None,
+    only_unlocked: Optional[bool] = False,
+    center: Optional[str] = None,
+    max_distance: Optional[int] = None,
+    sport_types: Optional[List[str]] = None,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    tour_name: Optional[str] = None,
+    sort: Optional[str] = None,
+    sort_field: Optional[str] = None,
+) -&gt; List[Tour]:
+    &#34;&#34;&#34;
+    Get a list of tours.
+    :param limit: The maximum number of tours to retrieve, if not provided, all tours are returned
+    :param user_identifier: The user identifier, if not provided, the logged in user is used
+    :param page: The page to retrieve, if not provided, the first page is used
+    :param status: The privacy status of the tour, if not provided, only public tours are returned
+    :param tour_type: The tour type, if not provided, return all tours
+    :param only_unlocked: Whether to only return unlocked tours, if not provided, return all tours
+    :param center: The center of the search area, if not provided, return all tours
+    :param max_distance: The maximum distance to the center, if not provided, return all tours
+    :param sport_types: The sport types to filter by, if not provided, return all tours
+    :param start_date: The start date to filter by, if not provided, return all tours
+    :param end_date: The end date to filter by, if not provided, return all tours
+    :param tour_name: The tour name to filter by, if not provided, return all tours
+    :param sort: The sort direction, if not provided, return all tours
+    :param sort_field: The field to sort by, if not provided, return all tours
+    :return: A list of tour objects
+    &#34;&#34;&#34;
+    if user_identifier is None:
+        logger.warning(f&#39;No user identifier provided, &#39;
+                       f&#39;using the currently logged user: {self.authentication.get_username()}&#39;)
+        user_identifier = self.authentication.get_username()
+    if status is None:
+        status = PrivacyStatus.PUBLIC
+    if status is not PrivacyStatus.PUBLIC and self.authentication.get_username() != user_identifier:
+        raise PrivacyError(user_identifier)
+    if tour_type is not None and tour_type not in [TourTypes.TOUR_PLANNED, TourTypes.TOUR_RECORDED]:
+        raise ValueError(f&#39;Invalid tour type provided: {tour_type}. Please provide a valid tour type.&#39;)
+    if center is not None:
+        if not re.match(
+            pattern=r&#39;^[-+]?\d{1,2}(\.\d+)?,\s*[-+]?\d{1,3}(\.\d+)?$&#39;,
+            string=center,
+        ):
+            raise ValueError(
+                f&#39;Invalid center provided: {center}. &#39;
+                f&#39;Please provide a valid center in the format &#34;lat, lon&#34; (e.g. &#34;52.520008, 13.404954&#34;).&#39;
+            )
+    if max_distance is None and center is not None:
+        raise ValueError(&#39;Max distance must be provided if center is provided.&#39;)
+    if max_distance is not None and center is None:
+        logger.warning(&#39;Max distance provided but no center, ignoring max distance.&#39;)
+    if sport_types is not None:
+        if not isinstance(sport_types, list):
+            raise TypeError(f&#39;Invalid sport types provided: {sport_types}. Please provide a list of strings.&#39;)
+        for sport_type in sport_types:
+            if not isinstance(sport_type, str):
+                raise TypeError(f&#39;Invalid sport type provided: {sport_type}. Please provide a string.&#39;)
+            if sport_type not in SupportedActivities.list_all():
+                raise ValueError(f&#39;Invalid sport type provided: {sport_type}. Please provide a valid sport type.&#39;)
+    if start_date is not None:
+        start_date = parser.parse(start_date)
+    if end_date is not None:
+        end_date = parser.parse(end_date)
+    if start_date is not None and end_date is not None and start_date &gt; end_date:
+        raise ValueError(f&#39;Start date ({start_date}) must be before end date ({end_date}).&#39;)
+    if sort is not None and sort not in [TourSort.ASCENDING, TourSort.DESCENDING]:
+        raise ValueError(f&#39;Invalid sort provided: {sort}. Please provide a valid sort (can be &#39;
+                         f&#39;{TourSort.ASCENDING} or {TourSort.DESCENDING}&#39;)
+    if sort_field is not None and sort_field not in TourSortField.list_all():
+        raise ValueError(f&#39;Invalid sort field provided: {sort_field}. Please provide a valid sort field.&#39;)
+    if not sort_field:
+        logger.warning(&#39;No sort field provided, using default sort field: date&#39;)
+    if sort_field == TourSortField.PROXIMITY and center is None:
+        raise ValueError(&#39;Sort field proximity requires a center to be provided.&#39;)
+
+    query_parameters = TourQueryParameters.construct_tour_query(
+        limit=limit,
+        page=page,
+        status=status,
+        tour_type=tour_type,
+        only_unlocked=only_unlocked,
+        center=center,
+        max_distance=max_distance,
+        sport_types=sport_types,
+        start_date=start_date,
+        end_date=end_date,
+        name=tour_name,
+        sort_direction=sort,
+        sort_field=sort_field,
+    )
+
+    fetch_more = True
+    current_page = 0
+    tours = []
+    while fetch_more:
+        query_parameters[TourQueryParameters.PAGE] = current_page
+        response = self._get_page_of_tours(
+            query_parameters=query_parameters,
+            user_identifier=user_identifier,
+        ).json()
+        tour_list = response[&#39;_embedded&#39;]
+        tours.extend(tour_list[&#39;tours&#39;])
+        max_page = response[&#39;page&#39;][&#39;totalPages&#39;]
+        current_page = response[&#39;page&#39;][&#39;number&#39;] + 1
+        logger.info(f&#39;Fetched page {current_page} of {max_page}.&#39;)
+        fetch_more = (current_page &lt; max_page) if limit is None else False
+    tour_objects = [
+        Tour(tour_dict) for tour_dict in tours
+    ]
+    return tour_objects</code></pre>
+                            </details>
+                        </dd>
+                    </dl>
+                </dd>
+            </dl>
+        </section>
+    </article>
+    <nav id="sidebar">
+        <h1>Index</h1>
+        <div class="toc">
+            <ul></ul>
+        </div>
+        <ul id="index">
+            <li><h3>Super-module</h3>
+                <ul>
+                    <li><code><a href="index.html" title="kompy">kompy</a></code></li>
+                </ul>
+            </li>
+            <li><h3><a href="#header-classes">Classes</a></h3>
+                <ul>
+                    <li>
+                        <h4><code><a href="#kompy.komoot_connector.KomootConnector"
+                                     title="kompy.komoot_connector.KomootConnector">KomootConnector</a></code></h4>
+                        <ul class="">
+                            <li><code><a href="#kompy.komoot_connector.KomootConnector.get_tour_by_id"
+                                         title="kompy.komoot_connector.KomootConnector.get_tour_by_id">get_tour_by_id</a></code>
+                            </li>
+                            <li><code><a href="#kompy.komoot_connector.KomootConnector.get_tours"
+                                         title="kompy.komoot_connector.KomootConnector.get_tours">get_tours</a></code>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</main>
+<footer id="footer">
+    <p>Generated by <a href="https://pdoc3.github.io/pdoc"
+                       title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

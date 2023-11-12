@@ -1,0 +1,1150 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, minimum-scale=1" name="viewport"/>
+    <meta content="pdoc 0.10.0" name="generator"/>
+    <title>kompy.tour API documentation</title>
+    <meta content="" name="description"/>
+    <link as="style" crossorigin
+          href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css"
+          integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" rel="preload stylesheet">
+    <link as="style" crossorigin
+          href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css"
+          integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" rel="preload stylesheet">
+    <link as="style" crossorigin
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" rel="stylesheet preload">
+    <style>:root {
+        --highlight-color: #fe9
+    }
+
+    .flex {
+        display: flex !important
+    }
+
+    body {
+        line-height: 1.5em
+    }
+
+    #content {
+        padding: 20px
+    }
+
+    #sidebar {
+        padding: 30px;
+        overflow: hidden
+    }
+
+    #sidebar > *:last-child {
+        margin-bottom: 2cm
+    }
+
+    .http-server-breadcrumbs {
+        font-size: 130%;
+        margin: 0 0 15px 0
+    }
+
+    #footer {
+        font-size: .75em;
+        padding: 5px 30px;
+        border-top: 1px solid #ddd;
+        text-align: right
+    }
+
+    #footer p {
+        margin: 0 0 0 1em;
+        display: inline-block
+    }
+
+    #footer p:last-child {
+        margin-right: 30px
+    }
+
+    h1, h2, h3, h4, h5 {
+        font-weight: 300
+    }
+
+    h1 {
+        font-size: 2.5em;
+        line-height: 1.1em
+    }
+
+    h2 {
+        font-size: 1.75em;
+        margin: 1em 0 .50em 0
+    }
+
+    h3 {
+        font-size: 1.4em;
+        margin: 25px 0 10px 0
+    }
+
+    h4 {
+        margin: 0;
+        font-size: 105%
+    }
+
+    h1:target, h2:target, h3:target, h4:target, h5:target, h6:target {
+        background: var(--highlight-color);
+        padding: .2em 0
+    }
+
+    a {
+        color: #058;
+        text-decoration: none;
+        transition: color .3s ease-in-out
+    }
+
+    a:hover {
+        color: #e82
+    }
+
+    .title code {
+        font-weight: bold
+    }
+
+    h2[id^="header-"] {
+        margin-top: 2em
+    }
+
+    .ident {
+        color: #900
+    }
+
+    pre code {
+        background: #f8f8f8;
+        font-size: .8em;
+        line-height: 1.4em
+    }
+
+    code {
+        background: #f2f2f1;
+        padding: 1px 4px;
+        overflow-wrap: break-word
+    }
+
+    h1 code {
+        background: transparent
+    }
+
+    pre {
+        background: #f8f8f8;
+        border: 0;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        margin: 1em 0;
+        padding: 1ex
+    }
+
+    #http-server-module-list {
+        display: flex;
+        flex-flow: column
+    }
+
+    #http-server-module-list div {
+        display: flex
+    }
+
+    #http-server-module-list dt {
+        min-width: 10%
+    }
+
+    #http-server-module-list p {
+        margin-top: 0
+    }
+
+    .toc ul, #index {
+        list-style-type: none;
+        margin: 0;
+        padding: 0
+    }
+
+    #index code {
+        background: transparent
+    }
+
+    #index h3 {
+        border-bottom: 1px solid #ddd
+    }
+
+    #index ul {
+        padding: 0
+    }
+
+    #index h4 {
+        margin-top: .6em;
+        font-weight: bold
+    }
+
+    @media (min-width: 200ex) {
+        #index .two-column {
+            column-count: 2
+        }
+    }
+
+    @media (min-width: 300ex) {
+        #index .two-column {
+            column-count: 3
+        }
+    }
+
+    dl {
+        margin-bottom: 2em
+    }
+
+    dl dl:last-child {
+        margin-bottom: 4em
+    }
+
+    dd {
+        margin: 0 0 1em 3em
+    }
+
+    #header-classes + dl > dd {
+        margin-bottom: 3em
+    }
+
+    dd dd {
+        margin-left: 2em
+    }
+
+    dd p {
+        margin: 10px 0
+    }
+
+    .name {
+        background: #eee;
+        font-weight: bold;
+        font-size: .85em;
+        padding: 5px 10px;
+        display: inline-block;
+        min-width: 40%
+    }
+
+    .name:hover {
+        background: #e0e0e0
+    }
+
+    dt:target .name {
+        background: var(--highlight-color)
+    }
+
+    .name > span:first-child {
+        white-space: nowrap
+    }
+
+    .name.class > span:nth-child(2) {
+        margin-left: .4em
+    }
+
+    .inherited {
+        color: #999;
+        border-left: 5px solid #eee;
+        padding-left: 1em
+    }
+
+    .inheritance em {
+        font-style: normal;
+        font-weight: bold
+    }
+
+    .desc h2 {
+        font-weight: 400;
+        font-size: 1.25em
+    }
+
+    .desc h3 {
+        font-size: 1em
+    }
+
+    .desc dt code {
+        background: inherit
+    }
+
+    .source summary, .git-link-div {
+        color: #666;
+        text-align: right;
+        font-weight: 400;
+        font-size: .8em;
+        text-transform: uppercase
+    }
+
+    .source summary > * {
+        white-space: nowrap;
+        cursor: pointer
+    }
+
+    .git-link {
+        color: inherit;
+        margin-left: 1em
+    }
+
+    .source pre {
+        max-height: 500px;
+        overflow: auto;
+        margin: 0
+    }
+
+    .source pre code {
+        font-size: 12px;
+        overflow: visible
+    }
+
+    .hlist {
+        list-style: none
+    }
+
+    .hlist li {
+        display: inline
+    }
+
+    .hlist li:after {
+        content: ',\2002'
+    }
+
+    .hlist li:last-child:after {
+        content: none
+    }
+
+    .hlist .hlist {
+        display: inline;
+        padding-left: 1em
+    }
+
+    img {
+        max-width: 100%
+    }
+
+    td {
+        padding: 0 .5em
+    }
+
+    .admonition {
+        padding: .1em .5em;
+        margin-bottom: 1em
+    }
+
+    .admonition-title {
+        font-weight: bold
+    }
+
+    .admonition.note, .admonition.info, .admonition.important {
+        background: #aef
+    }
+
+    .admonition.todo, .admonition.versionadded, .admonition.tip, .admonition.hint {
+        background: #dfd
+    }
+
+    .admonition.warning, .admonition.versionchanged, .admonition.deprecated {
+        background: #fd4
+    }
+
+    .admonition.error, .admonition.danger, .admonition.caution {
+        background: lightpink
+    }</style>
+    <style media="screen and (min-width: 700px)">@media screen and (min-width: 700px) {
+        #sidebar {
+            width: 30%;
+            height: 100vh;
+            overflow: auto;
+            position: sticky;
+            top: 0
+        }
+
+        #content {
+            width: 70%;
+            max-width: 100ch;
+            padding: 3em 4em;
+            border-left: 1px solid #ddd
+        }
+
+        pre code {
+            font-size: 1em
+        }
+
+        .item .name {
+            font-size: 1em
+        }
+
+        main {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end
+        }
+
+        .toc ul ul, #index ul {
+            padding-left: 1.5em
+        }
+
+        .toc > ul > li {
+            margin-top: .5em
+        }
+    }</style>
+    <style media="print">@media print {
+        #sidebar h1 {
+            page-break-before: always
+        }
+
+        .source {
+            display: none
+        }
+    }
+
+    @media print {
+        * {
+            background: transparent !important;
+            color: #000 !important;
+            box-shadow: none !important;
+            text-shadow: none !important
+        }
+
+        a[href]:after {
+            content: " (" attr(href) ")";
+            font-size: 90%
+        }
+
+        a[href][title]:after {
+            content: none
+        }
+
+        abbr[title]:after {
+            content: " (" attr(title) ")"
+        }
+
+        .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after {
+            content: ""
+        }
+
+        pre, blockquote {
+            border: 1px solid #999;
+            page-break-inside: avoid
+        }
+
+        thead {
+            display: table-header-group
+        }
+
+        tr, img {
+            page-break-inside: avoid
+        }
+
+        img {
+            max-width: 100% !important
+        }
+
+        @page {
+            margin: 0.5cm
+        }
+
+        p, h2, h3 {
+            orphans: 3;
+            widows: 3
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            page-break-after: avoid
+        }
+    }</style>
+    <script crossorigin defer
+            integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+    <script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+    <article id="content">
+        <header>
+            <h1 class="title">Module <code>kompy.tour</code></h1>
+        </header>
+        <section id="section-intro">
+            <details class="source">
+                <summary>
+                    <span>Expand source code</span>
+                </summary>
+                <pre><code class="python">import logging
+from typing import (
+    Any,
+    Dict,
+    List,
+)
+
+import requests
+from dateutil import parser
+
+from kompy.authentication import Authentication
+from kompy.constants.activities import SupportedActivities
+from kompy.constants.tour_constants import SmartTourTypes
+from kompy.constants.waypoint import Waypoint
+from kompy.coordinate import Coordinate
+from kompy.difficulty import Difficulty
+from kompy.image import KomootImage
+from kompy.segment import (
+    Segment,
+    SegmentInformation,
+)
+from kompy.surface import Surface
+from kompy.way_type import WayType
+
+
+class TourInformation:
+    def __init__(self, tour_information_type: str, segments: List[&#39;SegmentInformation&#39;]):
+        &#34;&#34;&#34;
+        Initialize the tour information.
+        :param tour_information_type: Type of the tour information.
+        :param segments: List of segment information.
+        &#34;&#34;&#34;
+        self.tour_information_type = tour_information_type
+        self.segments = segments
+
+
+class TourSummary:
+    def __init__(
+        self,
+        surfaces: List[Surface],
+        way_types: List[WayType],
+    ):
+        &#34;&#34;&#34;
+        Initialize the tour summary.
+        :param surfaces: List of surfaces.
+        :param way_types: List of way types.
+        &#34;&#34;&#34;
+        self.surfaces = surfaces
+        self.way_types = way_types
+
+
+class Tour:
+    def __init__(
+        self,
+        tour: Dict[str, Any],
+    ):
+        &#34;&#34;&#34;
+        Representation of a tour.
+
+        A representation with the list of the native fields can be found at:
+        https://static.komoot.de/doc/external-api/v007/docson/index.html#../schemas/users_tours.schema.json
+
+        It contains the following attributes:
+        - id: the id of the tour
+        - type: the type of the tour
+        - source: the source of the tour
+        - start_date: the start date of the tour
+        - changed_at: the date the tour was changed at
+        - name: the name of the tour
+        - kcal_active: the active kcal of the tour
+        - kcal_resting: the resting kcal of the tour
+        - start_point: the start point of the tour
+        - distance: the distance of the tour, in meters
+        - total_duration: the total duration of the tour, in seconds
+        - elevation_up: the elevation up of the tour
+        - elevation_down: the elevation down of the tour
+        - sport: the sport type of the tour
+        - vector_map_image: the vector map image of the tour
+        - time_in_motion: the time in motion of the tour, in seconds
+        - constitution: the constitution of the tour
+        - query: the query of the tour
+        - poor_quality: SEO info, the quality of creation of the tour
+        - smart_tour_type: the smart tour type of the tour
+        - path: the path of the tour
+        - segments: the segments of the tour
+        - tour_information: the tour information of the tour
+        - tour_summary: the tour summary of the tour
+        - difficulty: the difficulty of the tour
+        - master_share_url: the master share url of the tour
+        :param tour: the tour dictionary
+        :return: None
+        &#34;&#34;&#34;
+        self.id = tour[&#39;id&#39;]
+        self.type = tour[&#39;type&#39;]
+        if &#39;source&#39; in tour:
+            self.source = tour[&#39;source&#39;]
+        else:
+            self.source = None
+        self.start_date = parser.parse(tour[&#39;date&#39;])
+        self.changed_at = parser.parse(tour[&#39;changed_at&#39;])
+        self.name = tour[&#39;name&#39;]
+        self.kcal_active = tour[&#39;kcal_active&#39;]
+        self.kcal_resting = tour[&#39;kcal_resting&#39;]
+        self.start_point = Coordinate(
+            lat=tour[&#39;start_point&#39;][&#39;lat&#39;],
+            lon=tour[&#39;start_point&#39;][&#39;lng&#39;],
+            alt=tour[&#39;start_point&#39;][&#39;alt&#39;],
+            time=None,
+        )
+        self.distance = tour[&#39;distance&#39;]
+        self.total_duration = tour[&#39;duration&#39;]
+        self.elevation_up = tour[&#39;elevation_up&#39;]
+        self.elevation_down = tour[&#39;elevation_down&#39;]
+        if tour[&#39;sport&#39;] not in SupportedActivities.list_all():
+            raise ValueError(f&#39;Invalid sport type provided: {tour[&#34;sport&#34;]}. Please provide a valid sport type.&#39;)
+        else:
+            self.sport = tour[&#39;sport&#39;]
+        if &#39;vector_map_image&#39; in tour:
+            self.vector_map_image = KomootImage(
+                image_url=tour[&#39;vector_map_image&#39;][&#39;src&#39;],
+                templated=tour[&#39;vector_map_image&#39;][&#39;templated&#39;] if &#39;templated&#39; in tour[&#39;vector_map_image&#39;] else None,
+                client_hash=tour[&#39;vector_map_image&#39;][&#39;client_hash&#39;] if &#39;client_hash&#39; in tour[
+                    &#39;vector_map_image&#39;] else None,
+                attribution=tour[&#39;vector_map_image&#39;][&#39;attribution&#39;] if &#39;attribution&#39; in tour[
+                    &#39;vector_map_image&#39;] else None,
+                attribution_url=tour[&#39;vector_map_image&#39;][&#39;attribution_url&#39;] if (&#39;attribution_url&#39; in
+                                                                                tour[&#39;vector_map_image&#39;]) else None,
+                media_type=tour[&#39;vector_map_image&#39;][&#39;type&#39;] if &#39;type&#39; in tour[&#39;vector_map_image&#39;] else None,
+            )
+        else:
+            self.vector_map_image = None
+            logging.warning(&#39;No vector map image found.&#39;)
+        self.time_in_motion = tour[&#39;time_in_motion&#39;] if &#39;time_in_motion&#39; in tour else None
+        self.constitution = tour[&#39;constitution&#39;] if &#39;constitution&#39; in tour else None
+        self.query = tour[&#39;query&#39;] if &#39;query&#39; in tour else None
+        if &#39;smart_tour_type&#39; in tour:
+            if tour[&#39;smart_tour_type&#39;] not in SmartTourTypes.list_all():
+                raise ValueError(
+                    f&#39;Invalid smart tour type provided: {tour[&#34;smart_tour_type&#34;]}. &#39;
+                    f&#39;Please provide one of {SmartTourTypes.list_all()}.&#39;)
+            else:
+                self.smart_tour_type = tour[&#39;smart_tour_type&#39;] if &#39;smart_tour_type&#39; in tour else None
+        self.poor_quality = tour[&#39;poor_quality&#39;] if &#39;poor_quality&#39; in tour else None
+        self.path = self._create_list_waypoints(tour[&#39;path&#39;]) if &#39;path&#39; in tour else None
+        self.segments = self._create_list_segments(tour[&#39;segments&#39;]) if &#39;segments&#39; in tour else None
+        self.tour_information = self._create_tour_information(
+            tour_information_array=tour[&#39;tour_information&#39;],
+        ) if &#39;tour_information&#39; in tour else None
+        self.tour_summary = self._create_tour_summary(tour[&#39;tour_summary&#39;]) if &#39;tour_summary&#39; in tour else None
+        self.difficulty = Difficulty(
+            grade=tour[&#39;difficulty&#39;][&#39;grade&#39;],
+            technical_explanation=tour[&#39;difficulty&#39;][&#39;explanation_technical&#39;],
+            fitness_explanation=tour[&#39;difficulty&#39;][&#39;explanation_fitness&#39;],
+        ) if &#39;difficulty&#39; in tour else None
+        self.master_share_url = tour[&#39;master_share_url&#39;] if &#39;master_share_url&#39; in tour else None
+        self.links_dict = tour[&#39;_links&#39;] if &#39;_links&#39; in tour else None
+        if self.links_dict is not None:
+            self.coordinates_link = self.links_dict[&#39;coordinates&#39;][&#39;href&#39;] if &#39;coordinates&#39; in self.links_dict else None
+        self.coordinates = []
+
+    @staticmethod
+    def _create_list_waypoints(path: List[Dict[str, Any]]) -&gt; List[Waypoint]:
+        &#34;&#34;&#34;
+        Create a list of waypoints from the path.
+        :param path: the path
+        :return: a list of waypoints
+        &#34;&#34;&#34;
+        waypoints = []
+        for waypoint in path:
+            waypoints.append(
+                Waypoint(
+                    location=Coordinate(
+                        lat=waypoint[&#39;location&#39;][&#39;lat&#39;],
+                        lon=waypoint[&#39;location&#39;][&#39;lng&#39;],
+                    ),
+                    index=waypoint[&#39;index&#39;],
+                    end_index=waypoint[&#39;end_index&#39;] if &#39;end_index&#39; in waypoint else None,
+                    reference=waypoint[&#39;reference&#39;] if &#39;reference&#39; in waypoint else None,
+                )
+            )
+        return waypoints
+
+    @staticmethod
+    def _create_list_segments(segments: List[Dict[str, Any]]) -&gt; List[Segment]:
+        &#34;&#34;&#34;
+        Create a list of segments from the segments.
+        :param segments: the segments
+        :return: a list of segments
+        &#34;&#34;&#34;
+        segments_list = []
+        for segment in segments:
+            segments_list.append(
+                Segment(
+                    segment_type=segment[&#39;type&#39;],
+                    segment_boundaries=SegmentInformation(
+                        start_index_point=segment[&#39;from&#39;],
+                        end_index_point=segment[&#39;to&#39;],
+                    ),
+                    reference=segment[&#39;reference&#39;] if &#39;reference&#39; in segment else None,
+                )
+            )
+        return segments_list
+
+    @staticmethod
+    def _create_tour_information(tour_information_array: List[Dict[str, Any]]) -&gt; List[TourInformation]:
+        &#34;&#34;&#34;
+        Create a list of tour information from the tour information array.
+        :param tour_information_array:
+        :return: List of TourInformation objects
+        &#34;&#34;&#34;
+
+        tour_information_list = []
+        for tour_information in tour_information_array:
+            tour_information_list.append(
+                TourInformation(
+                    tour_information_type=tour_information[&#39;type&#39;],
+                    segments=[
+                        SegmentInformation(
+                            start_index_point=segment[&#39;from&#39;],
+                            end_index_point=segment[&#39;to&#39;],
+                        ) for segment in tour_information[&#39;segments&#39;]
+                    ],
+                )
+            )
+        return tour_information_list
+
+    @staticmethod
+    def _create_tour_summary(tour_summary: Dict[str, Any]) -&gt; TourSummary:
+        &#34;&#34;&#34;
+        Create a tour summary from the tour summary.
+        :param tour_summary: the tour summary
+        :return: a TourSummary object
+        &#34;&#34;&#34;
+        return TourSummary(
+            surfaces=[
+                Surface(
+                    surface_type=surface[&#39;type&#39;],
+                    amount=surface[&#39;amount&#39;],
+                ) for surface in tour_summary[&#39;surfaces&#39;]
+            ],
+            way_types=[
+                WayType(
+                    way_type=way_type[&#39;type&#39;],
+                    amount=way_type[&#39;amount&#39;],
+                ) for way_type in tour_summary[&#39;way_types&#39;]
+            ],
+        )
+
+    def get_coordinates(self, authentication: Authentication) -&gt; bool:
+        &#34;&#34;&#34;
+        Fetch the coordinates of the tour.
+        :param authentication: The authentication object.
+        :return: True if the coordinates were fetched successfully, False otherwise
+        &#34;&#34;&#34;
+        if self.coordinates_link is not None:
+            coord_request = requests.get(
+                url=self.coordinates_link,
+                auth=(authentication.get_email_address(), authentication.get_password()),
+            ).json()[&#39;items&#39;]
+        else:
+            logging.warning(&#39;No coordinates link found.&#39;)
+            return False
+
+        self.coordinates = [
+            Coordinate(
+                lat=coord_dict[&#39;lat&#39;],
+                lon=coord_dict[&#39;lng&#39;],
+                alt=coord_dict[&#39;alt&#39;],
+                time=coord_dict[&#39;t&#39;],
+            ) for coord_dict in coord_request
+        ]
+
+        return True</code></pre>
+            </details>
+        </section>
+        <section>
+        </section>
+        <section>
+        </section>
+        <section>
+        </section>
+        <section>
+            <h2 class="section-title" id="header-classes">Classes</h2>
+            <dl>
+                <dt id="kompy.tour.Tour"><code class="flex name class">
+                    <span>class <span class="ident">Tour</span></span>
+                    <span>(</span><span>tour: Dict[str, Any])</span>
+                </code></dt>
+                <dd>
+                    <div class="desc"><p>Representation of a tour.</p>
+                        <p>A representation with the list of the native fields can be found at:
+                            <a href="https://static.komoot.de/doc/external-api/v007/docson/index.html#../schemas/users_tours.schema.json">https://static.komoot.de/doc/external-api/v007/docson/index.html#../schemas/users_tours.schema.json</a>
+                        </p>
+                        <p>It contains the following attributes:
+                            - id: the id of the tour
+                            - type: the type of the tour
+                            - source: the source of the tour
+                            - start_date: the start date of the tour
+                            - changed_at: the date the tour was changed at
+                            - name: the name of the tour
+                            - kcal_active: the active kcal of the tour
+                            - kcal_resting: the resting kcal of the tour
+                            - start_point: the start point of the tour
+                            - distance: the distance of the tour, in meters
+                            - total_duration: the total duration of the tour, in seconds
+                            - elevation_up: the elevation up of the tour
+                            - elevation_down: the elevation down of the tour
+                            - sport: the sport type of the tour
+                            - vector_map_image: the vector map image of the tour
+                            - time_in_motion: the time in motion of the tour, in seconds
+                            - constitution: the constitution of the tour
+                            - query: the query of the tour
+                            - poor_quality: SEO info, the quality of creation of the tour
+                            - smart_tour_type: the smart tour type of the tour
+                            - path: the path of the tour
+                            - segments: the segments of the tour
+                            - tour_information: the tour information of the tour
+                            - tour_summary: the tour summary of the tour
+                            - difficulty: the difficulty of the tour
+                            - master_share_url: the master share url of the tour
+                            :param tour: the tour dictionary
+                            :return: None</p></div>
+                    <details class="source">
+                        <summary>
+                            <span>Expand source code</span>
+                        </summary>
+                        <pre><code class="python">class Tour:
+    def __init__(
+        self,
+        tour: Dict[str, Any],
+    ):
+        &#34;&#34;&#34;
+        Representation of a tour.
+
+        A representation with the list of the native fields can be found at:
+        https://static.komoot.de/doc/external-api/v007/docson/index.html#../schemas/users_tours.schema.json
+
+        It contains the following attributes:
+        - id: the id of the tour
+        - type: the type of the tour
+        - source: the source of the tour
+        - start_date: the start date of the tour
+        - changed_at: the date the tour was changed at
+        - name: the name of the tour
+        - kcal_active: the active kcal of the tour
+        - kcal_resting: the resting kcal of the tour
+        - start_point: the start point of the tour
+        - distance: the distance of the tour, in meters
+        - total_duration: the total duration of the tour, in seconds
+        - elevation_up: the elevation up of the tour
+        - elevation_down: the elevation down of the tour
+        - sport: the sport type of the tour
+        - vector_map_image: the vector map image of the tour
+        - time_in_motion: the time in motion of the tour, in seconds
+        - constitution: the constitution of the tour
+        - query: the query of the tour
+        - poor_quality: SEO info, the quality of creation of the tour
+        - smart_tour_type: the smart tour type of the tour
+        - path: the path of the tour
+        - segments: the segments of the tour
+        - tour_information: the tour information of the tour
+        - tour_summary: the tour summary of the tour
+        - difficulty: the difficulty of the tour
+        - master_share_url: the master share url of the tour
+        :param tour: the tour dictionary
+        :return: None
+        &#34;&#34;&#34;
+        self.id = tour[&#39;id&#39;]
+        self.type = tour[&#39;type&#39;]
+        if &#39;source&#39; in tour:
+            self.source = tour[&#39;source&#39;]
+        else:
+            self.source = None
+        self.start_date = parser.parse(tour[&#39;date&#39;])
+        self.changed_at = parser.parse(tour[&#39;changed_at&#39;])
+        self.name = tour[&#39;name&#39;]
+        self.kcal_active = tour[&#39;kcal_active&#39;]
+        self.kcal_resting = tour[&#39;kcal_resting&#39;]
+        self.start_point = Coordinate(
+            lat=tour[&#39;start_point&#39;][&#39;lat&#39;],
+            lon=tour[&#39;start_point&#39;][&#39;lng&#39;],
+            alt=tour[&#39;start_point&#39;][&#39;alt&#39;],
+            time=None,
+        )
+        self.distance = tour[&#39;distance&#39;]
+        self.total_duration = tour[&#39;duration&#39;]
+        self.elevation_up = tour[&#39;elevation_up&#39;]
+        self.elevation_down = tour[&#39;elevation_down&#39;]
+        if tour[&#39;sport&#39;] not in SupportedActivities.list_all():
+            raise ValueError(f&#39;Invalid sport type provided: {tour[&#34;sport&#34;]}. Please provide a valid sport type.&#39;)
+        else:
+            self.sport = tour[&#39;sport&#39;]
+        if &#39;vector_map_image&#39; in tour:
+            self.vector_map_image = KomootImage(
+                image_url=tour[&#39;vector_map_image&#39;][&#39;src&#39;],
+                templated=tour[&#39;vector_map_image&#39;][&#39;templated&#39;] if &#39;templated&#39; in tour[&#39;vector_map_image&#39;] else None,
+                client_hash=tour[&#39;vector_map_image&#39;][&#39;client_hash&#39;] if &#39;client_hash&#39; in tour[
+                    &#39;vector_map_image&#39;] else None,
+                attribution=tour[&#39;vector_map_image&#39;][&#39;attribution&#39;] if &#39;attribution&#39; in tour[
+                    &#39;vector_map_image&#39;] else None,
+                attribution_url=tour[&#39;vector_map_image&#39;][&#39;attribution_url&#39;] if (&#39;attribution_url&#39; in
+                                                                                tour[&#39;vector_map_image&#39;]) else None,
+                media_type=tour[&#39;vector_map_image&#39;][&#39;type&#39;] if &#39;type&#39; in tour[&#39;vector_map_image&#39;] else None,
+            )
+        else:
+            self.vector_map_image = None
+            logging.warning(&#39;No vector map image found.&#39;)
+        self.time_in_motion = tour[&#39;time_in_motion&#39;] if &#39;time_in_motion&#39; in tour else None
+        self.constitution = tour[&#39;constitution&#39;] if &#39;constitution&#39; in tour else None
+        self.query = tour[&#39;query&#39;] if &#39;query&#39; in tour else None
+        if &#39;smart_tour_type&#39; in tour:
+            if tour[&#39;smart_tour_type&#39;] not in SmartTourTypes.list_all():
+                raise ValueError(
+                    f&#39;Invalid smart tour type provided: {tour[&#34;smart_tour_type&#34;]}. &#39;
+                    f&#39;Please provide one of {SmartTourTypes.list_all()}.&#39;)
+            else:
+                self.smart_tour_type = tour[&#39;smart_tour_type&#39;] if &#39;smart_tour_type&#39; in tour else None
+        self.poor_quality = tour[&#39;poor_quality&#39;] if &#39;poor_quality&#39; in tour else None
+        self.path = self._create_list_waypoints(tour[&#39;path&#39;]) if &#39;path&#39; in tour else None
+        self.segments = self._create_list_segments(tour[&#39;segments&#39;]) if &#39;segments&#39; in tour else None
+        self.tour_information = self._create_tour_information(
+            tour_information_array=tour[&#39;tour_information&#39;],
+        ) if &#39;tour_information&#39; in tour else None
+        self.tour_summary = self._create_tour_summary(tour[&#39;tour_summary&#39;]) if &#39;tour_summary&#39; in tour else None
+        self.difficulty = Difficulty(
+            grade=tour[&#39;difficulty&#39;][&#39;grade&#39;],
+            technical_explanation=tour[&#39;difficulty&#39;][&#39;explanation_technical&#39;],
+            fitness_explanation=tour[&#39;difficulty&#39;][&#39;explanation_fitness&#39;],
+        ) if &#39;difficulty&#39; in tour else None
+        self.master_share_url = tour[&#39;master_share_url&#39;] if &#39;master_share_url&#39; in tour else None
+        self.links_dict = tour[&#39;_links&#39;] if &#39;_links&#39; in tour else None
+        if self.links_dict is not None:
+            self.coordinates_link = self.links_dict[&#39;coordinates&#39;][&#39;href&#39;] if &#39;coordinates&#39; in self.links_dict else None
+        self.coordinates = []
+
+    @staticmethod
+    def _create_list_waypoints(path: List[Dict[str, Any]]) -&gt; List[Waypoint]:
+        &#34;&#34;&#34;
+        Create a list of waypoints from the path.
+        :param path: the path
+        :return: a list of waypoints
+        &#34;&#34;&#34;
+        waypoints = []
+        for waypoint in path:
+            waypoints.append(
+                Waypoint(
+                    location=Coordinate(
+                        lat=waypoint[&#39;location&#39;][&#39;lat&#39;],
+                        lon=waypoint[&#39;location&#39;][&#39;lng&#39;],
+                    ),
+                    index=waypoint[&#39;index&#39;],
+                    end_index=waypoint[&#39;end_index&#39;] if &#39;end_index&#39; in waypoint else None,
+                    reference=waypoint[&#39;reference&#39;] if &#39;reference&#39; in waypoint else None,
+                )
+            )
+        return waypoints
+
+    @staticmethod
+    def _create_list_segments(segments: List[Dict[str, Any]]) -&gt; List[Segment]:
+        &#34;&#34;&#34;
+        Create a list of segments from the segments.
+        :param segments: the segments
+        :return: a list of segments
+        &#34;&#34;&#34;
+        segments_list = []
+        for segment in segments:
+            segments_list.append(
+                Segment(
+                    segment_type=segment[&#39;type&#39;],
+                    segment_boundaries=SegmentInformation(
+                        start_index_point=segment[&#39;from&#39;],
+                        end_index_point=segment[&#39;to&#39;],
+                    ),
+                    reference=segment[&#39;reference&#39;] if &#39;reference&#39; in segment else None,
+                )
+            )
+        return segments_list
+
+    @staticmethod
+    def _create_tour_information(tour_information_array: List[Dict[str, Any]]) -&gt; List[TourInformation]:
+        &#34;&#34;&#34;
+        Create a list of tour information from the tour information array.
+        :param tour_information_array:
+        :return: List of TourInformation objects
+        &#34;&#34;&#34;
+
+        tour_information_list = []
+        for tour_information in tour_information_array:
+            tour_information_list.append(
+                TourInformation(
+                    tour_information_type=tour_information[&#39;type&#39;],
+                    segments=[
+                        SegmentInformation(
+                            start_index_point=segment[&#39;from&#39;],
+                            end_index_point=segment[&#39;to&#39;],
+                        ) for segment in tour_information[&#39;segments&#39;]
+                    ],
+                )
+            )
+        return tour_information_list
+
+    @staticmethod
+    def _create_tour_summary(tour_summary: Dict[str, Any]) -&gt; TourSummary:
+        &#34;&#34;&#34;
+        Create a tour summary from the tour summary.
+        :param tour_summary: the tour summary
+        :return: a TourSummary object
+        &#34;&#34;&#34;
+        return TourSummary(
+            surfaces=[
+                Surface(
+                    surface_type=surface[&#39;type&#39;],
+                    amount=surface[&#39;amount&#39;],
+                ) for surface in tour_summary[&#39;surfaces&#39;]
+            ],
+            way_types=[
+                WayType(
+                    way_type=way_type[&#39;type&#39;],
+                    amount=way_type[&#39;amount&#39;],
+                ) for way_type in tour_summary[&#39;way_types&#39;]
+            ],
+        )
+
+    def get_coordinates(self, authentication: Authentication) -&gt; bool:
+        &#34;&#34;&#34;
+        Fetch the coordinates of the tour.
+        :param authentication: The authentication object.
+        :return: True if the coordinates were fetched successfully, False otherwise
+        &#34;&#34;&#34;
+        if self.coordinates_link is not None:
+            coord_request = requests.get(
+                url=self.coordinates_link,
+                auth=(authentication.get_email_address(), authentication.get_password()),
+            ).json()[&#39;items&#39;]
+        else:
+            logging.warning(&#39;No coordinates link found.&#39;)
+            return False
+
+        self.coordinates = [
+            Coordinate(
+                lat=coord_dict[&#39;lat&#39;],
+                lon=coord_dict[&#39;lng&#39;],
+                alt=coord_dict[&#39;alt&#39;],
+                time=coord_dict[&#39;t&#39;],
+            ) for coord_dict in coord_request
+        ]
+
+        return True</code></pre>
+                    </details>
+                    <h3>Methods</h3>
+                    <dl>
+                        <dt id="kompy.tour.Tour.get_coordinates"><code class="name flex">
+                            <span>def <span class="ident">get_coordinates</span></span>(<span>self, authentication: <a
+                                href="authentication.html#kompy.authentication.Authentication"
+                                title="kompy.authentication.Authentication">Authentication</a>) ‑> bool</span>
+                        </code></dt>
+                        <dd>
+                            <div class="desc"><p>Fetch the coordinates of the tour.
+                                :param authentication: The authentication object.
+                                :return: True if the coordinates were fetched successfully, False otherwise</p></div>
+                            <details class="source">
+                                <summary>
+                                    <span>Expand source code</span>
+                                </summary>
+                                <pre><code class="python">def get_coordinates(self, authentication: Authentication) -&gt; bool:
+    &#34;&#34;&#34;
+    Fetch the coordinates of the tour.
+    :param authentication: The authentication object.
+    :return: True if the coordinates were fetched successfully, False otherwise
+    &#34;&#34;&#34;
+    if self.coordinates_link is not None:
+        coord_request = requests.get(
+            url=self.coordinates_link,
+            auth=(authentication.get_email_address(), authentication.get_password()),
+        ).json()[&#39;items&#39;]
+    else:
+        logging.warning(&#39;No coordinates link found.&#39;)
+        return False
+
+    self.coordinates = [
+        Coordinate(
+            lat=coord_dict[&#39;lat&#39;],
+            lon=coord_dict[&#39;lng&#39;],
+            alt=coord_dict[&#39;alt&#39;],
+            time=coord_dict[&#39;t&#39;],
+        ) for coord_dict in coord_request
+    ]
+
+    return True</code></pre>
+                            </details>
+                        </dd>
+                    </dl>
+                </dd>
+                <dt id="kompy.tour.TourInformation"><code class="flex name class">
+                    <span>class <span class="ident">TourInformation</span></span>
+                    <span>(</span><span>tour_information_type: str, segments: List[ForwardRef('SegmentInformation')])</span>
+                </code></dt>
+                <dd>
+                    <div class="desc"><p>Initialize the tour information.
+                        :param tour_information_type: Type of the tour information.
+                        :param segments: List of segment information.</p></div>
+                    <details class="source">
+                        <summary>
+                            <span>Expand source code</span>
+                        </summary>
+                        <pre><code class="python">class TourInformation:
+    def __init__(self, tour_information_type: str, segments: List[&#39;SegmentInformation&#39;]):
+        &#34;&#34;&#34;
+        Initialize the tour information.
+        :param tour_information_type: Type of the tour information.
+        :param segments: List of segment information.
+        &#34;&#34;&#34;
+        self.tour_information_type = tour_information_type
+        self.segments = segments</code></pre>
+                    </details>
+                </dd>
+                <dt id="kompy.tour.TourSummary"><code class="flex name class">
+                    <span>class <span class="ident">TourSummary</span></span>
+                    <span>(</span><span>surfaces: List[<a href="surface.html#kompy.surface.Surface"
+                                                          title="kompy.surface.Surface">Surface</a>], way_types: List[<a
+                        href="way_type.html#kompy.way_type.WayType" title="kompy.way_type.WayType">WayType</a>])</span>
+                </code></dt>
+                <dd>
+                    <div class="desc"><p>Initialize the tour summary.
+                        :param surfaces: List of surfaces.
+                        :param way_types: List of way types.</p></div>
+                    <details class="source">
+                        <summary>
+                            <span>Expand source code</span>
+                        </summary>
+                        <pre><code class="python">class TourSummary:
+    def __init__(
+        self,
+        surfaces: List[Surface],
+        way_types: List[WayType],
+    ):
+        &#34;&#34;&#34;
+        Initialize the tour summary.
+        :param surfaces: List of surfaces.
+        :param way_types: List of way types.
+        &#34;&#34;&#34;
+        self.surfaces = surfaces
+        self.way_types = way_types</code></pre>
+                    </details>
+                </dd>
+            </dl>
+        </section>
+    </article>
+    <nav id="sidebar">
+        <h1>Index</h1>
+        <div class="toc">
+            <ul></ul>
+        </div>
+        <ul id="index">
+            <li><h3>Super-module</h3>
+                <ul>
+                    <li><code><a href="index.html" title="kompy">kompy</a></code></li>
+                </ul>
+            </li>
+            <li><h3><a href="#header-classes">Classes</a></h3>
+                <ul>
+                    <li>
+                        <h4><code><a href="#kompy.tour.Tour" title="kompy.tour.Tour">Tour</a></code></h4>
+                        <ul class="">
+                            <li><code><a href="#kompy.tour.Tour.get_coordinates"
+                                         title="kompy.tour.Tour.get_coordinates">get_coordinates</a></code></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h4><code><a href="#kompy.tour.TourInformation" title="kompy.tour.TourInformation">TourInformation</a></code>
+                        </h4>
+                    </li>
+                    <li>
+                        <h4><code><a href="#kompy.tour.TourSummary"
+                                     title="kompy.tour.TourSummary">TourSummary</a></code></h4>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</main>
+<footer id="footer">
+    <p>Generated by <a href="https://pdoc3.github.io/pdoc"
+                       title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
