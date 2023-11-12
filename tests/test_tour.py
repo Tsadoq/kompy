@@ -20,6 +20,13 @@ class TestTour(unittest.TestCase):
         cls.valid_id = os.environ['KOMOOT_VALID_TOUR_ID']
         cls.tour_obj = cls.connector.get_tour_by_id(cls.valid_id)
 
+    def test_no_coordinates_before_get_coordinates(self):
+        """
+        Test the get_coordinates method.
+        """
+        empty_coord_tour = self.connector.get_tour_by_id(self.valid_id)
+        self.assertEqual(empty_coord_tour.coordinates, [])
+
     def test_get_coordinates(self):
         """
         Test the get_coordinates method.
@@ -27,12 +34,6 @@ class TestTour(unittest.TestCase):
         result = self.tour_obj.get_coordinates(authentication=self.connector.authentication)
         self.assertIsInstance(self.tour_obj.coordinates[0], Coordinate)
         self.assertTrue(result)
-
-    def test_no_coordinates_before_get_coordinates(self):
-        """
-        Test the get_coordinates method.
-        """
-        self.assertEqual(self.tour_obj.coordinates, [])
 
 
 if __name__ == '__main__':
