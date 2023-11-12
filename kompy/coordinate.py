@@ -2,7 +2,13 @@ from typing import Optional
 
 
 class Coordinate:
-    def __init__(self, lat: float, lon: float, alt: Optional[float] = None, time: Optional[float] = None):
+    def __init__(
+        self,
+        lat: float,
+        lon: float,
+        alt: Optional[float] = None,
+        time: Optional[float] = None,
+    ):
         """
         Initialize the Coordinate object.
         :param lat: Latitude, must be between -90 and 90.

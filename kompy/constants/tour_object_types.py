@@ -1,4 +1,4 @@
-from typing import List, Final
+from typing import Final, List
 
 
 class TourObjectTypes:

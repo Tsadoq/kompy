@@ -1,7 +1,7 @@
 import json
 import logging
 import re
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 import dateutil.parser as parser
 import gpxpy

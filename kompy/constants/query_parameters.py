@@ -1,4 +1,4 @@
-from typing import Final, Dict, Union, Optional, List
+from typing import Dict, Final, List, Optional, Union
 
 
 class TourQueryParameters:

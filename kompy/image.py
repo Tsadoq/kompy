@@ -7,13 +7,15 @@ from PIL import Image
 
 
 class KomootImage:
-    def __init__(self,
-                 image_url: str,
-                 templated: bool,
-                 client_hash: Optional[str] = None,
-                 attribution: Optional[str] = None,
-                 attribution_url: Optional[str] = None,
-                 media_type: Optional[str] = None):
+    def __init__(
+        self,
+        image_url: str,
+        templated: bool,
+        client_hash: Optional[str] = None,
+        attribution: Optional[str] = None,
+        attribution_url: Optional[str] = None,
+        media_type: Optional[str] = None,
+    ):
         """
         Initialize the KomootImage.
         :param image_url: Link to the image.

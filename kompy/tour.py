@@ -1,35 +1,20 @@
 import logging
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 import requests
 from dateutil import parser
 
 from kompy.authentication import Authentication
 from kompy.constants.activities import SupportedActivities
-from kompy.constants.difficulty_grade import DifficultyGrade
 from kompy.constants.segment import Segment
-from kompy.constants.surface import SurfaceType
 from kompy.constants.tour_constants import SmartTourTypes
-from kompy.constants.way_type import PossibleWayType
 from kompy.constants.waypoint import Waypoint
 from kompy.coordinate import Coordinate
+from kompy.difficulty import Difficulty
 from kompy.image import KomootImage
-
-
-class SegmentInformation:
-
-    def __init__(
-        self,
-        start_index_point: int,
-        end_index_point: int,
-    ):
-        """
-        Initialize the segment information.
-        :param start_index_point: start index point
-        :param end_index_point: end index point
-        """
-        self.start_index_point = start_index_point
-        self.end_index_point = end_index_point
+from kompy.segment import SegmentInformation
+from kompy.surface import Surface
+from kompy.way_type import WayType
 
 
 class TourInformation:
@@ -43,38 +28,12 @@ class TourInformation:
         self.segments = segments
 
 
-class Surface:
-    def __init__(self, surface_type: str, amount: float):
-        """
-        Initialize the surface information.
-        :param surface_type: Type of the surface.
-        :param amount: Amount, must be greater than 0 and less than 1.
-        """
-        if surface_type not in SurfaceType.list_all():
-            raise ValueError(f'Invalid surface type provided: {surface_type}. Please provide a valid surface type.')
-        if not (0 < amount < 1):
-            raise ValueError('Amount must be greater than 0 and less than 1.')
-        self.type = surface_type
-        self.amount = amount
-
-
-class WayType:
-    def __init__(self, way_type: str, amount: float):
-        """
-        Initialize the way type information.
-        :param way_type: Type of the way.
-        :param amount: Amount, must be greater than 0 and less than 1.
-        """
-        if way_type not in PossibleWayType.list_all():  # Assuming WayType.list_all() exists
-            raise ValueError(f'Invalid way type provided: {way_type}. Please provide a valid way type.')
-        if not (0 < amount < 1):
-            raise ValueError('Amount must be greater than 0 and less than 1.')
-        self.type = way_type
-        self.amount = amount
-
-
 class TourSummary:
-    def __init__(self, surfaces: List[Surface], way_types: List[WayType]):
+    def __init__(
+        self,
+        surfaces: List[Surface],
+        way_types: List[WayType],
+    ):
         """
         Initialize the tour summary.
         :param surfaces: List of surfaces.
@@ -84,23 +43,11 @@ class TourSummary:
         self.way_types = way_types
 
 
-class Difficulty:
-    def __init__(self, grade: str, technical_explanation: str, fitness_explanation: str):
-        """
-        Initialize the difficulty information.
-        :param grade: Difficulty grade.
-        :param technical_explanation: Technical explanation of the difficulty.
-        :param fitness_explanation: Fitness explanation of the difficulty.
-        """
-        if grade not in DifficultyGrade.list_all():
-            raise ValueError(f'Invalid difficulty grade provided: {grade}. Please provide a valid difficulty grade.')
-        self.grade = grade
-        self.technical_explanation = technical_explanation
-        self.fitness_explanation = fitness_explanation
-
-
 class Tour:
-    def __init__(self, tour: Dict[str, Any]):
+    def __init__(
+        self,
+        tour: Dict[str, Any],
+    ):
         """
         Representation of a tour.
 
