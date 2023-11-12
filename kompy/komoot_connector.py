@@ -5,6 +5,8 @@ from typing import (
     List,
     Optional,
     Union,
+    Any,
+    Dict,
 )
 
 import dateutil.parser as parser
@@ -255,10 +257,58 @@ class KomootConnector:
         if object_type == TourObjectTypes.FIT:
             return FitFile.from_bytes(response.content)
 
+    def upload_tour(
+        self,
+        tour_object: Union[GPX, FitFile],
+        activity_type: str,
+        tour_name: str,
+        time_in_motion: Optional[int] = None,
+    ) -> bool:
+        """
+        Upload a tour. It can be either a GPX or FIT file.
+        :param tour_object: The binary data of the file
+        :param activity_type: The sport type, one of SupportedActivities
+        :param tour_name: The name of the tour
+        :param time_in_motion: Only exists for GPX files, in other file types this can be specified in the file itself.
+        The time in motion in seconds. This is the time the user was active, so the overall duration minus the pauses.
+        It must not be larger than the overall duration of the tour.
+        :return: Whether the upload was successful
+        """
+        headers = {
+            'User-Agent': 'Kompy',
+        }
+        params = {
+            'sport': activity_type,
+        }
+        if isinstance(tour_object, GPX):
+            params['data_type'] = 'gpx'
+            params['time_in_motion'] = time_in_motion
+        elif isinstance(tour_object, FitFile):
+            params['data_type'] = 'fit'
+        else:
+            raise TypeError(f'Invalid tour object provided: {type(tour_object)}. Please provide a GPX or FIT file.')
+        params['name'] = tour_name
+        resp = requests.post(
+            url=KomootUrl.UPLOAD_TOUR_URL.format(object_type=params['data_type']),
+            auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+            headers=headers,
+            params=params,
+            data=tour_object.to_xml().encode('utf-8') if isinstance(tour_object, GPX) else tour_object.to_bytes()
+        )
+        if resp.status_code == 201:
+            logging.info(f'Tour uploaded successfully with ID: {resp.json()["id"]}.')
+            return True
+        elif resp.status_code == 202:
+            logging.warning(f'Tour not created due to the same tour being already present with ID: {resp.json()["id"]}')
+            return True
+        else:
+            logging.error(f'Could not upload tour Failed: {resp.status_code}')
+            return False
+
     def _get_page_of_tours(
         self,
-        query_parameters,
-        user_identifier,
+        query_parameters: Dict[str, Any],
+        user_identifier: str,
     ) -> requests.Response:
         """
         Get a page of tours.

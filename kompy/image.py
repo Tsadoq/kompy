@@ -5,6 +5,12 @@ from typing import Optional
 import requests
 from PIL import Image
 
+logger = logging.getLogger('KomootImage')
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
 
 class KomootImage:
     def __init__(

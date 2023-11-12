@@ -1,3 +1,5 @@
+__docformat__ = "restructuredtext"
+
 from .authentication import Authentication
 from .coordinate import Coordinate
 from .difficulty import Difficulty

@@ -22,6 +22,12 @@ from kompy.segment import (
 from kompy.surface import Surface
 from kompy.way_type import WayType
 
+logger = logging.getLogger('KomootTour')
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
 
 class TourInformation:
     def __init__(self, tour_information_type: str, segments: List['SegmentInformation']):
