@@ -51,5 +51,8 @@ jobs:
         run: |
           coverage run -m pytest
           coverage report -m
-          
-          
+        env:
+          KOMOOT_EMAIL: ${{ secrets.KOMOOT_EMAIL }}
+          KOMOOT_PASSWORD: ${{ secrets.KOMOOT_PASSWORD }}
+          KOMOOT_VALID_TOUR_ID: ${{ secrets.KOMOOT_VALID_TOUR_ID }}
+
