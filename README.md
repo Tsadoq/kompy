@@ -47,6 +47,21 @@ The most basic usage is:
    tours_list = connector.get_tours(user_identifier=None)
     ```
 
+## Run the tests
+
+To run the tests (locally), run:
+
+```bash
+  pytest .
+```
+
+Currently you need to log in to run the tests. To do so you need to set some environment variables:
+
+```bash
+  export KOMOOT_EMAIL=<your email>
+  export KOMOOT_PASSWORD=<your password>
+```
+
 ## Contributing
 
 Contributions to Kompy are welcome! If you have a suggestion that would make this app better, please fork the repo
