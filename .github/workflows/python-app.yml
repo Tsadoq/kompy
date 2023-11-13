@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest rich pytest-pretty sphinx
+          pip install flake8 pytest rich pytest-pretty sphinx coverage
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           sudo apt update
       - name: Lint with flake8
@@ -47,3 +47,9 @@ jobs:
           KOMOOT_EMAIL: ${{ secrets.KOMOOT_EMAIL }}
           KOMOOT_PASSWORD: ${{ secrets.KOMOOT_PASSWORD }}
           KOMOOT_VALID_TOUR_ID: ${{ secrets.KOMOOT_VALID_TOUR_ID }}
+      - name: Run Coverage with coverage.py
+        run: |
+          coverage run -m pytest
+          coverage report -m
+          
+          
