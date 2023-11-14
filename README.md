@@ -55,11 +55,16 @@ To run the tests (locally), run:
   pytest .
 ```
 
+or
+```bash
+  python -m unittest
+```
 Currently you need to log in to run the tests. To do so you need to set some environment variables:
 
 ```bash
   export KOMOOT_EMAIL=<your email>
   export KOMOOT_PASSWORD=<your password>
+  export KOMOOT_VALID_TOUR_ID=1372281488
 ```
 
 ## Contributing
@@ -71,7 +76,8 @@ and create a pull request. You can also simply open an issue with the tag "enhan
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+5. Create, in your forked repo, the secrets mentioned above.
+6. Open a Pull Request
 
 ## Acknowledgements
 
