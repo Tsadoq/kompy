@@ -4,3 +4,4 @@ requests~=2.31.0
 pillow~=10.1.0
 gpxpy==1.6.1
 fit_tool==0.9.13
+pdoc==14.1.0

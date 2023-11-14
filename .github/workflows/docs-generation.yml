@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - run: pip install pdoc
+      - run: pip install -r requirements.txt
       - run: pdoc -d restructuredtext kompy -o docs/
 
       - uses: actions/upload-pages-artifact@v2
