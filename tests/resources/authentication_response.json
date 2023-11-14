@@ -1,0 +1,22 @@
+{
+  "email": "test@example.com",
+  "username": "1234567890",
+  "user": {
+    "createdAt": "2021-10-24 07:38:44 +0000",
+    "username": "xxxyyzzz",
+    "displayname": "Mock User",
+    "content": {
+      "hasImage": true
+    },
+    "state": "1",
+    "newsletter": true,
+    "welcomeMails": false,
+    "metric": true,
+    "locale": "en_US",
+    "imageUrl": "https://picsum.photos/200",
+    "fitness": {
+      "personalised": false
+    }
+  },
+  "password": "tokentokentoken"
+}
