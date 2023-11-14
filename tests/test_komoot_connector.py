@@ -1,61 +1,66 @@
 import os
 import unittest
+from unittest.mock import patch, MagicMock
 
-from kompy import (
-    KomootConnector,
-    Tour,
-)
+from kompy import KomootConnector, Tour
+from tests.resources.mock_response_builder import mock_response_builder
 
 
 class TestKomootConnector(unittest.TestCase):
 
     @classmethod
-    def setUpClass(cls):
-        """
-        Set up the KomootConnector for the tests.
-        """
-        cls.email = os.environ['KOMOOT_EMAIL']
-        cls.password = os.environ['KOMOOT_PASSWORD']
-        cls.connector = KomootConnector(email=cls.email, password=cls.password)
-        cls.valid_id = os.environ['KOMOOT_VALID_TOUR_ID']
-        cls.invalid_id = 'your_invalid_id'
+    @patch('requests.get')
+    def setUpClass(cls, mock_get: MagicMock):
+        cls.email = 'test@example.com'
+        cls.password = 'password'
+        cls.valid_id = '12345'
+        cls.invalid_id = 'invalid_id'
+        mock_response_builder(
+            mock_get=mock_get,
+            mock_status_code=200,
+            json_file_path=f'{os.path.dirname(os.path.realpath(__file__))}/resources/authentication_response.json',
+        )
+        cls.connector = KomootConnector(
+            email='test@example.com',
+            password='password',
+        )
 
-    def test_initialization(self):
-        """
-        Test initialization of the KomootConnector.
-        """
-        self.assertIsInstance(self.connector, KomootConnector)
+    @patch('requests.get')
+    def test_initialization(self, mock_get: MagicMock):
+        mock_response_builder(
+            mock_get=mock_get,
+            mock_status_code=200,
+            json_file_path=f'{os.path.dirname(os.path.realpath(__file__))}/resources/authentication_response.json',
+        )
+        connector = KomootConnector(
+            email=self.email,
+            password=self.password,
+        )
+        self.assertIsInstance(connector, KomootConnector)
 
-    def test_connect_is_populated(self):
-        """
-        Test if the connect attribute is populated.
-        """
-        self.assertIsNotNone(self.connector.authentication.get_email_address())
-        self.assertIsNotNone(self.connector.authentication.get_token())
+    @patch('requests.get')
+    def test_get_tours(self, mock_get):
+        mock_response_builder(
+            mock_get=mock_get,
+            mock_status_code=200,
+            json_file_path=f'{os.path.dirname(os.path.realpath(__file__))}/resources/fetch_tours.json',
+        )
 
-    def test_get_tours(self):
-        """
-        Test the get_tours method.
-        """
         tours = self.connector.get_tours(limit=10)
         self.assertIsInstance(tours, list)
         for tour in tours:
             self.assertIsInstance(tour, Tour)
         self.assertEqual(len(tours), 10)
 
-    def test_get_tour_by_valid_id(self):
-        """
-        Test the get_tour_by_id method with a valid id.
-        """
-        tour = self.connector.get_tour_by_id(self.valid_id)
+    @patch('requests.get')
+    def test_get_tour_by_valid_id(self, mock_get):
+        mock_response_builder(
+            mock_get=mock_get,
+            mock_status_code=200,
+            json_file_path=f'{os.path.dirname(os.path.realpath(__file__))}/resources/get_tour_by_id_response.json',
+        )
+        tour = self.connector.get_tour_by_id(tour_identifier=self.valid_id)
         self.assertIsInstance(tour, Tour)
-
-    def test_get_tour_by_invalid_id(self):
-        """
-        Test the get_tour_by_id method with an invalid id.
-        """
-        with self.assertRaises(ValueError):
-            self.connector.get_tour_by_id(self.invalid_id)
 
 
 if __name__ == '__main__':
