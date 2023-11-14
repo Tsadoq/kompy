@@ -64,7 +64,7 @@ Currently you need to log in to run the tests. To do so you need to set some env
 ```bash
   export KOMOOT_EMAIL=<your email>
   export KOMOOT_PASSWORD=<your password>
-  export KOMOOT_VALID_TOUR_ID=1372281488
+  export KOMOOT_VALID_TOUR_ID=675328935
 ```
 
 ## Contributing
