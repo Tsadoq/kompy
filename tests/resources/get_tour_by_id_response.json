@@ -1,0 +1,406 @@
+{
+  "status": "public",
+  "type": "tour_planned",
+  "date": "2022-02-17T12:43:28.289Z",
+  "name": "Alta Via dei Re",
+  "source": "{\"api\":\"de.komoot.routing-api/import\",\"type\":\"tour_planned\",\"id\":675328935}",
+  "distance": 70718.4398851885,
+  "duration": 124503,
+  "sport": "hike",
+  "query": "d01AqMayABvunQ=FyjYBVG_X_gTUv8IbuV12l_L95rAgQskFrvlwyepmUAdv8Mj6lCCI_17RkiHofbrQOan-ZhDCiQWsPe1BDCvRXfIIaPtxgIKgfgSyB-X8pUgKBcvgIV__w70HBsA2z7V2SJSP7YI9U-M0AA=",
+  "constitution": 3,
+  "summary": {
+    "surfaces": [
+      {
+        "type": "sf#unknown",
+        "amount": 0.0009908415
+      },
+      {
+        "type": "sf#nature",
+        "amount": 0.0020248494
+      },
+      {
+        "type": "sf#asphalt",
+        "amount": 0.003113748
+      },
+      {
+        "type": "sf#paved",
+        "amount": 0.008207826
+      },
+      {
+        "type": "sf#unpaved",
+        "amount": 0.0828781
+      },
+      {
+        "type": "sf#gravel",
+        "amount": 0.277002
+      },
+      {
+        "type": "sf#alpin",
+        "amount": 0.6257826
+      }
+    ],
+    "way_types": [
+      {
+        "type": "wt#minor_road",
+        "amount": 0.010963676
+      },
+      {
+        "type": "wt#hiking_path",
+        "amount": 0.036625333
+      },
+      {
+        "type": "wt#way",
+        "amount": 0.10174717
+      },
+      {
+        "type": "wt#alpine_hiking_path",
+        "amount": 0.10960963
+      },
+      {
+        "type": "wt#mountain_hiking_path",
+        "amount": 0.7410542
+      }
+    ]
+  },
+  "difficulty": {
+    "grade": "difficult",
+    "explanation_technical": "dh#t3",
+    "explanation_fitness": "d#c3"
+  },
+  "segments": [
+    {
+      "type": "Routed",
+      "from": 0,
+      "to": 447
+    },
+    {
+      "type": "Routed",
+      "from": 447,
+      "to": 891
+    },
+    {
+      "type": "Routed",
+      "from": 891,
+      "to": 1017
+    },
+    {
+      "type": "Routed",
+      "from": 1017,
+      "to": 1322
+    },
+    {
+      "type": "Routed",
+      "from": 1322,
+      "to": 1351
+    },
+    {
+      "type": "Routed",
+      "from": 1351,
+      "to": 1652
+    },
+    {
+      "type": "Routed",
+      "from": 1652,
+      "to": 1810
+    },
+    {
+      "type": "Routed",
+      "from": 1810,
+      "to": 1853
+    },
+    {
+      "type": "Routed",
+      "from": 1853,
+      "to": 1965
+    },
+    {
+      "type": "Routed",
+      "from": 1965,
+      "to": 2395
+    },
+    {
+      "type": "Routed",
+      "from": 2395,
+      "to": 2523
+    },
+    {
+      "type": "Routed",
+      "from": 2523,
+      "to": 2617
+    },
+    {
+      "type": "Routed",
+      "from": 2617,
+      "to": 2693
+    },
+    {
+      "type": "Routed",
+      "from": 2693,
+      "to": 2829
+    },
+    {
+      "type": "Routed",
+      "from": 2829,
+      "to": 2976
+    },
+    {
+      "type": "Routed",
+      "from": 2976,
+      "to": 3193
+    },
+    {
+      "type": "Routed",
+      "from": 3193,
+      "to": 3813
+    }
+  ],
+  "path": [
+    {
+      "location": {
+        "lat": 44.243656,
+        "lng": 7.322228
+      },
+      "index": 0
+    },
+    {
+      "location": {
+        "lat": 44.243529,
+        "lng": 7.2275
+      },
+      "index": 447,
+      "reference": "hlp:871420"
+    },
+    {
+      "location": {
+        "lat": 44.208163,
+        "lng": 7.241696
+      },
+      "index": 891
+    },
+    {
+      "location": {
+        "lat": 44.201682,
+        "lng": 7.240011
+      },
+      "index": 1017,
+      "reference": "hlp:528562"
+    },
+    {
+      "location": {
+        "lat": 44.174839,
+        "lng": 7.251513
+      },
+      "index": 1322,
+      "reference": "hlp:2599321"
+    },
+    {
+      "location": {
+        "lat": 44.170908,
+        "lng": 7.252604
+      },
+      "index": 1351,
+      "reference": "hlp:4105480"
+    },
+    {
+      "location": {
+        "lat": 44.16608,
+        "lng": 7.271046
+      },
+      "index": 1652
+    },
+    {
+      "location": {
+        "lat": 44.163755,
+        "lng": 7.288406
+      },
+      "index": 1810
+    },
+    {
+      "location": {
+        "lat": 44.163407,
+        "lng": 7.295595
+      },
+      "index": 1853,
+      "reference": "hlp:274594"
+    },
+    {
+      "location": {
+        "lat": 44.154853,
+        "lng": 7.307403
+      },
+      "index": 1965,
+      "reference": "hlp:274607"
+    },
+    {
+      "location": {
+        "lat": 44.156997,
+        "lng": 7.352204
+      },
+      "index": 2395,
+      "reference": "hlp:4119648"
+    },
+    {
+      "location": {
+        "lat": 44.148888,
+        "lng": 7.357575
+      },
+      "index": 2523
+    },
+    {
+      "location": {
+        "lat": 44.145453,
+        "lng": 7.361618
+      },
+      "index": 2617
+    },
+    {
+      "location": {
+        "lat": 44.132109,
+        "lng": 7.3629
+      },
+      "index": 2693
+    },
+    {
+      "location": {
+        "lat": 44.128251,
+        "lng": 7.374163
+      },
+      "index": 2829
+    },
+    {
+      "location": {
+        "lat": 44.129126,
+        "lng": 7.388555
+      },
+      "index": 2976,
+      "reference": "hlp:4117977"
+    },
+    {
+      "location": {
+        "lat": 44.124394,
+        "lng": 7.407568
+      },
+      "index": 3193
+    },
+    {
+      "location": {
+        "lat": 44.176874,
+        "lng": 7.385676
+      },
+      "index": 3813
+    }
+  ],
+  "_links": {
+    "creator": {
+      "href": "https://api.komoot.de/v007/users/600768031594/profile_embedded"
+    },
+    "self": {
+      "href": "https://api.komoot.de/v007/tours/675328935"
+    },
+    "coordinates": {
+      "href": "https://api.komoot.de/v007/tours/675328935/coordinates"
+    },
+    "participants": {
+      "href": "https://api.komoot.de/v007/tours/675328935/participants/"
+    },
+    "way_types": {
+      "href": "https://api.komoot.de/v007/tours/675328935/way_types"
+    },
+    "surfaces": {
+      "href": "https://api.komoot.de/v007/tours/675328935/surfaces"
+    },
+    "directions": {
+      "href": "https://api.komoot.de/v007/tours/675328935/directions"
+    },
+    "timeline": {
+      "href": "https://api.komoot.de/v007/tours/675328935/timeline/"
+    },
+    "translations": {
+      "href": "https://api.komoot.de/v007/tours/675328935/translations"
+    },
+    "cover_images": {
+      "href": "https://api.komoot.de/v007/tours/675328935/cover_images/"
+    },
+    "master": {
+      "href": "https://api.komoot.de/v007/tours/648615172?_embedded="
+    }
+  },
+  "kcal_active": 0,
+  "kcal_resting": 0,
+  "start_point": {
+    "lat": 44.243656,
+    "lng": 7.322228,
+    "alt": 983.6
+  },
+  "elevation_up": 5334.569071062614,
+  "elevation_down": 5079.985480081897,
+  "tour_information": [
+    {
+      "type": "MODERATE_DANGER",
+      "segments": [
+        {
+          "from": 1854,
+          "to": 2068
+        },
+        {
+          "from": 2696,
+          "to": 2913
+        },
+        {
+          "from": 2938,
+          "to": 3193
+        }
+      ]
+    }
+  ],
+  "_embedded": {
+    "creator": {
+      "username": "600768031594",
+      "avatar": {
+        "src": "https://d2exd72xrrp1s7.cloudfront.net/www/15/15o9lj5ve07hap0nmz0fefbok2kdn4998-u600768031594-full/183beb575b7/p?width={width}&height={height}&crop={crop}",
+        "templated": true,
+        "type": "image/*"
+      },
+      "status": "public",
+      "_links": {
+        "self": {
+          "href": "https://api.komoot.de/v007/users/600768031594/profile_embedded"
+        },
+        "relation": {
+          "href": "https://api.komoot.de/v007/users/{username}/relations/600768031594",
+          "templated": true
+        }
+      },
+      "display_name": "Marika Abb\u00e0",
+      "is_premium": true
+    }
+  },
+  "id": 675328935,
+  "changed_at": "2023-09-13T16:07:11.692Z",
+  "vector_map_image": {
+    "src": "https://tourpic-vector.maps.komoot.net/r/big/ic_Zk_nCAf@aAlB@~Au@%60Bb@zKgA~Fp@dBRdBUrC%5EbCD%7CDOGf@rAD%7C@W%5El@OCf@XLhCwBnC_@HTf@GnAaB%7C@PB%5Dn@Ml@%3Fc@j@J%5C%60AXAc@VADc@v@s@J%5C%60@ULTD%5Db@%5CZOhAxFh@fArA%5BrA%7DBtBkH%5ELhAuAbBG%5CYV%5BOOjBeBJs@PHGYd@BIy@tAoAQIA_@_Dz@bCwD%3FqCiA%5DKq@Ts@OaALB@_B%7C@mAjABVe@GwBZaCS_@H_Ck@FsAoCJc@a@uA_@IZ%7D@w@K%7C@yCt@TvA_ANs@XIT%5EJUXHVk@CPPEJk@Jh@BWb@@O_Av@XPc@d@KvCJWaAV@Os@n@W@q@p@w@MeBZO_@%5DPu@EaAi@KOyAe@@U_Dn@o@f@Px@mAn@@Do@Ic@e@CLYYBGw@oA~AuATUj@A_@eBfAo@EPWc@AHQYKaDbCmACaAd@cDUoAlBa@nBN%5Ci@f@/",
+    "templated": false,
+    "type": "image/*",
+    "attribution": "Map data \u00a9 OpenStreetMap contributors"
+  },
+  "vector_map_image_preview": {
+    "src": "https://tourpic-vector.maps.komoot.net/r/small/ic_Zk_nCAf@aAlB@~Au@%60Bb@zKgA~Fp@dBRdBUrC%5EbCD%7CDOGf@rAD%7C@W%5El@OCf@XLhCwBnC_@HTf@GnAaB%7C@PB%5Dn@Ml@%3Fc@j@J%5C%60AXAc@VADc@v@s@J%5C%60@ULTD%5Db@%5CZOhAxFh@fArA%5BrA%7DBtBkH%5ELhAuAbBG%5CYV%5BOOjBeBJs@PHGYd@BIy@tAoAQIA_@_Dz@bCwD%3FqCiA%5DKq@Ts@OaALB@_B%7C@mAjABVe@GwBZaCS_@H_Ck@FsAoCJc@a@uA_@IZ%7D@w@K%7C@yCt@TvA_ANs@XIT%5EJUXHVk@CPPEJk@Jh@BWb@@O_Av@XPc@d@KvCJWaAV@Os@n@W@q@p@w@MeBZO_@%5DPu@EaAi@KOyAe@@U_Dn@o@f@Px@mAn@@Do@Ic@e@CLYYBGw@oA~AuATUj@A_@eBfAo@EPWc@AHQYKaDbCmACaAd@cDUoAlBa@nBN%5Ci@f@/",
+    "templated": false,
+    "type": "image/*",
+    "attribution": "Map data \u00a9 OpenStreetMap contributors"
+  },
+  "potential_route_update": true,
+  "map_image": {
+    "src": "https://tourpic-vector.maps.komoot.net/r/big/ic_Zk_nCAf@aAlB@~Au@%60Bb@zKgA~Fp@dBRdBUrC%5EbCD%7CDOGf@rAD%7C@W%5El@OCf@XLhCwBnC_@HTf@GnAaB%7C@PB%5Dn@Ml@%3Fc@j@J%5C%60AXAc@VADc@v@s@J%5C%60@ULTD%5Db@%5CZOhAxFh@fArA%5BrA%7DBtBkH%5ELhAuAbBG%5CYV%5BOOjBeBJs@PHGYd@BIy@tAoAQIA_@_Dz@bCwD%3FqCiA%5DKq@Ts@OaALB@_B%7C@mAjABVe@GwBZaCS_@H_Ck@FsAoCJc@a@uA_@IZ%7D@w@K%7C@yCt@TvA_ANs@XIT%5EJUXHVk@CPPEJk@Jh@BWb@@O_Av@XPc@d@KvCJWaAV@Os@n@W@q@p@w@MeBZO_@%5DPu@EaAi@KOyAe@@U_Dn@o@f@Px@mAn@@Do@Ic@e@CLYYBGw@oA~AuATUj@A_@eBfAo@EPWc@AHQYKaDbCmACaAd@cDUoAlBa@nBN%5Ci@f@/?width={width}&height={height}&crop={crop}",
+    "templated": true,
+    "type": "image/*",
+    "attribution": "Map data \u00a9 OpenStreetMap contributors"
+  },
+  "map_image_preview": {
+    "src": "https://tourpic-vector.maps.komoot.net/r/small/ic_Zk_nCAf@aAlB@~Au@%60Bb@zKgA~Fp@dBRdBUrC%5EbCD%7CDOGf@rAD%7C@W%5El@OCf@XLhCwBnC_@HTf@GnAaB%7C@PB%5Dn@Ml@%3Fc@j@J%5C%60AXAc@VADc@v@s@J%5C%60@ULTD%5Db@%5CZOhAxFh@fArA%5BrA%7DBtBkH%5ELhAuAbBG%5CYV%5BOOjBeBJs@PHGYd@BIy@tAoAQIA_@_Dz@bCwD%3FqCiA%5DKq@Ts@OaALB@_B%7C@mAjABVe@GwBZaCS_@H_Ck@FsAoCJc@a@uA_@IZ%7D@w@K%7C@yCt@TvA_ANs@XIT%5EJUXHVk@CPPEJk@Jh@BWb@@O_Av@XPc@d@KvCJWaAV@Os@n@W@q@p@w@MeBZO_@%5DPu@EaAi@KOyAe@@U_Dn@o@f@Px@mAn@@Do@Ic@e@CLYYBGw@oA~AuATUj@A_@eBfAo@EPWc@AHQYKaDbCmACaAd@cDUoAlBa@nBN%5Ci@f@/?width={width}&height={height}&crop={crop}",
+    "templated": true,
+    "type": "image/*",
+    "attribution": "Map data \u00a9 OpenStreetMap contributors"
+  }
+}
