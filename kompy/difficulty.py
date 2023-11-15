@@ -11,6 +11,6 @@ class Difficulty:
         """
         if grade not in DifficultyGrade.list_all():
             raise ValueError(f'Invalid difficulty grade provided: {grade}. Please provide a valid difficulty grade.')
-        self.grade = grade
-        self.technical_explanation = technical_explanation
-        self.fitness_explanation = fitness_explanation
+        self.grade: str = grade
+        self.technical_explanation: str = technical_explanation
+        self.fitness_explanation: str = fitness_explanation

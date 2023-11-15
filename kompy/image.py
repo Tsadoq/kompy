@@ -31,13 +31,13 @@ class KomootImage:
         :param attribution_url: If it exists, contains link to the attribution source.
         :param media_type: Media type of resource.
         """
-        self.image_url = image_url
-        self.templated = templated
-        self.client_hash = client_hash
-        self.attribution = attribution
-        self.attribution_url = attribution_url
-        self.media_type = media_type
-        self.image = None
+        self.image_url: str = image_url
+        self.templated: bool = templated
+        self.client_hash: Optional[str] = client_hash
+        self.attribution: Optional[str] = attribution
+        self.attribution_url: Optional[str] = attribution_url
+        self.media_type: Optional[str] = media_type
+        self.image: Optional[Image] = None
 
     def load_image(self):
         """

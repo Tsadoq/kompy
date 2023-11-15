@@ -16,5 +16,5 @@ class Surface:
             raise ValueError(f'Invalid surface type provided: {surface_type}. Please provide a valid surface type.')
         if not (0 <= amount <= 1):
             raise ValueError('Amount must be greater than 0 and less than 1.')
-        self.type = surface_type
-        self.amount = amount
+        self.type: str = surface_type
+        self.amount: float = amount

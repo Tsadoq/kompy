@@ -1,13 +1,15 @@
 import logging
+from datetime import datetime
 from typing import (
     Any,
     Dict,
-    List,
+    List, Optional,
 )
 
 import requests
 from dateutil import parser
 
+from kompy import KomootConnector
 from kompy.authentication import Authentication
 from kompy.constants.activities import SupportedActivities
 from kompy.constants.tour_constants import SmartTourTypes
@@ -96,17 +98,14 @@ class Tour:
         :param tour: the tour dictionary
         :return: None
         """
-        self.id = tour['id']
-        self.type = tour['type']
-        if 'source' in tour:
-            self.source = tour['source']
-        else:
-            self.source = None
-        self.start_date = parser.parse(tour['date'])
-        self.changed_at = parser.parse(tour['changed_at'])
-        self.name = tour['name']
-        self.kcal_active = tour['kcal_active']
-        self.kcal_resting = tour['kcal_resting']
+        self.id: str = tour['id']
+        self.type: str = tour['type']
+        self.source: Optional[str] = tour['source'] if 'source' in tour else None
+        self.start_date: datetime = parser.parse(tour['date'])
+        self.changed_at: datetime = parser.parse(tour['changed_at'])
+        self.name: str = tour['name']
+        self.kcal_active: float = tour['kcal_active']
+        self.kcal_resting: float = tour['kcal_resting']
         self.start_point = Coordinate(
             lat=tour['start_point']['lat'],
             lon=tour['start_point']['lng'],
@@ -162,8 +161,8 @@ class Tour:
         self.links_dict = tour['_links'] if '_links' in tour else None
         if self.links_dict is not None:
             self.coordinates_link = self.links_dict['coordinates']['href'] if 'coordinates' in self.links_dict else None
-        self.coordinates = []
-
+        self.coordinates: List[Coordinate] = []
+        self.gpx_track = []
     @staticmethod
     def _create_list_waypoints(path: List[Dict[str, Any]]) -> List[Waypoint]:
         """
@@ -252,7 +251,7 @@ class Tour:
             ],
         )
 
-    def get_coordinates(self, authentication: Authentication) -> bool:
+    def generate_coordinates(self, authentication: Authentication) -> bool:
         """
         Fetch the coordinates of the tour.
         :param authentication: The authentication object.
@@ -271,9 +270,31 @@ class Tour:
             Coordinate(
                 lat=coord_dict['lat'],
                 lon=coord_dict['lng'],
-                alt=coord_dict['alt'],
-                time=coord_dict['t'],
+                alt=coord_dict['alt'] if 'alt' in coord_dict else None,
+                time=coord_dict['t'] if 't' in coord_dict else None
             ) for coord_dict in coord_request
         ]
 
         return True
+
+    def generate_gpx_track(self, authentication: Authentication) -> bool:
+        """
+        Fetch the GPX file of the tour.
+        :param authentication: The authentication object.
+        :return: True if the GPX file was fetched successfully, False otherwise
+        """
+
+        connector = KomootConnector(
+            email=authentication.get_email_address(),
+            password=authentication.get_password(),
+        )
+        try:
+            self.gpx_track = connector.get_tour_by_id(
+                tour_identifier=self.id,
+                object_type='gpx',
+            )
+            return True
+        except Exception as e:
+            logging.error(f'Could not fetch GPX file for tour {self.id}.')
+            logging.error(e)
+            return False

@@ -15,8 +15,8 @@ class SegmentInformation:
         :param start_index_point: start index point
         :param end_index_point: end index point
         """
-        self.start_index_point = start_index_point
-        self.end_index_point = end_index_point
+        self.start_index_point: int = start_index_point
+        self.end_index_point: int = end_index_point
 
 
 class Segment:
@@ -34,6 +34,6 @@ class Segment:
         """
         if segment_type not in SegmentType.list_all():
             raise ValueError(f'Invalid segment type provided: {segment_type}. Please provide a valid segment type.')
-        self.segment_type = segment_type
-        self.segment_boundaries = segment_boundaries
-        self.reference = reference
+        self.segment_type: str = segment_type
+        self.segment_boundaries: Optional[SegmentInformation] = segment_boundaries
+        self.reference: Optional[str] = reference

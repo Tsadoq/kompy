@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 class Authentication:
     def __init__(
         self,
@@ -13,10 +16,10 @@ class Authentication:
             raise ValueError('Email address cannot be empty.')
         if not password:
             raise ValueError('Password cannot be empty.')
-        self._email_address = email_address
-        self._password = password
-        self._token = None
-        self._username = None
+        self._email_address: str = email_address
+        self._password: str = password
+        self._token: Optional[str] = None
+        self._username: Optional[str] = None
 
     def get_email_address(self) -> str:
         """
