@@ -6,13 +6,14 @@ from typing import (
     List, Optional,
 )
 
+import gpxpy
 import requests
 from dateutil import parser
 
-from kompy import KomootConnector
 from kompy.authentication import Authentication
 from kompy.constants.activities import SupportedActivities
 from kompy.constants.tour_constants import SmartTourTypes
+from kompy.constants.urls import KomootUrl
 from kompy.constants.waypoint import Waypoint
 from kompy.coordinate import Coordinate
 from kompy.difficulty import Difficulty
@@ -284,17 +285,23 @@ class Tour:
         :return: True if the GPX file was fetched successfully, False otherwise
         """
 
-        connector = KomootConnector(
-            email=authentication.get_email_address(),
-            password=authentication.get_password(),
-        )
+        params = {
+            'Type': 'application/hal+json',
+        }
+
         try:
-            self.gpx_track = connector.get_tour_by_id(
-                tour_identifier=self.id,
-                object_type='gpx',
+            response = requests.get(
+                url=KomootUrl.DOWNLOAD_TOUR_URL.format(tour_identifier=self.id) + '.gpx',
+                auth=(authentication.get_email_address(), authentication.get_password()),
+                params=params,
             )
-            return True
-        except Exception as e:
-            logging.error(f'Could not fetch GPX file for tour {self.id}.')
-            logging.error(e)
-            return False
+            if response.status_code == 403:
+                raise ConnectionError(
+                    'Connection to Komoot API failed. Please check your credentials.'
+                )
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(
+                'Connection to Komoot API failed. Please check your internet connection.'
+            )
+
+        self.gpx_track = gpxpy.parse(response.content)
