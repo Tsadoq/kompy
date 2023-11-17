@@ -164,6 +164,7 @@ class Tour:
             self.coordinates_link = self.links_dict['coordinates']['href'] if 'coordinates' in self.links_dict else None
         self.coordinates: List[Coordinate] = []
         self.gpx_track = []
+
     @staticmethod
     def _create_list_waypoints(path: List[Dict[str, Any]]) -> List[Waypoint]:
         """
