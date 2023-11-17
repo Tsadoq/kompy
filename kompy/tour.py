@@ -9,6 +9,7 @@ from typing import (
 import gpxpy
 import requests
 from dateutil import parser
+from gpxpy.gpx import GPX
 
 from kompy.authentication import Authentication
 from kompy.constants.activities import SupportedActivities
@@ -163,7 +164,7 @@ class Tour:
         if self.links_dict is not None:
             self.coordinates_link = self.links_dict['coordinates']['href'] if 'coordinates' in self.links_dict else None
         self.coordinates: List[Coordinate] = []
-        self.gpx_track = []
+        self.gpx_track: Optional[GPX] = None
 
     @staticmethod
     def _create_list_waypoints(path: List[Dict[str, Any]]) -> List[Waypoint]:
