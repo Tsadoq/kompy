@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - main
-  schedule:
-    - cron: '0 1 * * 1'
 
 
 permissions:
@@ -39,10 +37,6 @@ jobs:
       - name: Run Tests
         run: |
           python -m unittest
-        env:
-          KOMOOT_EMAIL: ${{ secrets.KOMOOT_EMAIL }}
-          KOMOOT_PASSWORD: ${{ secrets.KOMOOT_PASSWORD }}
-          KOMOOT_VALID_TOUR_ID: ${{ secrets.KOMOOT_VALID_TOUR_ID }}
       - name: Run Coverage with coverage.py
         run: |
           coverage run -m unittest

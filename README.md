@@ -7,6 +7,8 @@
 Kompy is a wrapper for [Komoot APIs](https://static.komoot.de/doc/external-api/v007/index.html) that allows you to
 download and upload your activities from Komoot.
 
+A documentation can be found [here](https://tsadoq.github.io/kompy/).
+
 ## Features
 
 - **Download Activities from Komoot**: Download your activities from Komoot to GPX, FIT or Custom Object format.

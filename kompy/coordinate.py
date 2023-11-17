@@ -21,10 +21,10 @@ class Coordinate:
         self.validate_alt(alt=alt)
         self.validate_time(time=time)
 
-        self.lat = lat
-        self.lon = lon
-        self.alt = alt
-        self.time = time
+        self.lat: float = lat
+        self.lon: float = lon
+        self.alt: Optional[float] = alt
+        self.time: Optional[float] = time
 
     @staticmethod
     def validate_lat(lat: float):
