@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Kompy"
-version = "0.0.6"
+version = "0.0.7"
 authors = [
     { name = "Matteo Villosio", email = "github@matteovillosio.com" },
 ]
 description = "A Python wrapper for Komoot APIs"
 readme = "README.md"
 requires-python = ">=3.11"
-install_requires = [
+dependencies = [
     "dateutils>=0.6.12",
     "python-dateutil>=2.8.2",
     "requests>=2.31.0",
