@@ -31,6 +31,7 @@ class PossibleWayType:
     HIKING_PATH: Final[str] = 'wt#hiking_path'
     LONG_HIKING_PATH: Final[str] = 'wt#long_hiking_path'
     ALPINE_HIKING_PATH: Final[str] = 'wt#alpine_hiking_path'
+    MOUNTAIN_HIKING_PATH: Final[str] = 'wt#mountain_hiking_path'
     TRACK: Final[str] = 'wt#track'
     WAY: Final[str] = 'wt#way'
     MINOR_ROAD: Final[str] = 'wt#minor_road'
