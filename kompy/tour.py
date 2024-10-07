@@ -153,7 +153,7 @@ class Tour:
         self.tour_information = self._create_tour_information(
             tour_information_array=tour['tour_information'],
         ) if 'tour_information' in tour else None
-        self.tour_summary = self._create_tour_summary(tour['tour_summary']) if 'tour_summary' in tour else None
+        self.summary = self._create_tour_summary(tour['summary']) if 'summary' in tour else None
         self.difficulty = Difficulty(
             grade=tour['difficulty']['grade'],
             technical_explanation=tour['difficulty']['explanation_technical'],
