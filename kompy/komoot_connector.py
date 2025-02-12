@@ -50,7 +50,7 @@ class KomootConnector:
         :param email: email address used to log in to Komoot
         :param password: password used to log in to Komoot
         """
-        if not '@' in parseaddr(email)[1]:
+        if '@' not in parseaddr(email)[1]:
             raise NotEmailError(email)
 
         self.authentication = Authentication(
