@@ -14,7 +14,7 @@ A documentation can be found [here](https://tsadoq.github.io/kompy/).
 - **Download Activities from Komoot**: Download your activities from Komoot to GPX, FIT or Custom Object format.
 - **Upload Activities to Komoot**: Upload your activities to Komoot from GPX, FIT files.
 - **Download Tours from Komoot**: Download your tours from Komoot
--
+- **Change Activities on Komoot**: Change activity type or name of your existing activity on Komoot
 
 ## Installation
 
