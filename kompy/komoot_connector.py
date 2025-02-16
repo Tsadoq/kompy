@@ -343,6 +343,35 @@ class KomootConnector:
             logging.error(f'Could not change tour with id {tour_id}. Response status code: {resp.status_code}')
             return False
 
+    def delete_tour(
+        self,
+        tour_id: int,
+    ) -> bool:
+        """
+        Delete an existing tour.
+        :param tour_id: The id of the existing tour
+        :return: Whether deleting the tour was successful
+        """
+        headers = {
+            'User-Agent': 'Kompy',
+            'Accept': 'application/hal+json,application/json',
+        }
+
+        url=KomootUrl.TOUR_URL.format(tour_identifier=tour_id)
+        resp = requests.delete(
+            url=KomootUrl.TOUR_URL.format(tour_identifier=tour_id),
+            auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+            headers=headers,
+        )
+        print(resp.text)
+        if resp.status_code == 200:
+            logging.info(f'Tour with ID {tour_id} deleted successfully.')
+            return True
+        else:
+            logging.error(f'Could not delete tour with id {tour_id}. Response status code: {resp.status_code}')
+            return False
+
+
     def _get_page_of_tours(
         self,
         query_parameters: Dict[str, Any],
