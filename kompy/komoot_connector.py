@@ -316,8 +316,6 @@ class KomootConnector:
         :param tour_name: The new name of the tour, optional
         :return: Whether changing the tour was successful
         """
-        if activity_type is None and tour_name is None:
-            raise TypeError(f'Insufficient new tour data provided: Either activity_type or tour_name has to be set.')
 
         headers = {
             'User-Agent': 'Kompy',
