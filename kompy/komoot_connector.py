@@ -327,7 +327,6 @@ class KomootConnector:
             'sport': activity_type,
             'name': tour_name
         }
-        url=KomootUrl.TOUR_URL.format(tour_identifier=tour_id)
         resp = requests.patch(
             url=KomootUrl.TOUR_URL.format(tour_identifier=tour_id),
             auth=(self.authentication.get_email_address(), self.authentication.get_password()),
@@ -355,7 +354,6 @@ class KomootConnector:
             'Accept': 'application/hal+json,application/json',
         }
 
-        url=KomootUrl.TOUR_URL.format(tour_identifier=tour_id)
         resp = requests.delete(
             url=KomootUrl.TOUR_URL.format(tour_identifier=tour_id),
             auth=(self.authentication.get_email_address(), self.authentication.get_password()),
@@ -368,7 +366,6 @@ class KomootConnector:
         else:
             logging.error(f'Could not delete tour with id {tour_id}. Response status code: {resp.status_code}')
             return False
-
 
     def _get_page_of_tours(
         self,
