@@ -94,5 +94,6 @@ class TestKomootConnector(unittest.TestCase):
         ret = self.connector.delete_tour(self.valid_id)
         self.assertEqual(ret, True)
 
+
 if __name__ == '__main__':
     unittest.main()
