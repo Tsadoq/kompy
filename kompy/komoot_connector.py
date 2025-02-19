@@ -359,7 +359,6 @@ class KomootConnector:
             auth=(self.authentication.get_email_address(), self.authentication.get_password()),
             headers=headers,
         )
-        print(resp.text)
         if resp.status_code == 200:
             logging.info(f'Tour with ID {tour_id} deleted successfully.')
             return True
