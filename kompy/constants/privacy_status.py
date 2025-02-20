@@ -7,3 +7,4 @@ class PrivacyStatus:
     """
     PUBLIC: Final[str] = 'public'
     PRIVATE: Final[str] = 'private'
+    FRIENDS: Final[str] = 'friends'

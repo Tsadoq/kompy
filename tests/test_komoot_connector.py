@@ -4,6 +4,7 @@ from unittest.mock import patch, MagicMock
 import gpxpy
 
 from kompy import KomootConnector, Tour
+from kompy.constants.privacy_status import PrivacyStatus
 from tests.resources.mock_response_builder import mock_response_builder
 
 
@@ -71,7 +72,7 @@ class TestKomootConnector(unittest.TestCase):
             json_file_path=f'{os.path.dirname(os.path.realpath(__file__))}/resources/dummy_response_with_id.json',
         )
         gpx_data = gpxpy.parse(open(f'{os.path.dirname(os.path.realpath(__file__))}/resources/example.gpx'))
-        ret = self.connector.upload_tour(gpx_data, "Example gpx", "hike")
+        ret = self.connector.upload_tour(gpx_data, "Example gpx", "hike", PrivacyStatus.PRIVATE)
         self.assertEqual(ret, True)
 
     @patch('requests.patch')
@@ -81,7 +82,7 @@ class TestKomootConnector(unittest.TestCase):
             mock_status_code=200,
             json_file_path=f'{os.path.dirname(os.path.realpath(__file__))}/resources/dummy_response_with_id.json',
         )
-        ret = self.connector.change_tour(self.valid_id, "test name", "test type")
+        ret = self.connector.change_tour(self.valid_id, "test name", "test type", PrivacyStatus.PRIVATE)
         self.assertEqual(ret, True)
 
     @patch('requests.delete')
