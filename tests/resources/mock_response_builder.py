@@ -17,7 +17,7 @@ def mock_response_builder(
     :return:
     """
     mock_response = Response()
-    mock_response.status_code = mock_status_code,
+    mock_response.status_code = mock_status_code
     mock_response._content = json.dumps(
         json.loads(open(json_file_path).read())
     ).encode('utf-8')

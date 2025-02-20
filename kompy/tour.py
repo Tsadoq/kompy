@@ -293,7 +293,7 @@ class Tour:
 
         try:
             response = requests.get(
-                url=KomootUrl.DOWNLOAD_TOUR_URL.format(tour_identifier=self.id) + '.gpx',
+                url=KomootUrl.TOUR_URL.format(tour_identifier=self.id) + '.gpx',
                 auth=(authentication.get_email_address(), authentication.get_password()),
                 params=params,
             )

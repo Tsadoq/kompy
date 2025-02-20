@@ -227,7 +227,7 @@ class KomootConnector:
 
         try:
             response = requests.get(
-                url=KomootUrl.DOWNLOAD_TOUR_URL.format(tour_identifier=tour_identifier) + format_append,
+                url=KomootUrl.TOUR_URL.format(tour_identifier=tour_identifier) + format_append,
                 auth=(self.authentication.get_email_address(), self.authentication.get_password()),
                 params=params,
             )
@@ -300,7 +300,70 @@ class KomootConnector:
             logging.warning(f'Tour not created due to the same tour being already present with ID: {resp.json()["id"]}')
             return True
         else:
-            logging.error(f'Could not upload tour Failed: {resp.status_code}')
+            logging.error(f'Could not upload tour. Response status code: {resp.status_code}')
+            return False
+
+    def change_tour(
+        self,
+        tour_id: int,
+        activity_type: Optional[str] = None,
+        tour_name: Optional[str] = None
+    ) -> bool:
+        """
+        Change an existing tour.
+        :param tour_id: The id of the existing tour
+        :param activity_type: The new sport type, one of SupportedActivities, optional
+        :param tour_name: The new name of the tour, optional
+        :return: Whether changing the tour was successful
+        """
+
+        headers = {
+            'User-Agent': 'Kompy',
+            'Accept': 'application/hal+json,application/json',
+            'Content-Type': 'application/json'
+        }
+
+        json = {
+            'sport': activity_type,
+            'name': tour_name
+        }
+        resp = requests.patch(
+            url=KomootUrl.TOUR_URL.format(tour_identifier=tour_id),
+            auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+            headers=headers,
+            json=json,
+        )
+        if resp.status_code == 200:
+            logging.info(f'Tour with ID {tour_id} changed successfully.')
+            return True
+        else:
+            logging.error(f'Could not change tour with id {tour_id}. Response status code: {resp.status_code}')
+            return False
+
+    def delete_tour(
+        self,
+        tour_id: int,
+    ) -> bool:
+        """
+        Delete an existing tour.
+        :param tour_id: The id of the existing tour
+        :return: Whether deleting the tour was successful
+        """
+        headers = {
+            'User-Agent': 'Kompy',
+            'Accept': 'application/hal+json,application/json',
+        }
+
+        resp = requests.delete(
+            url=KomootUrl.TOUR_URL.format(tour_identifier=tour_id),
+            auth=(self.authentication.get_email_address(), self.authentication.get_password()),
+            headers=headers,
+        )
+        if resp.status_code == 200:
+            logging.info(f'Tour with ID {tour_id} deleted successfully.')
+            return True
+        else:
+            logging.error(f'Could not delete tour with id {tour_id}. Response status code: {resp.status_code}')
             return False
 
     def _get_page_of_tours(

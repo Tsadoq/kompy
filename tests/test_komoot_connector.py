@@ -1,6 +1,7 @@
 import os
 import unittest
 from unittest.mock import patch, MagicMock
+import gpxpy
 
 from kompy import KomootConnector, Tour
 from tests.resources.mock_response_builder import mock_response_builder
@@ -61,6 +62,37 @@ class TestKomootConnector(unittest.TestCase):
         )
         tour = self.connector.get_tour_by_id(tour_identifier=self.valid_id)
         self.assertIsInstance(tour, Tour)
+
+    @patch('requests.post')
+    def test_upload_tour(self, mock_get: MagicMock):
+        mock_response_builder(
+            mock_get=mock_get,
+            mock_status_code=201,
+            json_file_path=f'{os.path.dirname(os.path.realpath(__file__))}/resources/dummy_response_with_id.json',
+        )
+        gpx_data = gpxpy.parse(open(f'{os.path.dirname(os.path.realpath(__file__))}/resources/example.gpx'))
+        ret = self.connector.upload_tour(gpx_data, "Example gpx", "hike")
+        self.assertEqual(ret, True)
+
+    @patch('requests.patch')
+    def test_change_tour(self, mock_get: MagicMock):
+        mock_response_builder(
+            mock_get=mock_get,
+            mock_status_code=200,
+            json_file_path=f'{os.path.dirname(os.path.realpath(__file__))}/resources/dummy_response_with_id.json',
+        )
+        ret = self.connector.change_tour(self.valid_id, "test name", "test type")
+        self.assertEqual(ret, True)
+
+    @patch('requests.delete')
+    def test_delete_tour(self, mock_get: MagicMock):
+        mock_response_builder(
+            mock_get=mock_get,
+            mock_status_code=200,
+            json_file_path=f'{os.path.dirname(os.path.realpath(__file__))}/resources/dummy_response_with_id.json',
+        )
+        ret = self.connector.delete_tour(self.valid_id)
+        self.assertEqual(ret, True)
 
 
 if __name__ == '__main__':
