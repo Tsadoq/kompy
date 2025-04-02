@@ -261,6 +261,7 @@ class KomootConnector:
         activity_type: str,
         tour_name: str,
         time_in_motion: Optional[int] = None,
+        status: Optional[str] = PrivacyStatus.FRIENDS
     ) -> bool:
         """
         Upload a tour. It can be either a GPX or FIT file.
@@ -270,6 +271,7 @@ class KomootConnector:
         :param time_in_motion: Only exists for GPX files, in other file types this can be specified in the file itself.
         The time in motion in seconds. This is the time the user was active, so the overall duration minus the pauses.
         It must not be larger than the overall duration of the tour.
+        :param status: The privacy status of the tour, optional. If not provided, PrivacyStatus.FRIENDS will be used.
         :return: Whether the upload was successful
         """
         headers = {
@@ -277,6 +279,7 @@ class KomootConnector:
         }
         params = {
             'sport': activity_type,
+            'status': status,
         }
         if isinstance(tour_object, GPX):
             params['data_type'] = 'gpx'
@@ -307,13 +310,15 @@ class KomootConnector:
         self,
         tour_id: int,
         activity_type: Optional[str] = None,
-        tour_name: Optional[str] = None
+        tour_name: Optional[str] = None,
+        status: Optional[str] = None
     ) -> bool:
         """
         Change an existing tour.
         :param tour_id: The id of the existing tour
         :param activity_type: The new sport type, one of SupportedActivities, optional
         :param tour_name: The new name of the tour, optional
+        :param status: The new privacy status of the existing tour, one of PrivacyStatus, optional
         :return: Whether changing the tour was successful
         """
 
@@ -325,8 +330,10 @@ class KomootConnector:
 
         json = {
             'sport': activity_type,
-            'name': tour_name
+            'name': tour_name,
         }
+        if status is not None:
+            json['status'] = status
         resp = requests.patch(
             url=KomootUrl.TOUR_URL.format(tour_identifier=tour_id),
             auth=(self.authentication.get_email_address(), self.authentication.get_password()),
