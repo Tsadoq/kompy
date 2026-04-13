@@ -78,6 +78,16 @@ class KomootConnector:
         )
         logger.info(f'Logged in as {self.authentication.get_username()}.')
 
+    @staticmethod
+    def _validate_sport_types(sport_types: List[str]) -> None:
+        if not isinstance(sport_types, list):
+            raise TypeError(f'Invalid sport types provided: {sport_types}. Please provide a list of strings.')
+        for sport_type in sport_types:
+            if not isinstance(sport_type, str):
+                raise TypeError(f'Invalid sport type provided: {sport_type}. Please provide a string.')
+            if sport_type not in SupportedActivities.list_all():
+                raise ValueError(f'Invalid sport type provided: {sport_type}. Please provide a valid sport type.')
+
     def get_tours(
         self,
         limit: Optional[int] = None,
@@ -137,13 +147,7 @@ class KomootConnector:
         if max_distance is not None and center is None:
             logger.warning('Max distance provided but no center, ignoring max distance.')
         if sport_types is not None:
-            if not isinstance(sport_types, list):
-                raise TypeError(f'Invalid sport types provided: {sport_types}. Please provide a list of strings.')
-            for sport_type in sport_types:
-                if not isinstance(sport_type, str):
-                    raise TypeError(f'Invalid sport type provided: {sport_type}. Please provide a string.')
-                if sport_type not in SupportedActivities.list_all():
-                    raise ValueError(f'Invalid sport type provided: {sport_type}. Please provide a valid sport type.')
+            self._validate_sport_types(sport_types)
         if start_date is not None:
             start_date = parser.parse(start_date)
         if end_date is not None:
@@ -191,9 +195,24 @@ class KomootConnector:
             current_page = response['page']['number'] + 1
             logger.info(f'Fetched page {current_page} of {max_page}.')
             fetch_more = (current_page < max_page) if limit is None else False
-        tour_objects = [
-            Tour(tour_dict) for tour_dict in tours
-        ]
+        # Skip tours that cannot be parsed into Tour objects, but surface
+        # an aggregate error if the API returned tours and none could be parsed.
+        tour_objects = []
+        parse_failures = []
+        for tour_dict in tours:
+            try:
+                tour_objects.append(Tour(tour_dict))
+            except (KeyError, TypeError, ValueError) as e:
+                tour_id = tour_dict.get('id', 'unknown') if isinstance(tour_dict, dict) else 'unknown'
+                parse_failures.append((tour_id, str(e)))
+                logger.exception(f'Failed to parse tour {tour_id}: {e}')
+        if tours and not tour_objects:
+            failed_tour_ids = ', '.join(str(tour_id) for tour_id, _ in parse_failures)
+            raise ValueError(
+                f'Failed to parse all {len(tours)} returned tours. '
+                f'This may indicate an API/schema change. '
+                f'Failed tour ids: {failed_tour_ids}'
+            )
         return tour_objects
 
     def get_tour_by_id(

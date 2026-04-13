@@ -14,6 +14,7 @@ class SupportedActivities:
     # Main sport types
     HIKING: Final[str] = 'hike'
     MOUNTAINEERING: Final[str] = 'mountaineering'
+    MOUNTAINEERING_ADVANCED: Final[str] = 'mountaineering_advanced'
     ROAD_CYCLING: Final[str] = 'racebike'
     E_ROAD_CYCLING: Final[str] = 'e_racebike'
     BIKE_TOURING: Final[str] = 'touringbicycle'
