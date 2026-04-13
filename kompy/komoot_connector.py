@@ -191,14 +191,24 @@ class KomootConnector:
             current_page = response['page']['number'] + 1
             logger.info(f'Fetched page {current_page} of {max_page}.')
             fetch_more = (current_page < max_page) if limit is None else False
-        # Skip tours that cannot be parsed into Tour objects.
+        # Skip tours that cannot be parsed into Tour objects, but surface
+        # an aggregate error if the API returned tours and none could be parsed.
         tour_objects = []
+        parse_failures = []
         for tour_dict in tours:
             try:
                 tour_objects.append(Tour(tour_dict))
             except (KeyError, TypeError, ValueError) as e:
                 tour_id = tour_dict.get('id', 'unknown') if isinstance(tour_dict, dict) else 'unknown'
+                parse_failures.append((tour_id, str(e)))
                 logger.exception(f'Failed to parse tour {tour_id}: {e}')
+        if tours and not tour_objects:
+            failed_tour_ids = ', '.join(str(tour_id) for tour_id, _ in parse_failures)
+            raise ValueError(
+                f'Failed to parse all {len(tours)} returned tours. '
+                f'This may indicate an API/schema change. '
+                f'Failed tour ids: {failed_tour_ids}'
+            )
         return tour_objects
 
     def get_tour_by_id(
