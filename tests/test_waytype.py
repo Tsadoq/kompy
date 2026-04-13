@@ -26,9 +26,21 @@ class TestWayType(unittest.TestCase):
 
     def test_initialization_with_invalid_amount(self):
         """
-        Test initialization with invalid amounts (less than 0, equal to 0, greater than 1)
+        Test initialization with invalid amounts (less than 0 or greater than 1)
+        and valid boundary amounts (0 and 1)
         """
         valid_way_type = PossibleWayType.list_all()[0]
+
+        way_type_zero = WayType(valid_way_type, 0)
+        self.assertIsInstance(way_type_zero, WayType)
+        self.assertEqual(way_type_zero.type, valid_way_type)
+        self.assertEqual(way_type_zero.amount, 0)
+
+        way_type_one = WayType(valid_way_type, 1)
+        self.assertIsInstance(way_type_one, WayType)
+        self.assertEqual(way_type_one.type, valid_way_type)
+        self.assertEqual(way_type_one.amount, 1)
+
         for amount in [-1, 2]:
             with self.assertRaises(ValueError):
                 WayType(valid_way_type, amount)
