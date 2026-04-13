@@ -12,6 +12,7 @@ class PossibleWayType:
     FERRY: Final[str] = 'wt#ferry'
     ALPINE_BIKE_D9: Final[str] = 'wt#alpine_bike_d9'
     ALPINE_BIKE_D8: Final[str] = 'wt#alpine_bike_d8'
+    ALPINE_BIKE: Final[str] = 'wt#alpine_bike'
     TRAIL_D7: Final[str] = 'wt#trail_d7'
     TRAIL_D6: Final[str] = 'wt#trail_d6'
     TRAIL_D5: Final[str] = 'wt#trail_d5'

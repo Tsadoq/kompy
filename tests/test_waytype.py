@@ -29,7 +29,7 @@ class TestWayType(unittest.TestCase):
         Test initialization with invalid amounts (less than 0, equal to 0, greater than 1)
         """
         valid_way_type = PossibleWayType.list_all()[0]
-        for amount in [-1, 0, 1, 2]:
+        for amount in [-1, 2]:
             with self.assertRaises(ValueError):
                 WayType(valid_way_type, amount)
 

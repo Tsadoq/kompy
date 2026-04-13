@@ -191,9 +191,12 @@ class KomootConnector:
             current_page = response['page']['number'] + 1
             logger.info(f'Fetched page {current_page} of {max_page}.')
             fetch_more = (current_page < max_page) if limit is None else False
-        tour_objects = [
-            Tour(tour_dict) for tour_dict in tours
-        ]
+        tour_objects = []
+        for tour_dict in tours:
+            try:
+                tour_objects.append(Tour(tour_dict))
+            except Exception as e:
+                logger.warning(f'Failed to parse tour {tour_dict.get("id", "unknown")}: {e}')
         return tour_objects
 
     def get_tour_by_id(
