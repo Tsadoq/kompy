@@ -106,7 +106,8 @@ class TestKomootConnector(unittest.TestCase):
     @patch('requests.get')
     def test_get_tours_skips_malformed_entries(self, mock_get: MagicMock):
         valid_tours = [_minimal_valid_tour(1), _minimal_valid_tour(2)]
-        malformed_tour = {'id': '999', 'sport': 'UNKNOWN_SPORT_XYZ'}  # missing required fields
+        malformed_tour = _minimal_valid_tour(999)
+        malformed_tour['sport'] = 'UNKNOWN_SPORT_XYZ'
         page_response = {
             '_embedded': {'tours': valid_tours + [malformed_tour]},
             'page': {'totalPages': 1, 'number': 0},
