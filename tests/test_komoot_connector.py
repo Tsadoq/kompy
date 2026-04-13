@@ -1,3 +1,4 @@
+import json
 import os
 import unittest
 from unittest.mock import patch, MagicMock
@@ -6,6 +7,24 @@ import gpxpy
 from kompy import KomootConnector, Tour
 from kompy.constants.privacy_status import PrivacyStatus
 from tests.resources.mock_response_builder import mock_response_builder
+
+
+def _minimal_valid_tour(tour_id: int) -> dict:
+    return {
+        'id': str(tour_id),
+        'type': 'tour_recorded',
+        'date': '2023-11-12T10:05:49.000Z',
+        'changed_at': '2023-11-12T11:00:00.000Z',
+        'name': f'Tour {tour_id}',
+        'kcal_active': 0,
+        'kcal_resting': 0,
+        'start_point': {'lat': 44.88, 'lng': 7.33, 'alt': 366.0},
+        'distance': 10000.0,
+        'duration': 3600,
+        'elevation_up': 100.0,
+        'elevation_down': 100.0,
+        'sport': 'jogging',
+    }
 
 
 class TestKomootConnector(unittest.TestCase):
@@ -84,6 +103,26 @@ class TestKomootConnector(unittest.TestCase):
         )
         ret = self.connector.change_tour(self.valid_id, "test name", "test type", PrivacyStatus.PRIVATE)
         self.assertEqual(ret, True)
+
+    @patch('requests.get')
+    def test_get_tours_skips_malformed_entries(self, mock_get: MagicMock):
+        valid_tours = [_minimal_valid_tour(1), _minimal_valid_tour(2)]
+        malformed_tour = {'id': '999', 'sport': 'UNKNOWN_SPORT_XYZ'}  # missing required fields
+        page_response = {
+            '_embedded': {'tours': valid_tours + [malformed_tour]},
+            'page': {'totalPages': 1, 'number': 0},
+        }
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = page_response
+        mock_get.return_value = mock_response
+
+        tours = self.connector.get_tours(limit=10)
+
+        self.assertIsInstance(tours, list)
+        self.assertEqual(len(tours), 2)
+        for tour in tours:
+            self.assertIsInstance(tour, Tour)
 
     @patch('requests.delete')
     def test_delete_tour(self, mock_get: MagicMock):
