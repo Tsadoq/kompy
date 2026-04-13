@@ -3,5 +3,5 @@ python-dateutil~=2.8.2
 requests~=2.32.0
 pillow~=10.3.0
 gpxpy==1.6.1
-fit_tool==0.9.13
+fit_tool==0.9.14
 pdoc==14.5.1

@@ -78,6 +78,16 @@ class KomootConnector:
         )
         logger.info(f'Logged in as {self.authentication.get_username()}.')
 
+    @staticmethod
+    def _validate_sport_types(sport_types: List[str]) -> None:
+        if not isinstance(sport_types, list):
+            raise TypeError(f'Invalid sport types provided: {sport_types}. Please provide a list of strings.')
+        for sport_type in sport_types:
+            if not isinstance(sport_type, str):
+                raise TypeError(f'Invalid sport type provided: {sport_type}. Please provide a string.')
+            if sport_type not in SupportedActivities.list_all():
+                raise ValueError(f'Invalid sport type provided: {sport_type}. Please provide a valid sport type.')
+
     def get_tours(
         self,
         limit: Optional[int] = None,
@@ -137,13 +147,7 @@ class KomootConnector:
         if max_distance is not None and center is None:
             logger.warning('Max distance provided but no center, ignoring max distance.')
         if sport_types is not None:
-            if not isinstance(sport_types, list):
-                raise TypeError(f'Invalid sport types provided: {sport_types}. Please provide a list of strings.')
-            for sport_type in sport_types:
-                if not isinstance(sport_type, str):
-                    raise TypeError(f'Invalid sport type provided: {sport_type}. Please provide a string.')
-                if sport_type not in SupportedActivities.list_all():
-                    raise ValueError(f'Invalid sport type provided: {sport_type}. Please provide a valid sport type.')
+            self._validate_sport_types(sport_types)
         if start_date is not None:
             start_date = parser.parse(start_date)
         if end_date is not None:
