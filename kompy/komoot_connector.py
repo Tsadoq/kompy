@@ -197,7 +197,8 @@ class KomootConnector:
             try:
                 tour_objects.append(Tour(tour_dict))
             except (KeyError, TypeError, ValueError) as e:
-                logger.exception(f'Failed to parse tour {tour_dict.get("id", "unknown")}: {e}')
+                tour_id = tour_dict.get('id', 'unknown') if isinstance(tour_dict, dict) else 'unknown'
+                logger.exception(f'Failed to parse tour {tour_id}: {e}')
         return tour_objects
 
     def get_tour_by_id(
