@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "Kompy"
-version = "0.0.12"
+name = "kompy"
+version = "0.0.13"
 authors = [
     { name = "Matteo Villosio", email = "github@matteovillosio.com" },
 ]
