@@ -7,4 +7,4 @@ class KomootUrl:
     TOUR_URL: Final[str] = 'https://api.komoot.de/v007/tours/{tour_identifier}'
     UPLOAD_TOUR_URL: Final[str] = 'https://api.komoot.de/v007/tours/?data_type={object_type}'
     ROUTING_URL: Final[str] = 'https://www.komoot.com/api/routing/tour'
-    SAVE_TOUR_URL: Final[str] = 'https://www.komoot.com/api/v007/tours/'
+    SAVE_TOUR_URL: Final[str] = 'https://api.komoot.de/v007/tours/'
