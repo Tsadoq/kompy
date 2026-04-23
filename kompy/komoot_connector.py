@@ -344,7 +344,9 @@ class KomootConnector:
         :param waypoints: List of waypoint dicts with 'lat' and 'lng' keys,
             e.g. [{'lat': 53.14, 'lng': 8.21}, ...]
         :param tour_name: Name of the planned tour
-        :param sport: Sport type, one of SupportedActivities (default: 'racebike')
+        :param sport: Sport type, one of SupportedActivities, e.g. 'racebike', 'touringbicycle',
+            'mtb', 'hike', 'jogging', 'mtb_easy' (gravel). See SupportedActivities for full list.
+            Default: 'racebike'
         :param constitution: Fitness level 1-5 (default: 3)
         :param date: ISO date string for the planned tour (default: now)
         :param status: Privacy status (default: PrivacyStatus.FRIENDS)
@@ -354,6 +356,12 @@ class KomootConnector:
         """
         if len(waypoints) < 2:
             raise ValueError('At least 2 waypoints are required to plan a tour.')
+
+        if sport not in SupportedActivities.list_all():
+            raise ValueError(
+                f'Invalid sport type: {sport}. '
+                f'Supported: {", ".join(SupportedActivities.list_all())}'
+            )
 
         if date is None:
             from datetime import datetime, timezone
