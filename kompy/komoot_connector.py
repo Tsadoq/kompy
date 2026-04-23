@@ -325,6 +325,116 @@ class KomootConnector:
             logging.error(f'Could not upload tour. Response status code: {resp.status_code}')
             return False
 
+    def plan_tour(
+        self,
+        waypoints: List[Dict[str, float]],
+        tour_name: str,
+        sport: str = 'racebike',
+        constitution: int = 3,
+        date: Optional[str] = None,
+        status: Optional[str] = PrivacyStatus.FRIENDS,
+    ) -> Dict[str, Any]:
+        """
+        Plan a tour using Komoot's routing engine and save it as a planned tour.
+
+        This uses the same API as Komoot's web-based route planner. The tour
+        is routed by Komoot between the given waypoints and saved as a
+        planned tour (not a recorded tour).
+
+        :param waypoints: List of waypoint dicts with 'lat' and 'lng' keys,
+            e.g. [{'lat': 53.14, 'lng': 8.21}, ...]
+        :param tour_name: Name of the planned tour
+        :param sport: Sport type, one of SupportedActivities (default: 'racebike')
+        :param constitution: Fitness level 1-5 (default: 3)
+        :param date: ISO date string for the planned tour (default: now)
+        :param status: Privacy status (default: PrivacyStatus.FRIENDS)
+        :return: Dict with 'tour_id', 'url', 'distance', 'duration', 'type'
+        :raises ConnectionError: If the API request fails
+        :raises ValueError: If fewer than 2 waypoints are provided
+        """
+        if len(waypoints) < 2:
+            raise ValueError('At least 2 waypoints are required to plan a tour.')
+
+        if date is None:
+            from datetime import datetime, timezone
+            date = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.000Z')
+
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (kompy)',
+            'Content-Type': 'application/json',
+            'Accept': 'application/hal+json,application/json',
+        }
+        auth = (self.authentication.get_email_address(), self.authentication.get_password())
+
+        # Step 1: Route the tour via Komoot's routing engine
+        path = [{'location': wp} for wp in waypoints]
+        segments = [{'type': 'Routed', 'geometry': []} for _ in range(len(waypoints) - 1)]
+
+        routing_payload = {
+            'sport': sport,
+            'constitution': constitution,
+            'path': path,
+            'segments': segments,
+        }
+
+        routing_resp = requests.post(
+            url=KomootUrl.ROUTING_URL,
+            params={
+                'sport': sport,
+                '_embedded': 'coordinates,way_types,surfaces,directions',
+            },
+            auth=auth,
+            headers=headers,
+            json=routing_payload,
+        )
+
+        if routing_resp.status_code != 200:
+            raise ConnectionError(
+                f'Komoot routing failed (status {routing_resp.status_code}): '
+                f'{routing_resp.text[:500]}'
+            )
+
+        route = routing_resp.json()
+        logger.info(
+            f'Route calculated: {round(route["distance"] / 1000, 1)} km, '
+            f'{round(route["duration"] / 60)} min'
+        )
+
+        # Step 2: Save as planned tour using the full routing response
+        save_payload = route.copy()
+        save_payload['status'] = status
+        save_payload['type'] = TourTypes.TOUR_PLANNED
+        save_payload['name'] = tour_name
+        save_payload['date'] = date
+        save_payload['custom_tags'] = []
+        save_payload.pop('result_status', None)
+
+        save_resp = requests.post(
+            url=KomootUrl.SAVE_TOUR_URL,
+            auth=auth,
+            headers=headers,
+            json=save_payload,
+        )
+
+        if save_resp.status_code not in (200, 201):
+            raise ConnectionError(
+                f'Komoot save failed (status {save_resp.status_code}): '
+                f'{save_resp.text[:500]}'
+            )
+
+        data = save_resp.json()
+        tour_id = data.get('id')
+        logger.info(f'Planned tour saved with ID: {tour_id}')
+
+        return {
+            'tour_id': tour_id,
+            'url': f'https://www.komoot.com/tour/{tour_id}',
+            'distance': round(data.get('distance', 0) / 1000, 1),
+            'duration': round(data.get('duration', 0) / 60),
+            'type': data.get('type'),
+            'name': data.get('name'),
+        }
+
     def change_tour(
         self,
         tour_id: int,
