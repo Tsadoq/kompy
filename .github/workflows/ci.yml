@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Cancel superseded runs on PRs, but let every push to main finish.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  FORCE_COLOR: "1"
+  UV_NO_DEFAULT_GROUPS: "1" # each job installs only the dependency groups it needs
+
+jobs:
+  lint:
+    name: Lint & type-check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          python-version: "3.11"
+      - run: uv sync --locked --group lint
+      - name: ruff check
+        run: uv run --no-sync ruff check --output-format=github .
+      - name: ruff format
+        run: uv run --no-sync ruff format --check --diff .
+      - name: mypy
+        run: uv run --no-sync mypy
+
+  test:
+    name: Test (py${{ matrix.python-version }}, ${{ matrix.os }}${{ matrix.resolution == 'lowest-direct' && ', lowest deps' || '' }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15 # a hung test (e.g. an endless pagination loop) must fail, not block CI for hours
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+        resolution: [locked]
+        include:
+          - { os: macos-latest, python-version: "3.13", resolution: locked }
+          - { os: windows-latest, python-version: "3.13", resolution: locked }
+          # Proves that the lower bounds declared in [project.dependencies] really work.
+          - { os: ubuntu-latest, python-version: "3.11", resolution: lowest-direct }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Test with locked dependencies
+        if: matrix.resolution == 'locked'
+        run: |
+          uv sync --locked --group test
+          uv run --no-sync pytest --cov --cov-report=term-missing
+      - name: Test with the lowest allowed dependencies
+        if: matrix.resolution == 'lowest-direct'
+        run: uv run --isolated --resolution lowest-direct --group test pytest
+
+  build:
+    name: Build & check distribution
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+      - run: uv build --build-constraint build-constraints.txt # exact build backend
+      - run: uvx twine==7.0.0 check --strict dist/*
+      - name: Check wheel contents
+        run: |
+          contents="$(unzip -Z1 dist/*.whl)"
+          echo "$contents"
+          grep -qx 'kompy/py.typed' <<< "$contents" || { echo "::error::py.typed missing from wheel"; exit 1; }
+          if grep -q '^tests/' <<< "$contents"; then echo "::error::tests/ leaked into wheel"; exit 1; fi
+      - name: Smoke-test the wheel in a clean environment
+        run: uv run --isolated --no-project --with dist/*.whl python -c "import kompy; print(kompy.__version__)"
+
+  # Single status check to mark as "required" in branch protection.
+  all-green:
+    name: All checks passed
+    if: always()
+    needs: [lint, test, build]
+    runs-on: ubuntu-latest
+    steps:
+      - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1

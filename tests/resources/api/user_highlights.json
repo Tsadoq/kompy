@@ -1,0 +1,196 @@
+{
+ "_embedded": {
+  "items": [
+   {
+    "id": 6424706,
+    "type": "highlight_point",
+    "base_name": "Sample base_name",
+    "name": "Sample name",
+    "created_at": "2024-02-18T13:32:02.896Z",
+    "changed_at": "2026-02-12T17:53:21.035Z",
+    "sport": "hike",
+    "routable": true,
+    "start_point": {
+     "lat": 46.008376,
+     "lng": 8.005565,
+     "alt": 1207
+    },
+    "mid_point": {
+     "lat": 46.006423,
+     "lng": 8.001859,
+     "alt": 1207
+    },
+    "end_point": {
+     "lat": 46.009925,
+     "lng": 8.008599,
+     "alt": 1207
+    },
+    "distance": 0,
+    "elevation_up": 0,
+    "elevation_down": 0,
+    "score": 0.76,
+    "poor_quality": true,
+    "category": "viewpoint",
+    "categories": [
+     "viewpoint",
+     "intermediate",
+     "forest"
+    ],
+    "flagged": false,
+    "sport_scores": {
+     "mtb": 0.39,
+     "hike": 0.76,
+     "sled": 0.17,
+     "e_mtb": 0.17,
+     "nordic": 0.17,
+     "skaten": 0.17,
+     "jogging": 0.17,
+     "skitour": 0.17,
+     "citybike": 0.17,
+     "climbing": 0.17,
+     "mtb_easy": 0.3,
+     "racebike": 0.17,
+     "skialpin": 0.17,
+     "snowshoe": 0.17,
+     "unicycle": 0.17,
+     "snowboard": 0.17,
+     "e_mtb_easy": 0.17,
+     "e_racebike": 0.17,
+     "downhillbike": 0.17,
+     "mtb_advanced": 0.17,
+     "nordicwalking": 0.17,
+     "e_mtb_advanced": 0.17,
+     "mountaineering": 0.17,
+     "touringbicycle": 0.17,
+     "e_touringbicycle": 0.17,
+     "mountaineering_advanced": 0.17
+    },
+    "editorial": false,
+    "_links": {
+     "self": {
+      "href": "https://api.komoot.de/v007/highlights/6424706"
+     },
+     "seasonality": {
+      "href": "https://api.komoot.de/v007/highlights/6424706/seasonality"
+     },
+     "tips": {
+      "href": "https://api.komoot.de/v007/highlights/6424706/tips/"
+     },
+     "images": {
+      "href": "https://api.komoot.de/v007/highlights/6424706/images/"
+     },
+     "recommenders": {
+      "href": "https://api.komoot.de/v007/highlights/6424706/recommenders/"
+     },
+     "creator": {
+      "href": "https://api.komoot.de/v007/users/930381385967/profile_embedded"
+     },
+     "discover_tours": {
+      "href": "https://api.komoot.de/v007/discover_tours/for_highlight/6424706/"
+     },
+     "bookmark": {
+      "href": "https://api.komoot.de/v007/highlights/6424706/bookmark/{username}",
+      "templated": true
+     },
+     "recommendation": {
+      "href": "https://api.komoot.de/v007/highlights/6424706/recommendation/{username}",
+      "templated": true
+     },
+     "seo_regions": {
+      "href": "https://api.komoot.de/v007/highlights/6424706/seo_regions/"
+     },
+     "content": {
+      "href": "https://api.komoot.de/v007/highlights/6424706/content"
+     },
+     "front_image": {
+      "href": "https://api.komoot.de/v007/highlights/6424706/images/69115777"
+     }
+    },
+    "_embedded": {
+     "creator": {
+      "username": "930381385967",
+      "avatar": {
+       "src": "https://d2exd72xrrp1s7.cloudfront.net/www/1d/1duym6wxi042q9ck7eai8mbzi34muec2a-u930381385967-full/19d67191fe8?width={width}&height={height}&crop={crop}",
+       "templated": true,
+       "type": "image/*"
+      },
+      "status": "public",
+      "_links": {
+       "self": {
+        "href": "https://api.komoot.de/v007/users/930381385967/profile_embedded"
+       },
+       "relation": {
+        "href": "https://api.komoot.de/v007/users/{username}/relations/930381385967",
+        "templated": true
+       }
+      },
+      "display_name": "Sample display_name",
+      "is_premium": false
+     },
+     "front_image": {
+      "id": 69115777,
+      "src": "https://d2exd72xrrp1s7.cloudfront.net/www/000/1k8/7i/7izsu011kxxda9h7j61cif1o4vw93v0i-uhi69115777/0?width={width}&height={height}&crop={crop}",
+      "rating": {
+       "up": 0,
+       "down": 0
+      },
+      "templated": true,
+      "highlight_id": 6424706,
+      "created_at": "2024-02-18T13:32:03.134Z",
+      "client_hash": "e61b6a21806b8730ea7d4a03829577e756817c3142c07b8c1adb82ba82f29730",
+      "sport": "hike",
+      "type": "image/*",
+      "_links": {
+       "self": {
+        "href": "https://api.komoot.de/v007/highlights/6424706/images/69115777"
+       },
+       "creator": {
+        "href": "https://api.komoot.de/v007/users/930381385967/profile_embedded"
+       },
+       "highlight": {
+        "href": "https://api.komoot.de/v007/highlights/6424706"
+       },
+       "rating": {
+        "href": "https://api.komoot.de/v007/highlights/6424706/images/69115777/rating/{username}",
+        "templated": true
+       }
+      },
+      "_embedded": {
+       "creator": {
+        "username": "930381385967",
+        "avatar": {
+         "src": "https://d2exd72xrrp1s7.cloudfront.net/www/1d/1duym6wxi042q9ck7eai8mbzi34muec2a-u930381385967-full/19d67191fe8?width={width}&height={height}&crop={crop}",
+         "templated": true,
+         "type": "image/*"
+        },
+        "status": "public",
+        "_links": {
+         "self": {
+          "href": "https://api.komoot.de/v007/users/930381385967/profile_embedded"
+         },
+         "relation": {
+          "href": "https://api.komoot.de/v007/users/{username}/relations/930381385967",
+          "templated": true
+         }
+        },
+        "display_name": "Sample display_name",
+        "is_premium": false
+       }
+      }
+     }
+    }
+   }
+  ]
+ },
+ "_links": {
+  "self": {
+   "href": "https://api.komoot.de/v007/users/1234567890/highlights/?limit=3"
+  }
+ },
+ "page": {
+  "size": 3,
+  "totalElements": 1,
+  "totalPages": 1,
+  "number": 0
+ }
+}

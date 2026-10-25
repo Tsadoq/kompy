@@ -1,0 +1,13 @@
+{
+ "_links": {
+  "self": {
+   "href": "https://api.komoot.de/v007/tours/1000000001/cover_images/"
+  }
+ },
+ "page": {
+  "size": 24,
+  "totalElements": 0,
+  "totalPages": 0,
+  "number": 0
+ }
+}

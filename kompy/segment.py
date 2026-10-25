@@ -1,39 +1,98 @@
-from typing import Optional
+"""Segments of a planned tour."""
 
-from kompy.constants import SegmentType
+from __future__ import annotations
+
+from collections.abc import Mapping
+from dataclasses import dataclass
+from typing import Any, Self
+
+from kompy._parsing import coerce_enum, optional_str, require_int, require_str
+from kompy.constants.segment_type import SegmentType
+
+__all__ = ['AnnotatedSegment', 'Segment', 'SegmentInformation']
 
 
+@dataclass
 class SegmentInformation:
+    """
+    Boundaries of a stretch of a tour, as indices into the tour's coordinates.
 
-    def __init__(
-        self,
-        start_index_point: int,
-        end_index_point: int,
-    ):
+    :param start_index_point: Index of the first coordinate of the stretch.
+    :param end_index_point: Index of the last coordinate of the stretch.
+    """
+
+    start_index_point: int
+    end_index_point: int
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any]) -> Self:
         """
-        Initialize the segment information.
-        :param start_index_point: start index point
-        :param end_index_point: end index point
+        Build the boundaries from the API shape ``{"from": 0, "to": 19}``.
+
+        :param data: A payload with ``from`` and ``to`` indices.
+        :return: The parsed boundaries.
+        :raises KeyError: If ``from`` or ``to`` is missing.
         """
-        self.start_index_point: int = start_index_point
-        self.end_index_point: int = end_index_point
+        return cls(start_index_point=require_int(data, 'from'), end_index_point=require_int(data, 'to'))
 
 
+@dataclass
 class Segment:
-    def __init__(
-        self,
-        segment_type: str,
-        segment_boundaries: SegmentInformation,
-        reference: Optional[str] = None,
-    ):
+    """
+    A segment of a planned tour: the stretch between two consecutive waypoints.
+
+    :param segment_type: How the segment was created, usually a :class:`kompy.constants.SegmentType`. Unknown
+        types are kept as plain strings.
+    :param segment_boundaries: Boundaries of the segment.
+    :param reference: Reference of the segment (optional).
+    """
+
+    segment_type: SegmentType | str
+    segment_boundaries: SegmentInformation
+    reference: str | None = None
+
+    def __post_init__(self) -> None:
+        self.segment_type = coerce_enum(SegmentType, self.segment_type)
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any]) -> Self:
         """
-        Initialize a segment.
-        :param segment_type: Type of the segment.
-        :param segment_boundaries: Boundaries of the segment as a SegmentInformation object.
-        :param reference: Reference of the segment (optional).
+        Build a segment from the API shape ``{"type": "Routed", "from": 0, "to": 19, "reference"?: ...}``.
+
+        :param data: One entry of a tour's ``segments``.
+        :return: The parsed segment.
+        :raises KeyError: If ``type``, ``from`` or ``to`` is missing.
         """
-        if segment_type not in SegmentType.list_all():
-            raise ValueError(f'Invalid segment type provided: {segment_type}. Please provide a valid segment type.')
-        self.segment_type: str = segment_type
-        self.segment_boundaries: Optional[SegmentInformation] = segment_boundaries
-        self.reference: Optional[str] = reference
+        return cls(
+            segment_type=require_str(data, 'type'),
+            segment_boundaries=SegmentInformation.from_dict(data),
+            reference=optional_str(data.get('reference')),
+        )
+
+
+@dataclass
+class AnnotatedSegment:
+    """
+    A stretch of a tour sharing one property, such as a way type or a surface.
+
+    These come from the tour's embedded ``way_types`` and ``surfaces`` resources
+    (see ``KomootConnector.get_tour_by_id(..., embedded=...)``).
+
+    :param element: The shared property, e.g. ``'wt#way'`` (a :class:`kompy.constants.PossibleWayType`) or
+        ``'sf#gravel'`` (a :class:`kompy.constants.SurfaceType`). Unknown values are plain strings.
+    :param segment_boundaries: Boundaries of the stretch.
+    """
+
+    element: str
+    segment_boundaries: SegmentInformation
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any]) -> Self:
+        """
+        Build the stretch from the API shape ``{"from": 0, "to": 33, "element": "wt#way"}``.
+
+        :param data: One entry of an embedded ``way_types`` or ``surfaces`` resource.
+        :return: The parsed stretch, with ``element`` kept as returned by the API.
+        :raises KeyError: If a key is missing.
+        """
+        return cls(element=require_str(data, 'element'), segment_boundaries=SegmentInformation.from_dict(data))

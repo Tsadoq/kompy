@@ -1,10 +1,15 @@
-from typing import Final
+"""Visibility of Komoot resources."""
+
+from __future__ import annotations
+
+from kompy.constants._base import KomootStrEnum
+
+__all__ = ['PrivacyStatus']
 
 
-class PrivacyStatus:
-    """
-    Privacy status of a resource.
-    """
-    PUBLIC: Final[str] = 'public'
-    PRIVATE: Final[str] = 'private'
-    FRIENDS: Final[str] = 'friends'
+class PrivacyStatus(KomootStrEnum):
+    """Privacy status (visibility) of a tour or a user profile."""
+
+    PUBLIC = 'public'
+    PRIVATE = 'private'
+    FRIENDS = 'friends'

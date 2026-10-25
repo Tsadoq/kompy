@@ -1,0 +1,42 @@
+{
+ "username": "1234567890",
+ "email": "user@example.com",
+ "display_name": "Sample display_name",
+ "newsletter": true,
+ "has_password": true,
+ "apple_id": "redacted",
+ "facebook_id": "redacted",
+ "metric": true,
+ "unit_distance": "metric",
+ "unit_temperature": "celsius",
+ "locale": "en_US",
+ "content": {
+  "link": null,
+  "text": null
+ },
+ "content_link": null,
+ "content_text": null,
+ "searchable": true,
+ "status": "private",
+ "anonymized_data_usage_consent": null,
+ "avatar": {
+  "src": "https://d2exd72xrrp1s7.cloudfront.net/www/14/xxxxxxxx-u1234567890-full/18999070c1f?width={width}&height={height}&crop={crop}",
+  "templated": true,
+  "type": "image/*"
+ },
+ "changed_at": "2026-10-01T06:40:31.000Z",
+ "created_at": "2021-10-24T07:38:44.000Z",
+ "_links": {
+  "self": {
+   "href": "https://api.komoot.de/v007/users/1234567890"
+  },
+  "relation": {
+   "href": "https://api.komoot.de/v007/users/{username}/relations/1234567890",
+   "templated": true
+  },
+  "premium_status": {
+   "href": "https://api.komoot.de/v007/users/{username}/premium_status",
+   "templated": true
+  }
+ }
+}

@@ -1,31 +1,194 @@
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.27"] # CI and releases build with the exact version in build-constraints.txt
+build-backend = "hatchling.build"
 
 [project]
 name = "kompy"
-version = "0.0.13"
-authors = [
-    { name = "Matteo Villosio", email = "github@matteovillosio.com" },
-]
-description = "A Python wrapper for Komoot APIs"
+dynamic = ["version"]
+description = "A typed Python client for the Komoot API: list, download (GPX/FIT), upload, edit and delete tours."
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
+authors = [{ name = "Matteo Villosio", email = "github@matteovillosio.com" }]
+maintainers = [{ name = "Matteo Villosio", email = "github@matteovillosio.com" }]
+keywords = ["komoot", "api", "client", "wrapper", "gpx", "fit", "tours", "hiking", "cycling", "outdoor", "gis"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+# Lower bounds only: kompy is a library, so it must not over-constrain its users' environments.
+# Reproducible dev/CI environments come from uv.lock instead.
 dependencies = [
-    "dateutils>=0.6.12",
+    "requests>=2.32",
     "python-dateutil>=2.8.2",
-    "requests>=2.31.0",
-    "pillow>=10.1.0",
     "gpxpy>=1.6.1",
-    "fit_tool>=0.9.13",
-    "pdoc>=14.1.0",
+    "fit-tool>=0.9.16", # 0.9.16 dropped the hard pin on the 2018 sdist-only openpyxl
 ]
 
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
-]
+[project.optional-dependencies]
+# Needed only for KomootImage.load_image().
+images = ["pillow>=10.3"]
+
+[project.scripts]
+kompy = "kompy.cli:main"
 
 [project.urls]
-"Homepage" = "https://github.com/tsadoq/kompy"
-"Bug Tracker" = "https://github.com/tsadoq/kompy/issues"
+Homepage = "https://github.com/Tsadoq/kompy"
+Documentation = "https://tsadoq.github.io/kompy/"
+Repository = "https://github.com/Tsadoq/kompy"
+Issues = "https://github.com/Tsadoq/kompy/issues"
+Changelog = "https://github.com/Tsadoq/kompy/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+test = [
+    "pytest>=8.3",
+    "pytest-cov>=6",
+    "pytest-timeout>=2.3", # a pagination bug loops forever against `responses`: fail it instead of hanging CI
+    "responses>=0.25",
+    "pillow>=10.3",
+]
+lint = [
+    "ruff>=0.15",
+    "mypy>=1.15",
+    "types-requests",
+    "types-python-dateutil",
+    "pillow>=10.3",       # ships its own type hints, needed by mypy
+]
+docs = [
+    "pdoc>=15",
+    "pillow>=10.3",       # lets pdoc resolve the PIL type hints of KomootImage
+]
+dev = [
+    { include-group = "test" },
+    { include-group = "lint" },
+    "pre-commit>=4",
+]
+
+# ---------------------------------------------------------------- build
+
+[tool.hatch.version]
+# Single source of truth: `__version__ = "X.Y.Z"` in kompy/__init__.py.
+path = "kompy/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["kompy"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/kompy",
+    "/tests",
+    "/examples", # tests/test_examples.py runs them, so the sdist test suite needs them
+    "/README.md",
+    "/LICENSE",
+    "/CHANGELOG.md",
+]
+
+# ---------------------------------------------------------------- ruff
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E", "W", "F",  # pycodestyle / pyflakes
+    "I",            # isort
+    "UP",           # pyupgrade: modern syntax for the target version
+    "B",            # flake8-bugbear: likely bugs and design problems
+    "SIM",          # flake8-simplify
+    "C4",           # flake8-comprehensions
+    "PIE",          # flake8-pie
+    "RET",          # flake8-return
+    "PT",           # flake8-pytest-style
+    "PL",           # pylint (tuned below)
+    "S",            # flake8-bandit (e.g. requests without timeout)
+    "T20",          # no print() in library code
+    "LOG",          # logging misuse (e.g. calls on the root logger)
+    "G",            # logging format (lazy %-style arguments)
+    "TRY",          # tryceratops (tuned below)
+    "RUF",          # ruff-specific rules
+]
+ignore = [
+    "E501",     # line length is enforced by the formatter; long URLs/strings are fine
+    "PLR0913",  # too many arguments: the connector mirrors the API's many query parameters
+    "PLR0917",  # too many positional arguments: public signatures predate 0.1.0 and stay positional-compatible
+    "PLR2004",  # magic values: HTTP status codes read better inline than as constants
+    "TRY003",   # long messages in exception constructors are the clearest option here
+    "TRY300",   # "consider else": usually less readable for short try blocks
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "S",        # asserts, fake credentials, etc. are expected in tests
+    "PLR0915",  # long test functions are acceptable
+    "PLC0415",  # local imports are useful in tests (e.g. to test lazy imports)
+]
+"kompy/cli.py" = ["T20"]  # a CLI prints by design
+"examples/**" = ["T20"]  # example scripts print their results
+
+[tool.ruff.lint.pylint]
+max-args = 8
+max-branches = 15
+max-returns = 8
+
+[tool.ruff.lint.isort]
+known-first-party = ["kompy"]
+combine-as-imports = true
+
+[tool.ruff.format]
+quote-style = "single"
+docstring-code-format = true
+
+# ---------------------------------------------------------------- mypy
+
+[tool.mypy]
+python_version = "3.11"
+files = ["kompy"]
+strict = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+pretty = true
+
+[[tool.mypy.overrides]]
+# Third-party packages that ship no type information.
+module = ["fit_tool.*", "gpxpy.*"]
+ignore_missing_imports = true
+
+# ---------------------------------------------------------------- pytest / coverage
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+# Live tests hit the real Komoot API; they are opt-in: `pytest -m live`.
+addopts = ["-ra", "--strict-markers", "--strict-config", "-m", "not live"]
+markers = ["live: talks to the real Komoot API (needs KOMOOT_EMAIL and KOMOOT_PASSWORD)"]
+timeout = 60
+xfail_strict = true
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+source = ["kompy"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+fail_under = 90
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "@overload",
+    "^\\s*\\.\\.\\.$",
+]

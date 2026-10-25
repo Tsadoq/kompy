@@ -1,0 +1,183 @@
+{
+ "id": 85124,
+ "type": "highlight_segment",
+ "base_name": "Sample base_name",
+ "name": "Sample name",
+ "created_at": "2015-05-06T08:49:42.564Z",
+ "changed_at": "2026-10-24T02:05:17.741Z",
+ "sport": "touringbicycle",
+ "routable": true,
+ "start_point": {
+  "lat": 46.001209,
+  "lng": 8.003327,
+  "alt": 74
+ },
+ "mid_point": {
+  "lat": 46.007215,
+  "lng": 8.007112,
+  "alt": 79
+ },
+ "end_point": {
+  "lat": 46.009364,
+  "lng": 8.004221,
+  "alt": 74
+ },
+ "distance": 841,
+ "elevation_up": 14,
+ "elevation_down": 14,
+ "score": 0.92,
+ "poor_quality": false,
+ "category": "cycle_way",
+ "categories": [
+  "cycle_way",
+  "trail",
+  "family_friendly"
+ ],
+ "flagged": false,
+ "sport_scores": {
+  "mtb": 0.17,
+  "hike": 0.39,
+  "sled": 0.17,
+  "e_mtb": 0.17,
+  "nordic": 0.17,
+  "skaten": 0.17,
+  "jogging": 0.3,
+  "skitour": 0.17,
+  "citybike": 0.17,
+  "climbing": 0.17,
+  "mtb_easy": 0.78,
+  "racebike": 0.58,
+  "skialpin": 0.17,
+  "snowshoe": 0.17,
+  "unicycle": 0.17,
+  "snowboard": 0.17,
+  "e_mtb_easy": 0.17,
+  "e_racebike": 0.17,
+  "downhillbike": 0.17,
+  "mtb_advanced": 0.17,
+  "nordicwalking": 0.17,
+  "e_mtb_advanced": 0.17,
+  "mountaineering": 0.17,
+  "touringbicycle": 0.92,
+  "e_touringbicycle": 0.17,
+  "mountaineering_advanced": 0.17
+ },
+ "editorial": true,
+ "short_intro": "Historic avenue through Parforceheide forest, ideal for cycling",
+ "_links": {
+  "self": {
+   "href": "https://api.komoot.de/v007/highlights/85124"
+  },
+  "seasonality": {
+   "href": "https://api.komoot.de/v007/highlights/85124/seasonality"
+  },
+  "tips": {
+   "href": "https://api.komoot.de/v007/highlights/85124/tips/"
+  },
+  "images": {
+   "href": "https://api.komoot.de/v007/highlights/85124/images/"
+  },
+  "recommenders": {
+   "href": "https://api.komoot.de/v007/highlights/85124/recommenders/"
+  },
+  "creator": {
+   "href": "https://api.komoot.de/v007/users/jan/profile_embedded"
+  },
+  "discover_tours": {
+   "href": "https://api.komoot.de/v007/discover_tours/for_highlight/85124/"
+  },
+  "bookmark": {
+   "href": "https://api.komoot.de/v007/highlights/85124/bookmark/{username}",
+   "templated": true
+  },
+  "recommendation": {
+   "href": "https://api.komoot.de/v007/highlights/85124/recommendation/{username}",
+   "templated": true
+  },
+  "seo_regions": {
+   "href": "https://api.komoot.de/v007/highlights/85124/seo_regions/"
+  },
+  "content": {
+   "href": "https://api.komoot.de/v007/highlights/85124/content"
+  },
+  "coordinates": {
+   "href": "https://api.komoot.de/v007/highlights/85124/coordinates"
+  },
+  "front_image": {
+   "href": "https://api.komoot.de/v007/highlights/85124/images/20631867"
+  }
+ },
+ "_embedded": {
+  "creator": {
+   "username": "jan",
+   "avatar": {
+    "src": "https://d2exd72xrrp1s7.cloudfront.net/www/1l/1l1ghi9ajv0snl2cb5ub1jk321boo67vi141811-full/17711813c46?width={width}&height={height}&crop={crop}",
+    "templated": true,
+    "type": "image/*"
+   },
+   "status": "private",
+   "_links": {
+    "self": {
+     "href": "https://api.komoot.de/v007/users/jan/profile_embedded"
+    },
+    "relation": {
+     "href": "https://api.komoot.de/v007/users/{username}/relations/jan",
+     "templated": true
+    }
+   },
+   "display_name": "Sample display_name",
+   "is_premium": true
+  },
+  "front_image": {
+   "id": 20631867,
+   "src": "https://d2exd72xrrp1s7.cloudfront.net/www/000/1k4/14/14e0el8t8mohk12vuvoyqdl64f3hkj6r5n-uhi20631867/0?width={width}&height={height}&crop={crop}",
+   "rating": {
+    "up": 3,
+    "down": 0
+   },
+   "templated": true,
+   "highlight_id": 85124,
+   "created_at": "2020-08-29T15:35:43.352Z",
+   "client_hash": "58832192a2933e5648bec23ca93d4afdb41d624ba3d6bc8d5bdbddb2bb991fb2",
+   "sport": "touringbicycle",
+   "type": "image/*",
+   "_links": {
+    "self": {
+     "href": "https://api.komoot.de/v007/highlights/85124/images/20631867"
+    },
+    "creator": {
+     "href": "https://api.komoot.de/v007/users/173680780822/profile_embedded"
+    },
+    "highlight": {
+     "href": "https://api.komoot.de/v007/highlights/85124"
+    },
+    "rating": {
+     "href": "https://api.komoot.de/v007/highlights/85124/images/20631867/rating/{username}",
+     "templated": true
+    }
+   },
+   "_embedded": {
+    "creator": {
+     "username": "173680780822",
+     "avatar": {
+      "src": "https://d2exd72xrrp1s7.cloudfront.net/www/t4/t4wnv5st7si372w67u75gt2j1bj7c2645577006-full/1945a5c481f?width={width}&height={height}&crop={crop}",
+      "templated": true,
+      "type": "image/*"
+     },
+     "status": "private",
+     "_links": {
+      "self": {
+       "href": "https://api.komoot.de/v007/users/173680780822/profile_embedded"
+      },
+      "relation": {
+       "href": "https://api.komoot.de/v007/users/{username}/relations/173680780822",
+       "templated": true
+      }
+     },
+     "display_name": "Sample display_name",
+     "is_premium": false
+    }
+   }
+  }
+ }
+}

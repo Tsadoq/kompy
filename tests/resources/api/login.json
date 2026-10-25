@@ -1,0 +1,22 @@
+{
+ "email": "user@example.com",
+ "username": "1234567890",
+ "user": {
+  "createdAt": "2021-10-24 07:38:44 +0000",
+  "username": "1234567890",
+  "displayname": "Sample User",
+  "content": {
+   "hasImage": true
+  },
+  "state": "0",
+  "newsletter": true,
+  "welcomeMails": false,
+  "metric": true,
+  "locale": "en_US",
+  "imageUrl": "https://d2exd72xrrp1s7.cloudfront.net/www/14/xxxxxxxx-u1234567890-full/18999070c1f",
+  "fitness": {
+   "personalised": false
+  }
+ },
+ "password": "TOKEN"
+}

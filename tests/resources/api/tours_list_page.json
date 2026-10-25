@@ -1,0 +1,369 @@
+{
+ "_embedded": {
+  "tours": [
+   {
+    "id": 1000000001,
+    "type": "tour_recorded",
+    "name": "Sample name",
+    "source": "{\"api\":\"de.komoot.garmin-integration\",\"type\":\"tour_recorded\",\"id\":1000000001}",
+    "status": "friends",
+    "date": "2026-10-24T12:46:45.000Z",
+    "kcal_active": 0,
+    "kcal_resting": 0,
+    "start_point": {
+     "lat": 46.001344,
+     "lng": 8.008474,
+     "alt": 579.4
+    },
+    "distance": 12022.7099609375,
+    "duration": 3753,
+    "elevation_up": 56.0,
+    "elevation_down": 53.0,
+    "sport": "jogging",
+    "time_in_motion": 3753,
+    "changed_at": "2026-10-24T13:49:53.474Z",
+    "map_image": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/big/SAMPLE_POLYLINE/?width={width}&height={height}&crop={crop}",
+     "templated": true,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "map_image_preview": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/small/SAMPLE_POLYLINE/?width={width}&height={height}&crop={crop}",
+     "templated": true,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "vector_map_image": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/big/SAMPLE_POLYLINE/",
+     "templated": false,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "vector_map_image_preview": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/small/SAMPLE_POLYLINE/",
+     "templated": false,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "potential_route_update": false,
+    "device_name": "Sample device_name",
+    "_embedded": {
+     "creator": {
+      "username": "1234567890",
+      "avatar": {
+       "src": "https://d2exd72xrrp1s7.cloudfront.net/www/14/xxxxxxxx-u1234567890-full/18999070c1f?width={width}&height={height}&crop={crop}",
+       "templated": true,
+       "type": "image/*"
+      },
+      "status": "private",
+      "_links": {
+       "self": {
+        "href": "https://api.komoot.de/v007/users/1234567890/profile_embedded"
+       },
+       "relation": {
+        "href": "https://api.komoot.de/v007/users/{username}/relations/1234567890",
+        "templated": true
+       }
+      },
+      "display_name": "Sample display_name",
+      "is_premium": false
+     }
+    },
+    "_links": {
+     "creator": {
+      "href": "https://api.komoot.de/v007/users/1234567890/profile_embedded"
+     },
+     "self": {
+      "href": "https://api.komoot.de/v007/tours/1000000001"
+     },
+     "coordinates": {
+      "href": "https://api.komoot.de/v007/tours/1000000001/coordinates"
+     },
+     "peaks": {
+      "href": "${server.peak-bagging.baseUrl}/v4/peaks-bagged-by/1000000001"
+     },
+     "trail_reports": {
+      "href": "https://api.komoot.de/v007/tours/1000000001/trail_reports"
+     },
+     "tour_line": {
+      "href": "https://api.komoot.de/v007/tours/1000000001/tour_line"
+     },
+     "participants": {
+      "href": "https://api.komoot.de/v007/tours/1000000001/participants/"
+     },
+     "timeline": {
+      "href": "https://api.komoot.de/v007/tours/1000000001/timeline/"
+     },
+     "translations": {
+      "href": "https://api.komoot.de/v007/tours/1000000001/translations"
+     },
+     "faqs": {
+      "href": "https://api.komoot.de/v007/tours/1000000001/faqs"
+     },
+     "details": {
+      "href": "https://api.komoot.de/v007/tours/1000000001/details"
+     },
+     "cover_images": {
+      "href": "https://api.komoot.de/v007/tours/1000000001/cover_images/"
+     },
+     "tour_rating": {
+      "href": "https://api.komoot.de/v007/tours/1000000001/ratings/1234567890"
+     }
+    }
+   },
+   {
+    "id": 3359786974,
+    "type": "tour_recorded",
+    "name": "Sample name",
+    "source": "{\"api\":\"de.komoot.garmin-integration\",\"type\":\"tour_recorded\",\"id\":3359786974}",
+    "status": "friends",
+    "date": "2026-10-21T14:56:20.000Z",
+    "kcal_active": 0,
+    "kcal_resting": 0,
+    "start_point": {
+     "lat": 46.007638,
+     "lng": 8.002551,
+     "alt": 583.6
+    },
+    "distance": 11010.1796875,
+    "duration": 3419,
+    "elevation_up": 67.0,
+    "elevation_down": 61.0,
+    "sport": "jogging",
+    "time_in_motion": 3374,
+    "changed_at": "2026-10-21T15:54:29.784Z",
+    "map_image": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/big/SAMPLE_POLYLINE/?width={width}&height={height}&crop={crop}",
+     "templated": true,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "map_image_preview": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/small/SAMPLE_POLYLINE/?width={width}&height={height}&crop={crop}",
+     "templated": true,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "vector_map_image": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/big/SAMPLE_POLYLINE/",
+     "templated": false,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "vector_map_image_preview": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/small/SAMPLE_POLYLINE/",
+     "templated": false,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "potential_route_update": false,
+    "device_name": "Sample device_name",
+    "pause_events": [
+     {
+      "start_ms": 1725000,
+      "end_ms": 1769000
+     }
+    ],
+    "_embedded": {
+     "creator": {
+      "username": "1234567890",
+      "avatar": {
+       "src": "https://d2exd72xrrp1s7.cloudfront.net/www/14/xxxxxxxx-u1234567890-full/18999070c1f?width={width}&height={height}&crop={crop}",
+       "templated": true,
+       "type": "image/*"
+      },
+      "status": "private",
+      "_links": {
+       "self": {
+        "href": "https://api.komoot.de/v007/users/1234567890/profile_embedded"
+       },
+       "relation": {
+        "href": "https://api.komoot.de/v007/users/{username}/relations/1234567890",
+        "templated": true
+       }
+      },
+      "display_name": "Sample display_name",
+      "is_premium": false
+     }
+    },
+    "_links": {
+     "creator": {
+      "href": "https://api.komoot.de/v007/users/1234567890/profile_embedded"
+     },
+     "self": {
+      "href": "https://api.komoot.de/v007/tours/3359786974"
+     },
+     "coordinates": {
+      "href": "https://api.komoot.de/v007/tours/3359786974/coordinates"
+     },
+     "peaks": {
+      "href": "${server.peak-bagging.baseUrl}/v4/peaks-bagged-by/3359786974"
+     },
+     "trail_reports": {
+      "href": "https://api.komoot.de/v007/tours/3359786974/trail_reports"
+     },
+     "tour_line": {
+      "href": "https://api.komoot.de/v007/tours/3359786974/tour_line"
+     },
+     "participants": {
+      "href": "https://api.komoot.de/v007/tours/3359786974/participants/"
+     },
+     "timeline": {
+      "href": "https://api.komoot.de/v007/tours/3359786974/timeline/"
+     },
+     "translations": {
+      "href": "https://api.komoot.de/v007/tours/3359786974/translations"
+     },
+     "faqs": {
+      "href": "https://api.komoot.de/v007/tours/3359786974/faqs"
+     },
+     "details": {
+      "href": "https://api.komoot.de/v007/tours/3359786974/details"
+     },
+     "cover_images": {
+      "href": "https://api.komoot.de/v007/tours/3359786974/cover_images/"
+     },
+     "tour_rating": {
+      "href": "https://api.komoot.de/v007/tours/3359786974/ratings/1234567890"
+     }
+    }
+   },
+   {
+    "id": 3357935214,
+    "type": "tour_recorded",
+    "name": "Sample name",
+    "source": "{\"api\":\"de.komoot.garmin-integration\",\"type\":\"tour_recorded\",\"id\":3357935214}",
+    "status": "friends",
+    "date": "2026-10-20T10:19:00.000Z",
+    "kcal_active": 0,
+    "kcal_resting": 0,
+    "start_point": {
+     "lat": 46.004954,
+     "lng": 8.004495,
+     "alt": 582.6
+    },
+    "distance": 13010.1796875,
+    "duration": 4131,
+    "elevation_up": 66.0,
+    "elevation_down": 65.0,
+    "sport": "jogging",
+    "time_in_motion": 4066,
+    "changed_at": "2026-10-20T11:28:35.160Z",
+    "map_image": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/big/SAMPLE_POLYLINE/?width={width}&height={height}&crop={crop}",
+     "templated": true,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "map_image_preview": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/small/SAMPLE_POLYLINE/?width={width}&height={height}&crop={crop}",
+     "templated": true,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "vector_map_image": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/big/SAMPLE_POLYLINE/",
+     "templated": false,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "vector_map_image_preview": {
+     "src": "https://tourpic-vector.maps.komoot.net/r/small/SAMPLE_POLYLINE/",
+     "templated": false,
+     "type": "image/*",
+     "attribution": "Map data \u00a9 OpenStreetMap contributors"
+    },
+    "potential_route_update": false,
+    "device_name": "Sample device_name",
+    "pause_events": [
+     {
+      "start_ms": 357000,
+      "end_ms": 382000
+     },
+     {
+      "start_ms": 625000,
+      "end_ms": 664000
+     }
+    ],
+    "_embedded": {
+     "creator": {
+      "username": "1234567890",
+      "avatar": {
+       "src": "https://d2exd72xrrp1s7.cloudfront.net/www/14/xxxxxxxx-u1234567890-full/18999070c1f?width={width}&height={height}&crop={crop}",
+       "templated": true,
+       "type": "image/*"
+      },
+      "status": "private",
+      "_links": {
+       "self": {
+        "href": "https://api.komoot.de/v007/users/1234567890/profile_embedded"
+       },
+       "relation": {
+        "href": "https://api.komoot.de/v007/users/{username}/relations/1234567890",
+        "templated": true
+       }
+      },
+      "display_name": "Sample display_name",
+      "is_premium": false
+     }
+    },
+    "_links": {
+     "creator": {
+      "href": "https://api.komoot.de/v007/users/1234567890/profile_embedded"
+     },
+     "self": {
+      "href": "https://api.komoot.de/v007/tours/3357935214"
+     },
+     "coordinates": {
+      "href": "https://api.komoot.de/v007/tours/3357935214/coordinates"
+     },
+     "peaks": {
+      "href": "${server.peak-bagging.baseUrl}/v4/peaks-bagged-by/3357935214"
+     },
+     "trail_reports": {
+      "href": "https://api.komoot.de/v007/tours/3357935214/trail_reports"
+     },
+     "tour_line": {
+      "href": "https://api.komoot.de/v007/tours/3357935214/tour_line"
+     },
+     "participants": {
+      "href": "https://api.komoot.de/v007/tours/3357935214/participants/"
+     },
+     "timeline": {
+      "href": "https://api.komoot.de/v007/tours/3357935214/timeline/"
+     },
+     "translations": {
+      "href": "https://api.komoot.de/v007/tours/3357935214/translations"
+     },
+     "faqs": {
+      "href": "https://api.komoot.de/v007/tours/3357935214/faqs"
+     },
+     "details": {
+      "href": "https://api.komoot.de/v007/tours/3357935214/details"
+     },
+     "cover_images": {
+      "href": "https://api.komoot.de/v007/tours/3357935214/cover_images/"
+     },
+     "tour_rating": {
+      "href": "https://api.komoot.de/v007/tours/3357935214/ratings/1234567890"
+     }
+    }
+   }
+  ]
+ },
+ "_links": {
+  "self": {
+   "href": "https://api.komoot.de/v007/users/1234567890/tours/?limit=3"
+  },
+  "next": {
+   "href": "https://api.komoot.de/v007/users/1234567890/tours/?page=1&limit=3"
+  }
+ },
+ "page": {
+  "size": 3,
+  "totalElements": 1436,
+  "totalPages": 479,
+  "number": 0
+ }
+}

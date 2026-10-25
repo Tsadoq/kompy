@@ -1,24 +1,28 @@
-from typing import Optional
+"""Deprecated location of :class:`kompy.Waypoint`, kept so that old imports keep working."""
 
-from kompy.coordinate import Coordinate
+from __future__ import annotations
+
+import warnings
+from typing import Any
+
+__all__: list[str] = []
 
 
-class Waypoint:
-    def __init__(
-        self,
-        location: Coordinate,
-        index: int,
-        end_index: Optional[int] = None,
-        reference: Optional[str] = None,
-    ):
-        """
-        Initialize a Waypoint object.
-        :param location: Location of the waypoint as a Coordinate object.
-        :param index: Index into the tour coordinates array representing the location of the waypoint.
-        :param end_index: Exclusive index into the tour coordinates array representing the location of the waypoint.
-        :param reference: Reference to a highlight or OSM POI (optional), e.g., "hl:85124".
-        """
-        self.location = location
-        self.index = index
-        self.end_index = end_index
-        self.reference = reference
+def __getattr__(name: str) -> Any:
+    """
+    Resolve ``kompy.constants.waypoint.Waypoint``, which moved to :mod:`kompy.waypoint`, with a deprecation warning.
+
+    :param name: Name of the attribute being looked up.
+    :return: The :class:`kompy.Waypoint` class.
+    :raises AttributeError: For any other unknown attribute.
+    """
+    if name == 'Waypoint':
+        from kompy.waypoint import Waypoint  # noqa: PLC0415 - imported lazily to avoid a circular import
+
+        warnings.warn(
+            'kompy.constants.waypoint.Waypoint is deprecated; import Waypoint from kompy instead.',
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return Waypoint
+    raise AttributeError(f'module {__name__!r} has no attribute {name!r}')

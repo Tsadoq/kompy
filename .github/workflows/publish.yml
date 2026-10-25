@@ -1,0 +1,148 @@
+name: Publish to PyPI
+
+# Releases are automatic: when a push to main changes `__version__` in kompy/__init__.py to a version that has no
+# `vX.Y.Z` tag yet, this workflow tests and builds the package, uploads it to PyPI, then creates the tag and a GitHub
+# release whose notes are that version's section of CHANGELOG.md. Pushes that do not bump the version publish nothing.
+# Authentication uses PyPI Trusted Publishing (OIDC): no API token is stored in the repository.
+# One-time setup on pypi.org: project "kompy" -> Publishing -> GitHub, repository Tsadoq/kompy,
+# workflow publish.yml, environment pypi.
+
+on:
+  push:
+    branches: [main]
+    paths: [kompy/__init__.py]
+  workflow_dispatch: # re-run a release that failed half-way; a version that is already tagged is skipped
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+env:
+  UV_NO_DEFAULT_GROUPS: "1"
+
+jobs:
+  check:
+    name: Detect a new version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      release: ${{ steps.version.outputs.release }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="$(sed -nE "s/^__version__ = ['\"]([^'\"]+)['\"]$/\1/p" kompy/__init__.py)"
+          if [ -z "$version" ]; then
+            echo "::error::Could not read __version__ from kompy/__init__.py"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$version" > /dev/null 2>&1; then
+            echo "v$version is already tagged; nothing to release."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Releasing v$version."
+            echo "release=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    name: Build & verify
+    needs: check
+    if: needs.check.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          python-version: "3.13"
+          enable-cache: false # never restore a cache into a release build
+      - run: uv sync --locked --group test
+      - name: Verify the built package reports the detected version
+        env:
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          actual="$(uv run --no-sync python -c 'import kompy; print(kompy.__version__)')"
+          if [ "$actual" != "$VERSION" ]; then
+            echo "::error::kompy.__version__ is '$actual', expected '$VERSION'"
+            exit 1
+          fi
+      - name: Extract the release notes from CHANGELOG.md
+        env:
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          awk -v header="## [$VERSION]" '
+            index($0, header) == 1 { found = 1; next }
+            found && /^## \[/ { exit }
+            found && /^\[[^]]+\]: / { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          if ! grep -q '[^[:space:]]' release-notes.md; then
+            echo "::error::CHANGELOG.md has no section '## [$VERSION]'; add one before bumping the version"
+            exit 1
+          fi
+      - run: uv run --no-sync pytest
+      - run: uv build --build-constraint build-constraints.txt # exact build backend
+      - run: uvx twine==7.0.0 check --strict dist/*
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-notes
+          path: release-notes.md
+          if-no-files-found: error
+
+  publish:
+    name: Upload to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/kompy/
+    permissions:
+      id-token: write # required for Trusted Publishing
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist/
+      # Generates and uploads PEP 740 attestations automatically.
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
+        with:
+          skip-existing: true # a re-run after a failed release step must not fail on files already uploaded
+
+  release:
+    name: Tag & GitHub release
+    needs: [check, publish]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the tag and the release
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist/
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-notes
+      - name: Create the tag and the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          gh release create "v$VERSION" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "v$VERSION" \
+            --notes-file release-notes.md

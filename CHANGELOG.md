@@ -1,0 +1,325 @@
+# Changelog
+
+All notable changes to kompy are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html). While the version is below 1.0, a minor version bump
+(0.**x**.0) may contain breaking changes; they are always listed under "Breaking changes".
+
+## [Unreleased]
+
+## [0.1.0] - 2026-10-25
+
+A complete revamp: a typed, tested and documented library with a shared HTTP session, timeouts, retries, typed
+errors, lenient parsing, many new endpoints and a command-line tool. Most code written for 0.0.x keeps working;
+the breaking changes are listed first, each with what to do.
+
+### Breaking changes and migration
+
+- **`get_tours()` returns all of your own tours.** The `status` argument now defaults to `None`, which returns
+  public, friends-only and private tours. Before, the default (and an explicit `None`) returned only public tours.
+  To keep the old behaviour, pass `status=PrivacyStatus.PUBLIC`. For another user's tours kompy still sends
+  `status=public` automatically.
+- **`get_tours(limit=N)` returns up to N tours across as many pages as needed.** Before, it returned only the first
+  page, of size N. The page size defaults to `min(limit, 100)`, or 100 (1000 with a `status` filter, which kompy
+  applies locally), and can be set with the new keyword-only `page_size`. `get_tours(page=P)` now fetches exactly
+  page P, a window of `page_size` tours, or `limit` tours when `page_size` is not given, whether or not `status` is
+  set (`page=2, limit=10` is tours 20 to 29); before, `page` was ignored and page 0 was always fetched.
+- **`upload_tour()` returns an `UploadResult(tour_id, created, raw)` instead of `True`.** The result is always
+  truthy, so `if connector.upload_tour(...):` still works, but it is no longer equal to `True`: `== True`,
+  `is True` and `assertEqual(result, True)` checks fail; use `if result:` or `result.tour_id`. `created` is `False`
+  when Komoot recognised the file as a duplicate (HTTP 202) and returned the id of the existing tour.
+- **Mutators raise instead of returning `False`.** `upload_tour()`, `change_tour()` and `delete_tour()` raise a
+  `KomootAPIError` (or a subclass such as `NotFoundError` or `AuthenticationError`) on failure. Replace
+  `if not connector.delete_tour(...)` checks with `try`/`except KomootError`.
+- **`change_tour()` sends only the fields you pass.** Before, it sent JSON `null` for a missing sport or name.
+  Calling it with nothing to change now raises `ValueError`, and `status` is validated. It succeeds on any 2xx
+  (before, only 200).
+- **`delete_tour()` succeeds on any 2xx**, including 204, which used to return `False`.
+- **Pillow is no longer installed by default.** It is only needed by `KomootImage.load_image()`; install
+  `kompy[images]` (or `pillow`) if you use it. `load_image()` raises an `ImportError` with installation
+  instructions when Pillow is missing.
+- **`pdoc` and `dateutils` are no longer runtime dependencies.** The unrelated `dateutils` package also pulled in
+  `pytz`. Install them yourself if your code relied on kompy installing them.
+- **Minimum dependency versions:** `fit-tool>=0.9.16` (older versions hard-pinned `openpyxl==2.5.12`) and
+  `requests>=2.32`. There are no upper version pins any more.
+- **`str()` and `repr()` of `Authentication` no longer show the password length or the token length**, and no
+  longer crash before login (they used to raise `TypeError`). They now read e.g.
+  `Authentication(email_address='te***om', username='12***90', token=<set>)`.
+- **Constants are now `enum.StrEnum` classes.** Member names and values are unchanged, members still compare equal
+  to plain strings (`SupportedActivities.HIKING == 'hike'`), format as them and serialise to JSON as them. Two small
+  differences: members are no longer exactly of type `str` (`isinstance(x, str)` still holds), and iterating over a
+  class now yields its members.
+- **`list_all()` returns values in declaration order** instead of alphabetical order (for example
+  `SupportedActivities.list_all()[0]` is now `'hike'`). Sort the result if you relied on the order.
+- **`Tour` equality and hashing are based on `id`.** Two `Tour` objects with the same id are equal; before,
+  equality was by identity.
+- **Value objects compare by value and are no longer hashable.** `Coordinate`, `Segment`, `SegmentInformation`,
+  `Surface`, `WayType`, `Difficulty`, `Waypoint`, `KomootImage`, `TourInformation`, `TourSummary`, and the new
+  `User` and `Highlight`, are dataclasses: two instances with the same fields are equal, and as a consequence they
+  cannot be put in a `set` or used as `dict` keys any more (before, they were hashable by identity). Key them by an
+  id or by a tuple of their fields instead, e.g. `{(c.lat, c.lon) for c in coordinates}`.
+- **`from kompy.constants import *` no longer brings in `Waypoint`.** Import it from `kompy`
+  (`from kompy import Waypoint`); `kompy.constants.Waypoint` still works, with a `DeprecationWarning`.
+- **Tests that patched `requests.get`/`post`/`patch`/`delete` no longer intercept kompy.** kompy sends every
+  request through a `requests.Session`, so such patches let real requests reach api.komoot.de. Mock HTTP with
+  [`responses`](https://github.com/getsentry/responses), or pass `session=` a session with a mock adapter.
+- **`get_tour_by_id(object_type='fit')` on a recorded tour raises `UnsupportedFormatError`** (a `ValueError`) with a
+  clear message. Before, fit_tool crashed with `FitHeaderError`. Komoot only provides FIT files for planned tours.
+- **Errors are typed.** Failures that used to surface as `KeyError`, `JSONDecodeError` or a bare `ConnectionError` or
+  `ValueError` now raise `kompy.exceptions` errors (see "Added"). They keep the old builtin base classes, so
+  existing `except ConnectionError` and `except ValueError` clauses still catch them, but `except KeyError` and
+  `except JSONDecodeError` clauses no longer do.
+- **Lenient parsing.** Unknown sports, statuses, tour types, surfaces, way types, segment types and difficulty
+  grades are kept as plain strings (logged at DEBUG) instead of raising `ValueError`. Before, `get_tours()` silently
+  dropped such tours and `get_tour_by_id()` raised. The `Surface`, `WayType`, `Segment` and `Difficulty`
+  constructors no longer raise for unknown types or grades.
+
+### Added
+
+- Command-line tool `kompy` (also `python -m kompy`): `whoami`, `token`, `tours list`, `tours show`,
+  `tours download` and `upload`, plus `--version`, `--debug` and `--prompt-password`. It reads credentials from
+  `KOMOOT_USERNAME`/`KOMOOT_TOKEN` or `KOMOOT_EMAIL`/`KOMOOT_PASSWORD`. `tours list` and `tours download` filter by
+  type, sport, status, name and count, and `--json` prints machine-readable output. Global options work before
+  or after any command (`kompy tours --debug list`). Piping into `head` exits quietly with code 141, and Ctrl+C (or
+  Ctrl+D at a prompt) with code 130.
+- Token authentication: `KomootConnector.from_token(username, token, validate=False)` connects without a password
+  and without a login request. After a password login, the read-only properties `connector.username` and
+  `connector.token` expose the credentials to store. `Authentication(username=..., token=...)` is a token-only
+  mode, and `Authentication.is_logged_in()` is new.
+- `KomootConnector.from_env(prefix='KOMOOT_')`: uses `KOMOOT_USERNAME` and `KOMOOT_TOKEN` when both are set,
+  otherwise `KOMOOT_EMAIL` and `KOMOOT_PASSWORD`. It raises `ValueError` when neither pair is set.
+- `KomootConnector.close()`, context-manager support (`with KomootConnector(...) as connector:`) and a `repr` that
+  shows only the username.
+- Keyword-only connector options `timeout` (default: 5 s to connect, 30 s to read), `max_retries` (default 3) and
+  `session` (your own `requests.Session`, which kompy does not close).
+- `iter_tours()`: the same arguments as `get_tours()`, validated immediately, with pages fetched lazily.
+- `get_tour_by_id(..., embedded=True | [names])`: embeds coordinates, way types, surfaces and directions (or the
+  chosen resources) in a single request. It accepts `int` or `str` ids and is typed with overloads, so the return
+  type is `Tour`, `GPX` or `FitFile` depending on `object_type`.
+- New connector methods:
+  - `get_tour_gpx(tour_or_id, share_token=None)` returns a gpxpy `GPX` and stores it on a `Tour` that is passed in.
+  - `get_tour_fit(tour_or_id, share_token=None)` returns a fit_tool `FitFile`.
+  - `get_tour_coordinates(tour_or_id)` returns a `list[Coordinate]` and stores it on a `Tour` that is passed in.
+  - `get_tour_cover_images(tour_or_id)` returns a `list[KomootImage]`, following pagination.
+  - `download_tour(tour_or_id, path_or_dir, fmt='gpx' | 'fit', share_token=None)` saves the raw file atomically and
+    returns its `Path`. In a directory the file is named `<id>_<slug>.<fmt>` for a `Tour` and `<id>.<fmt>` for a
+    bare id.
+  - `download_tours(dest_dir, fmt='gpx', *, overwrite=False, **get_tours_filters)` backs up many tours. Existing
+    files are skipped unless `overwrite=True`. A failed tour does not stop the others; at the end a
+    `DownloadError` lists the failures and the files that were written.
+  - `get_user(username=None)` returns a `User`: your full profile, or another user's public profile.
+  - `get_user_highlights(username=None, limit=None, *, page_size=None)`, `iter_user_highlights(...)` and
+    `get_highlight(highlight_id)` return `Highlight` objects.
+- `upload_tour()` also accepts the path (`str` or `Path`) of a `.gpx`, `.fit` or `.tcx` file. `UploadResult.status`
+  reports the visibility of the uploaded tour.
+- Exception hierarchy in `kompy.exceptions`, all exported from `kompy`: `KomootError` (the base class),
+  `KomootConnectionError` and `KomootTimeoutError` (both `ConnectionError`s), `KomootAPIError` (with `status_code`,
+  `url`, a truncated `body` and Komoot's error `message`), `AuthenticationError` (401/403, a `ConnectionError`),
+  `NotFoundError` (404, a `ValueError`), `RateLimitError` (429, with `retry_after`), `ServerError` (5xx, a
+  `ConnectionError`, which kompy 0.0.x raised on HTTP 500), `KomootResponseError` (an unparseable response, a
+  `ValueError`), `UnsupportedFormatError` (a `ValueError`), `UploadStatusError` (with `tour_id`, see "Fixed") and
+  `DownloadError` (with `paths` and `failures`). All of them can be pickled, so they cross process boundaries
+  (`multiprocessing`, `ProcessPoolExecutor`) intact. `NotEmailError` and `PrivacyError` now also derive from
+  `KomootError`; their module paths and constructors are unchanged, and they are exported from `kompy` and
+  `kompy.errors`.
+- New models: `kompy.User` (accepts both the full profile and the embedded profile shape), `kompy.Highlight`
+  (point and segment highlights, with `front_image` and `creator`) and `kompy.AnnotatedSegment` (the embedded way
+  type and surface stretches of a tour). Both `User` and `Highlight` keep `raw` and have a `url` property.
+- New `Tour` attributes: `status`, `map_image`, `map_image_preview`, `vector_map_image_preview`, `device_name`,
+  `creator` (a `User`), `raw`, `way_type_segments` and `surface_segments` (from the embedded `way_types` and
+  `surfaces`), and `coordinates` filled from the embedded `coordinates` when present. `type`, `sport` and
+  `status` are enum members when known.
+- New `Tour` API: `Tour.from_dict()`, `to_dict()` (a deep copy of `raw`), `set_coordinates()`, `set_gpx_track()`,
+  and the properties `is_recorded`, `is_planned`, `url`, `distance_km`, `duration_timedelta`,
+  `time_in_motion_timedelta` and `tour_summary` (an alias of `summary`). `repr()` shows id, name, sport and date.
+- The value objects `Coordinate`, `SegmentInformation`, `Segment`, `Surface`, `WayType`, `Difficulty`, `Waypoint`,
+  `TourInformation`, `TourSummary` and `KomootImage` are now dataclasses with the same constructor arguments and
+  attribute names. They gain value equality, a readable `repr` and `from_dict()`. `Coordinate` also gains
+  `to_dict()`.
+- `KomootImage.from_dict()` and `KomootImage.url_for(width, height, crop)`, which fills the `{width}`, `{height}`
+  and `{crop}` placeholders of templated URLs and drops the ones without a value. `load_image()` accepts `width`,
+  `height` and a `timeout` (default 10 s) and returns the loaded image.
+- `PrivacyStatus`, `TourTypes` and `TourSort` gain `list_all()`.
+- `kompy.__version__`, a complete `__all__`, and type information (`py.typed`, `Typing :: Typed` classifier).
+- `KomootUrl` gains `API_BASE_URL`, `TOUR_COORDINATES_URL`, `TOUR_COVER_IMAGES_URL`, `USER_URL`,
+  `USER_PROFILE_URL`, `USER_HIGHLIGHTS_URL` and `HIGHLIGHT_URL`. New helper
+  `kompy.constants.query_parameters.format_api_datetime()`.
+- Runnable, tested example scripts in `examples/`: `quickstart.py`, `export_all_tours.py`, `upload_activity.py` and
+  `stats_by_sport.py`.
+- A rewritten README (authentication, every connector method, models, errors, CLI and logging), this changelog,
+  `CONTRIBUTING.md`, `SECURITY.md` and an API reference landing page.
+- An MIT `LICENSE`. The package metadata now carries `License-Expression: MIT`.
+
+### Changed
+
+- Only the login sends the email address and password. Every later request is authenticated with the username and
+  API token, so the password is no longer sent on every request.
+- Every request has a timeout (5 s to connect, 30 s to read by default). Before, a stalled connection could hang
+  forever.
+- Requests share one HTTP session (keep-alive) and send `User-Agent: kompy/0.1.0 (+https://github.com/Tsadoq/kompy)`.
+- GET requests are retried up to 3 times on connection errors and on HTTP 429, 502, 503 and 504, with exponential
+  backoff. A `Retry-After` of up to 60 seconds is honoured (a malformed one falls back to the backoff); when Komoot
+  asks for a longer pause, kompy raises `RateLimitError` with `retry_after` at once instead of blocking. Uploads,
+  edits and deletes are never retried (a retried delete could report a successful delete as `NotFoundError`).
+- HTTP errors map to exceptions: 401/403 raise `AuthenticationError`, 404 `NotFoundError`, 429 `RateLimitError`,
+  5xx `ServerError`, and any other non-2xx status `KomootAPIError`. Network failures raise `KomootConnectionError`
+  and timeouts (connect and read) `KomootTimeoutError`, with the original exception chained as `__cause__`. A wrong password at login
+  raises `AuthenticationError('Komoot rejected the email address or password.')`, for both 401 and 403. A rejected
+  token raises `AuthenticationError` with a message that says to log in again.
+- `get_tours(status=X)` filters on the tour's status locally (Komoot ignores the parameter for your own tours) and
+  still sends it. The status is validated (an unknown value raises `ValueError`) and compared with `==` instead of
+  `is`, so status strings built at runtime work. `PrivacyError` is raised only when non-public tours of another
+  user are requested.
+- `get_tours(sport_types=[...])` sends the sports as one comma-separated value, and accepts a tuple. An unknown
+  sport logs a warning and is sent anyway (it used to raise `ValueError`), in case Komoot added it. The same
+  applies to the sport of `upload_tour()` and `change_tour()`.
+- `get_tours()` date filters accept a `str`, `date` or `datetime` and are sent as ISO 8601 UTC timestamps such as
+  `2023-01-01T00:00:00.000Z` (naive values are taken to be in UTC). Before, they were sent as
+  `2023-01-01 00:00:00`.
+- `get_tours()` sends `only_unlocked=true` only when it is set (before, `only_unlocked=False` was always sent),
+  normalises `center` to `lat,lng`, requires `max_distance` to be greater than 0, and no longer sends
+  `max_distance` without `center` (it still logs a warning).
+- `get_tours()` logs at DEBUG instead of WARNING for default arguments. A tour that cannot be parsed is skipped
+  with one WARNING and no traceback. If every returned tour fails to parse, it raises `KomootResponseError`
+  (still a `ValueError`).
+- `get_tour_by_id()` and the other requests send an `Accept` header instead of the meaningless
+  `Type=application/hal+json` query parameter. Invalid GPX or FIT bodies raise `KomootResponseError`.
+- `upload_tour()` sends `data_type` once instead of twice, no longer sends `time_in_motion=None`, ignores
+  `time_in_motion` for FIT files (with a warning) and rejects negative values. It validates `status` (`None`
+  leaves it out) and sends the body as `application/octet-stream`.
+- `UPLOAD_TOUR_URL` no longer embeds `?data_type={object_type}`; calling `.format(object_type=...)` on it still
+  works.
+- Email addresses and other path values are URL-quoted, so logging in with an address containing `#`, `?`, `+` or
+  `/` works.
+- `Tour.id` is always an `int`, as the API returns it; numeric strings are converted, while booleans and
+  fractional numbers are rejected. A JSON `null` in a required nested value (a username, an image URL, a
+  difficulty grade, a segment type, ...) makes that nested object `None` (or skips the entry) instead of becoming
+  the string `'None'`.
+- `Tour` numeric fields are normalised: `distance`, `elevation_*` and `kcal_*` are `float`; `total_duration`,
+  `time_in_motion` and `constitution` are `int`.
+- `Tour.start_date` and `changed_at` are timezone-aware datetimes. Unparseable dates become `None` instead of
+  raising.
+- Optional `Tour` fields that are missing or malformed are `None` instead of raising `KeyError` (for example
+  `kcal_active`, `start_point`, `date`, `time_in_motion` and the difficulty explanations). Every attribute is
+  always defined, so `smart_tour_type` and `coordinates_link` no longer raise `AttributeError`, and
+  `smart_tour_type=null` no longer raises `ValueError`. Malformed entries inside `path`, `segments`,
+  `tour_information` and `summary` are skipped. Only a missing or non-integer `id` raises.
+- `Coordinate` no longer validates the altitude (implausible barometer or GPS readings must not make tours
+  unreadable); `Coordinate.validate_alt()` is kept as a no-op. Latitude, longitude and time validation are
+  unchanged.
+- `Surface` and `WayType` amounts that are outside [0, 1] only by floating-point noise (within 1e-6) are clamped
+  instead of rejected.
+- `Difficulty.technical_explanation` and `fitness_explanation` are optional (default `None`).
+- `KomootImage.templated` defaults to `False`, and `image` is typed as `PIL.Image.Image | None`. `load_image()`
+  logs failures (including undecodable data) as WARNING on the `kompy.image` logger instead of ERROR on the root
+  logger.
+- `Waypoint` moved to `kompy.waypoint` and is exported as `kompy.Waypoint`.
+- `get_tour_by_id()`, `change_tour()` and `delete_tour()` accept a `Tour` as well as an id, like the other methods
+  that take a tour.
+- `download_tour(tour, 'folder/')` treats a path ending in a separator as a directory and creates it. Downloads
+  write through a uniquely named temporary file that is removed if the write fails.
+- `download_tours()` and `kompy tours download` skip a tour whose file exists under either name kompy uses,
+  `<id>_<name>.<fmt>` or `<id>.<fmt>`, so mixing downloads by id and by filter (or renaming a tour) no longer
+  downloads it twice.
+- Logging: kompy adds a `NullHandler` to the `kompy` logger and never attaches other handlers. Modules log on
+  `kompy.*` loggers (`kompy.komoot_connector`, `kompy.tour`, `kompy.image`, ...) instead of the root logger or
+  `KomootTour`/`KomootImage`, so messages are no longer printed twice. The per-tour WARNING "No vector map image
+  found." is gone.
+- `Tour.generate_coordinates()` and `Tour.generate_gpx_track()` (deprecated, see below) now use a timeout, the API
+  token after login, an `Accept` header, the kompy `User-Agent`, and the same typed exceptions and messages as
+  `KomootConnector` (including `RateLimitError.retry_after` for a `Retry-After` given as an HTTP date).
+  `generate_gpx_track()` returns `True` (it used to return `None`), and `generate_coordinates()` builds the URL from
+  the tour id when the tour has no coordinates link (it used to return `False`).
+- Python 3.11 to 3.14 are supported and tested on Linux, plus macOS and Windows.
+- Development Status is now "4 - Beta", with fuller PyPI metadata (classifiers, keywords, documentation, issues
+  and changelog links).
+
+### Deprecated
+
+- `Tour.generate_coordinates(authentication)`: use `connector.get_tour_coordinates(tour)`.
+- `Tour.generate_gpx_track(authentication)`: use `connector.get_tour_gpx(tour)`.
+- `kompy.constants.Waypoint` and `kompy.constants.waypoint.Waypoint`: import `Waypoint` from `kompy`.
+
+All three still work but emit a `DeprecationWarning`.
+
+### Removed
+
+- The broken example notebook `examples/run_kompy.ipynb`, replaced by the scripts in `examples/`.
+- `requirements.txt` and `setup.cfg`. Development uses [uv](https://docs.astral.sh/uv/) and the dependency groups
+  in `pyproject.toml`; see `CONTRIBUTING.md`.
+
+### Fixed
+
+- **`upload_tour(status=...)` now applies the visibility.** Komoot's upload endpoint ignores the `status`
+  parameter and gives a new tour the account's default visibility, so a tour uploaded as `private` used to end up
+  visible to friends (kompy 0.0.x had the same bug). kompy now checks the created tour and sets the requested
+  visibility with a `PATCH` right away; if that fails it raises `UploadStatusError`, which names the tour. A
+  duplicate upload (HTTP 202) leaves the existing tour untouched. This also applies to `kompy upload --status`.
+- An empty tour list (a response without `_embedded`) returns `[]` instead of raising `KeyError`.
+- Tours with a sport, surface or way type unknown to kompy are no longer dropped from `get_tours()`.
+- `get_tours(page=...)` is honoured, and `limit` is a true maximum (see "Breaking changes").
+- `get_tours()` with a `status` built at runtime no longer misbehaves (`is` was used to compare strings).
+- `str(Authentication(...))` no longer raises `TypeError` before login.
+- `Tour.generate_gpx_track()` returns `True` instead of `None`, and both deprecated `generate_*` methods raise a
+  clear error on HTTP failures instead of `KeyError`, `JSONDecodeError` or a garbage GPX track.
+
+### Security
+
+- The password is sent only once, at login; later requests use the API token.
+- Share tokens and the login email address are redacted (`***`) from exception messages, `KomootAPIError.url`
+  and debug logs, so they do not end up in tracebacks, CLI output or bug reports.
+- Neither `Authentication` nor `KomootConnector` reveals the password or the token in `str()` or `repr()`.
+- Releases are published with PyPI Trusted Publishing from a GitHub release (no long-lived API token), after the
+  tests pass and the tag is checked against `kompy.__version__`.
+
+## [0.0.13] - 2026-04-13
+
+### Added
+
+- The `mountaineering_advanced` sport and the `wt#alpine_bike` way type.
+
+### Fixed
+
+- A tour that cannot be parsed is skipped with a warning instead of failing the whole `get_tours()` call.
+- `WayType` amounts of exactly 0.0 and 1.0 are accepted.
+- Packaging: the distribution name is lowercase (`kompy`), fit-tool is updated, and releases are published only
+  from GitHub releases.
+
+## [0.0.12] - 2025-02-20
+
+### Added
+
+- The `friends` privacy status, usable when uploading and changing tours.
+
+## [0.0.11] - 2025-02-19
+
+### Added
+
+- `KomootConnector.change_tour()` and `KomootConnector.delete_tour()`.
+
+## [0.0.10] - 2025-02-11
+
+### Changed
+
+- Email addresses are validated with the standard library instead of a regular expression.
+
+## [0.0.9] - 2024-11-20
+
+### Added
+
+- Support for new way types (also in 0.0.8, released on 2024-10-07).
+
+## Earlier versions
+
+- 0.0.4 to 0.0.7 (November 2023): the GPX track of a tour (`Tour.generate_gpx_track()`), mocked tests, and
+  generated requirements.
+- First releases (2023): log in, list tours, fetch a tour as a `Tour`, GPX or FIT, and upload tours.
+
+[Unreleased]: https://github.com/Tsadoq/kompy/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Tsadoq/kompy/releases/tag/v0.1.0
+[0.0.13]: https://pypi.org/project/kompy/0.0.13/
+[0.0.12]: https://pypi.org/project/kompy/0.0.12/
+[0.0.11]: https://pypi.org/project/kompy/0.0.11/
+[0.0.10]: https://pypi.org/project/kompy/0.0.10/
+[0.0.9]: https://pypi.org/project/kompy/0.0.9/

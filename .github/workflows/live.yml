@@ -1,0 +1,57 @@
+name: Live API contract tests
+
+# Runs the tests marked `live` against the real Komoot API, to notice early when the
+# unofficial API changes. Credentials come from the `komoot-live` environment secrets.
+#
+# The scheduled run is read-only. The tests that upload, change and delete a tour (they clean up after
+# themselves) run only when started by hand with "write" ticked: an uploaded tour briefly has the account's
+# default visibility before kompy makes it private, so it should not happen unattended every week.
+
+on:
+  workflow_dispatch:
+    inputs:
+      write:
+        description: "Also run the tests that upload, change and delete a tour"
+        type: boolean
+        default: false
+  schedule:
+    - cron: "17 6 * * 1" # every Monday, 06:17 UTC
+
+permissions:
+  contents: read
+
+concurrency:
+  group: live-api
+  cancel-in-progress: false
+
+env:
+  UV_NO_DEFAULT_GROUPS: "1"
+
+jobs:
+  live:
+    name: Live tests
+    # Scheduled runs only in the upstream repository, not in forks.
+    if: github.event_name == 'workflow_dispatch' || github.repository == 'Tsadoq/kompy'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: komoot-live
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          python-version: "3.13"
+      - run: uv sync --locked --group test
+      - name: Run live tests
+        env:
+          KOMOOT_EMAIL: ${{ secrets.KOMOOT_EMAIL }}
+          KOMOOT_PASSWORD: ${{ secrets.KOMOOT_PASSWORD }}
+          KOMOOT_LIVE_REQUIRED: "1" # missing credentials fail the run instead of skipping every test
+          KOMOOT_LIVE_WRITE: ${{ inputs.write && '1' || '' }}
+        run: |
+          if [ -z "$KOMOOT_EMAIL" ] || [ -z "$KOMOOT_PASSWORD" ]; then
+            echo "::error::The komoot-live environment secrets KOMOOT_EMAIL and KOMOOT_PASSWORD are not configured."
+            exit 1
+          fi
+          uv run --no-sync pytest -m live
