@@ -58,9 +58,12 @@ def run(capsys: pytest.CaptureFixture[str], *argv: str) -> tuple[int, str, str]:
 
 @pytest.fixture(autouse=True)
 def _clean_environment(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Make sure credentials of the developer's shell never reach the tests."""
+    """Make sure credentials and colour settings of the developer's shell never reach the tests."""
     for name in CREDENTIAL_VARIABLES:
         monkeypatch.delenv(name, raising=False)
+    # Python 3.14's argparse colours usage text when FORCE_COLOR is set (as it is in CI).
+    monkeypatch.delenv('FORCE_COLOR', raising=False)
+    monkeypatch.setenv('PYTHON_COLORS', '0')
 
 
 @pytest.fixture

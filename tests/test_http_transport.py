@@ -105,7 +105,8 @@ def test_refused_connection_is_a_connection_error_not_a_timeout() -> None:
     with socket.socket() as probe:  # find a port nothing listens on
         probe.bind((LOCALHOST, 0))
         port = probe.getsockname()[1]
-    client = HttpClient(timeout=(2.0, 2.0), max_retries=0)
+    # Windows retries refused SYNs for about two seconds before giving up, so leave headroom.
+    client = HttpClient(timeout=(10.0, 2.0), max_retries=0)
 
     with pytest.raises(KomootConnectionError) as caught:
         client.request('GET', f'http://{LOCALHOST}:{port}/unreachable')
