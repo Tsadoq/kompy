@@ -36,7 +36,10 @@ class KomootUrl:
     """Paginated list of a tour's cover images."""
 
     UPLOAD_TOUR_URL: Final[str] = f'{_API}/v007/tours/'
-    """Upload a GPX, FIT or TCX file (the format goes in the ``data_type`` query parameter)."""
+    """Upload a GPX, FIT or TCX file (the format goes in the ``data_type`` query parameter), or save a routed tour."""
+
+    ROUTING_URL: Final[str] = 'https://www.komoot.com/api/routing/tour'
+    """Komoot's route planner: routes a tour between waypoints (served by the website, not by ``api.komoot.de``)."""
 
     USER_URL: Final[str] = f'{_API}/v007/users/{{user_identifier}}/'
     """Full profile of the logged-in user."""

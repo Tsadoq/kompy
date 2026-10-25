@@ -275,6 +275,26 @@ def test_upload_change_and_delete_tour(live_connector: KomootConnector, call_log
 
 
 @pytest.mark.usefixtures('write_enabled')
+def test_plan_tour(live_connector: KomootConnector, call_log: CallLog) -> None:
+    name = f'{LIVE_TEST_PREFIX}{uuid.uuid4().hex[:8]}'
+    start = (53.14, 8.21)
+    mark = call_log.mark()
+    tour = live_connector.plan_tour([start, (53.08, 8.31), start], name, 'hike', status=PrivacyStatus.PRIVATE)
+    logger.info('plan: %s', call_log.since(mark))
+    try:
+        assert tour.is_planned
+        fetched = live_connector.get_tour_by_id(tour.id)
+        assert fetched.name == name
+        assert fetched.is_planned
+        assert fetched.sport == 'hike'
+        assert fetched.status == PrivacyStatus.PRIVATE  # unlike uploads, saving a planned tour keeps the status
+        assert fetched.distance > 1000
+        assert live_connector.get_tour_fit(tour.id)  # planned tours can be exported as FIT
+    finally:
+        live_connector.delete_tour(tour.id)
+
+
+@pytest.mark.usefixtures('write_enabled')
 def test_no_live_test_tours_left(live_connector: KomootConnector) -> None:
     listed = live_connector.get_tours(tour_name=LIVE_TEST_PREFIX)
     # Never trust the server-side name filter alone before deleting anything.

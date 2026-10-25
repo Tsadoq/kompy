@@ -889,6 +889,82 @@ class KomootConnector:
             ) from error
         return {**payload, 'status': str(status)}
 
+    def plan_tour(
+        self,
+        waypoints: Sequence[Coordinate | Mapping[str, float] | tuple[float, float]],
+        tour_name: str,
+        sport: str = SupportedActivities.ROAD_CYCLING,
+        *,
+        constitution: int = 3,
+        date: str | date | datetime | None = None,
+        status: str = PrivacyStatus.FRIENDS,
+    ) -> Tour:
+        """
+        Plan a tour with Komoot's route planner and save it as a planned tour.
+
+        Komoot routes the tour between the waypoints, in order, exactly like the route planner of its website. To plan
+        a round trip, repeat the first waypoint at the end.
+
+        :param waypoints: At least two points, each a :class:`kompy.Coordinate`, a ``(lat, lon)`` tuple or a mapping
+            with ``lat`` and ``lng`` (or ``lon``) keys.
+        :param tour_name: The name of the tour.
+        :param sport: The sport to route for, one of :class:`kompy.constants.SupportedActivities` (unknown values
+            are sent anyway, with a warning). Road cycling by default.
+        :param constitution: The fitness level used for the time estimate, from 1 to 5.
+        :param date: The date of the planned tour; now by default. Naive values are taken to be in UTC.
+        :param status: The :class:`kompy.constants.PrivacyStatus` of the new tour, friends by default.
+        :return: The saved tour, with its id and :attr:`kompy.Tour.url`.
+        :raises ValueError: If there are fewer than two waypoints, or a waypoint, ``constitution``, ``date`` or
+            ``status`` is invalid.
+        :raises KomootAPIError: If Komoot cannot route between the waypoints or rejects the tour.
+        :raises KomootError: If a request fails or a response cannot be parsed.
+        """
+        locations = [_waypoint_location(waypoint) for waypoint in waypoints]
+        if len(locations) < 2:
+            raise ValueError(f'At least 2 waypoints are needed to plan a tour, got {len(locations)}.')
+        if isinstance(constitution, bool) or constitution not in range(1, 6):
+            raise ValueError(f'constitution must be a whole number from 1 to 5, got {constitution!r}.')
+        status = _validate_status(status)
+        _check_sport(sport)
+        planned_at = datetime.now(UTC) if date is None else _to_datetime('date', date)
+
+        route = decode_json_object(
+            self._request(
+                'POST',
+                KomootUrl.ROUTING_URL,
+                params={'sport': str(sport), '_embedded': 'coordinates,way_types,surfaces,directions'},
+                json={
+                    'sport': str(sport),
+                    'constitution': constitution,
+                    'path': [{'location': location} for location in locations],
+                    'segments': [{'type': 'Routed', 'geometry': []} for _ in locations[1:]],
+                },
+                headers={'Accept': _HAL_JSON},
+            )
+        )
+        route.pop('result_status', None)
+        payload = decode_json_object(
+            self._request(
+                'POST',
+                KomootUrl.UPLOAD_TOUR_URL,
+                json={
+                    **route,
+                    'type': TourTypes.TOUR_PLANNED,
+                    'name': tour_name,
+                    'status': str(status),
+                    'date': planned_at.astimezone(UTC).isoformat(timespec='milliseconds').replace('+00:00', 'Z'),
+                    'custom_tags': [],
+                },
+                headers={'Accept': _HAL_JSON},
+            )
+        )
+        try:
+            tour = Tour(payload)
+        except (AttributeError, KeyError, TypeError, ValueError) as error:
+            raise KomootResponseError('The planned tour returned by Komoot could not be parsed.') from error
+        logger.info('Planned tour %s.', tour.id)
+        return tour
+
     def change_tour(
         self,
         tour_id: int | str | Tour,
@@ -1282,6 +1358,27 @@ def _to_datetime(name: str, value: str | date | datetime) -> datetime:
     elif not isinstance(value, datetime):
         value = datetime(value.year, value.month, value.day)
     return value.replace(tzinfo=UTC) if value.tzinfo is None else value
+
+
+def _waypoint_location(waypoint: object) -> dict[str, float]:
+    """Convert a waypoint of :meth:`KomootConnector.plan_tour` to the ``{"lat": ..., "lng": ...}`` of the routing API."""
+    if isinstance(waypoint, Coordinate):
+        lat, lon = waypoint.lat, waypoint.lon
+    elif isinstance(waypoint, Mapping):
+        if 'lat' not in waypoint or not ('lng' in waypoint or 'lon' in waypoint):
+            raise ValueError(f'A waypoint mapping needs "lat" and "lng" (or "lon") keys, got {dict(waypoint)!r}.')
+        lat, lon = waypoint['lat'], waypoint['lng'] if 'lng' in waypoint else waypoint['lon']
+    elif isinstance(waypoint, Sequence) and not isinstance(waypoint, str) and len(waypoint) == 2:
+        lat, lon = waypoint
+    else:
+        raise ValueError(f'A waypoint must be a Coordinate, a (lat, lon) tuple or a mapping, got {waypoint!r}.')
+    try:
+        lat, lon = float(lat), float(lon)
+    except (TypeError, ValueError) as error:
+        raise ValueError(f'Waypoint coordinates must be numbers, got {waypoint!r}.') from error
+    if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+        raise ValueError(f'Waypoint {waypoint!r} is outside the valid latitude/longitude range.')
+    return {'lat': lat, 'lng': lon}
 
 
 def _validate_format(fmt: str) -> TourFormat:
