@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). While the version is below 1.0, a minor version bump
 (0.**x**.0) may contain breaking changes; they are always listed under "Breaking changes".
 
-## [0.1.0] - Unreleased
+## [Unreleased]
+
+## [0.1.0] - 2026-10-25
 
 A complete revamp: a typed, tested and documented library with a shared HTTP session, timeouts, retries, typed
 errors, lenient parsing, many new endpoints and a command-line tool. Most code written for 0.0.x keeps working;
@@ -314,6 +316,7 @@ All three still work but emit a `DeprecationWarning`.
   generated requirements.
 - First releases (2023): log in, list tours, fetch a tour as a `Tour`, GPX or FIT, and upload tours.
 
+[Unreleased]: https://github.com/Tsadoq/kompy/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/Tsadoq/kompy/releases/tag/v0.1.0
 [0.0.13]: https://pypi.org/project/kompy/0.0.13/
 [0.0.12]: https://pypi.org/project/kompy/0.0.12/

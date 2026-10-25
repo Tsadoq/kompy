@@ -133,22 +133,25 @@ The "All checks passed" CI job must be green before a pull request is merged.
 
 ## Releasing (maintainers)
 
-Releases are published to PyPI by the [publish workflow](.github/workflows/publish.yml) with
-[Trusted Publishing](https://docs.pypi.org/trusted-publishers/), so no API token is needed.
+Releases are automatic. The [publish workflow](.github/workflows/publish.yml) runs on every push to `main` that
+changes `kompy/__init__.py`; when `__version__` names a version that has no `vX.Y.Z` tag yet, it runs the tests,
+builds the sdist and the wheel, uploads them to PyPI with
+[Trusted Publishing](https://docs.pypi.org/trusted-publishers/) (no API token is needed), then creates the tag and a
+GitHub release whose notes are the version's section of `CHANGELOG.md`. Merges that do not bump the version publish
+nothing.
+
+To release:
 
 1. Pick the version, following [Semantic Versioning](https://semver.org/) (while kompy is below 1.0, a breaking
    change bumps the minor version).
-2. In a pull request:
+2. In a pull request (on its own or as part of a feature):
    - set `__version__` in `kompy/__init__.py` (the single source of the version; `uv.lock` does not record it, so
      run `uv lock` only if dependencies changed);
    - in `CHANGELOG.md`, rename `Unreleased` to the version and date (`## [0.2.0] - 2026-11-30`), start a new empty
-     `Unreleased` section, and update the links at the bottom.
-3. Merge it once CI is green.
-4. On GitHub, [draft a new release](https://github.com/Tsadoq/kompy/releases/new) with a new tag `vX.Y.Z` on
-   `main` (for example `v0.2.0`). Use the changelog entry as the description, then publish the release.
-5. The publish workflow checks that the tag matches `kompy.__version__`, runs the tests, builds the sdist and the
-   wheel, checks them with twine, and uploads them to PyPI from the protected `pypi` environment.
-6. Check the new version on <https://pypi.org/project/kompy/>, and try `pip install kompy==X.Y.Z` in a clean
+     `## [Unreleased]` section above it, and update the links at the bottom. The workflow refuses to release a
+     version without its own changelog section.
+3. Merge it once CI is green. The release appears on PyPI and on the GitHub releases page a few minutes later.
+4. Check the new version on <https://pypi.org/project/kompy/>, and try `pip install kompy==X.Y.Z` in a clean
    environment.
 
 ### One-time repository setup
@@ -158,14 +161,14 @@ These settings live on GitHub and PyPI, not in the repository. Check them before
 - **PyPI trusted publisher**: on pypi.org, project `kompy` -> Publishing -> add a GitHub publisher for the
   repository `Tsadoq/kompy`, workflow `publish.yml`, environment `pypi`. Without it the upload step fails.
 - **`pypi` environment**: in the repository settings -> Environments, create `pypi` and add protection rules
-  (required reviewers, and/or deployment only from tags `v*`). GitHub creates a missing environment automatically
+  (required reviewers, and/or deployment only from the `main` branch). GitHub creates a missing environment automatically
   but without any protection, so the environment is only "protected" once you configure this.
 - **`komoot-live` environment**: create it with the secrets `KOMOOT_EMAIL` and `KOMOOT_PASSWORD` of a dedicated
   test account, for the live contract workflow (it fails, by design, while they are missing).
 - **Old secret**: delete the repository secret `PYPI_API_TOKEN`, which the previous publish workflow used.
 
-If the workflow fails before the upload, fix the problem, delete the release and its tag, and publish it again.
-A version number that has been uploaded to PyPI cannot be reused, so if a broken version was uploaded, release a
+If the workflow fails, fix the problem on `main` and run it again from the Actions tab ("Run workflow"): a version
+that is already tagged is skipped, and files already on PyPI are not uploaded twice. A version number that has been uploaded to PyPI cannot be reused, so if a broken version was uploaded, release a
 new patch version.
 
 ## License
