@@ -63,7 +63,7 @@ Links: [README and full guide](https://github.com/Tsadoq/kompy#readme) ·
 """
 
 __docformat__ = 'restructuredtext'
-__version__ = '0.1.0'  # x-release-please-version
+__version__ = '0.2.0'  # x-release-please-version
 
 import logging
 
