@@ -1,59 +1,38 @@
-from typing import (
-    Final,
-    List,
-)
+"""Enumerations used to describe, filter and sort tours."""
+
+from __future__ import annotations
+
+from kompy.constants._base import KomootStrEnum
+
+__all__ = ['SmartTourTypes', 'TourSort', 'TourSortField', 'TourTypes']
 
 
-class TourTypes:
-    """
-    Types of tour.
-    """
-    TOUR_PLANNED: Final[str] = 'tour_planned'
-    TOUR_RECORDED: Final[str] = 'tour_recorded'
+class TourTypes(KomootStrEnum):
+    """Types of tour."""
+
+    TOUR_PLANNED = 'tour_planned'
+    TOUR_RECORDED = 'tour_recorded'
 
 
-class SmartTourTypes:
-    """
-    Types of smart tour. For smart tours api format=v2 only
-    """
-    SMART_TOUR_PLAIN: Final[str] = 'SMART_TOUR_PLAIN'
-    SMART_TOUR_CUSTOMIZED: Final[str] = 'SMART_TOUR_CUSTOMIZED'
+class SmartTourTypes(KomootStrEnum):
+    """Types of smart tour. Only reported by the API for smart tours in format v2."""
 
-    @classmethod
-    def list_all(cls) -> List[str]:
-        """
-        List all supported activities.
-        :return: A list of all supported activities
-        """
-        return [
-            getattr(cls, attr) for attr in dir(cls) if not attr.startswith('__') and not callable(getattr(cls, attr))
-        ]
+    SMART_TOUR_PLAIN = 'SMART_TOUR_PLAIN'
+    SMART_TOUR_CUSTOMIZED = 'SMART_TOUR_CUSTOMIZED'
 
 
-class TourSort:
-    """
-    Sort direction of the tour list, can be either ascending or descending.
-    """
-    ASCENDING: Final[str] = 'asc'
-    DESCENDING: Final[str] = 'desc'
+class TourSort(KomootStrEnum):
+    """Sort direction of the tour list."""
+
+    ASCENDING = 'asc'
+    DESCENDING = 'desc'
 
 
-class TourSortField:
-    """
-    Field to sort the tour list by, can be one of name, elevation, duration, date, proximity
-    """
-    NAME: Final[str] = 'name'
-    ELEVATION: Final[str] = 'elevation'
-    DURATION: Final[str] = 'duration'
-    DATE: Final[str] = 'date'
-    PROXIMITY: Final[str] = 'proximity'
+class TourSortField(KomootStrEnum):
+    """Field to sort the tour list by."""
 
-    @classmethod
-    def list_all(cls) -> List[str]:
-        """
-        List all supported activities.
-        :return: A list of all supported activities
-        """
-        return [
-            getattr(cls, attr) for attr in dir(cls) if not attr.startswith('__') and not callable(getattr(cls, attr))
-        ]
+    NAME = 'name'
+    ELEVATION = 'elevation'
+    DURATION = 'duration'
+    DATE = 'date'
+    PROXIMITY = 'proximity'

@@ -1,23 +1,15 @@
-from typing import (
-    Final,
-    List,
-)
+"""Difficulty grades of planned tours."""
+
+from __future__ import annotations
+
+from kompy.constants._base import KomootStrEnum
+
+__all__ = ['DifficultyGrade']
 
 
-class DifficultyGrade:
-    """
-    Difficulty Grade.
-    """
-    EASY: Final[str] = 'easy'
-    MODERATE: Final[str] = 'moderate'
-    DIFFICULT: Final[str] = 'difficult'
+class DifficultyGrade(KomootStrEnum):
+    """Overall difficulty grade that Komoot assigns to a planned tour."""
 
-    @classmethod
-    def list_all(cls) -> List[str]:
-        """
-        List all supported difficulty grades.
-        :return: A list of all supported difficulty grades
-        """
-        return [
-            getattr(cls, attr) for attr in dir(cls) if not attr.startswith('__') and not callable(getattr(cls, attr))
-        ]
+    EASY = 'easy'
+    MODERATE = 'moderate'
+    DIFFICULT = 'difficult'

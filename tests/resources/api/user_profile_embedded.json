@@ -1,0 +1,20 @@
+{
+ "username": "1234567890",
+ "avatar": {
+  "src": "https://d2exd72xrrp1s7.cloudfront.net/www/14/xxxxxxxx-u1234567890-full/18999070c1f?width={width}&height={height}&crop={crop}",
+  "templated": true,
+  "type": "image/*"
+ },
+ "status": "private",
+ "_links": {
+  "self": {
+   "href": "https://api.komoot.de/v007/users/1234567890/profile_embedded"
+  },
+  "relation": {
+   "href": "https://api.komoot.de/v007/users/{username}/relations/1234567890",
+   "templated": true
+  }
+ },
+ "display_name": "Sample display_name",
+ "is_premium": false
+}
