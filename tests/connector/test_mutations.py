@@ -10,7 +10,7 @@ import pytest
 import responses
 from fit_tool.fit_file import FitFile
 
-from kompy import KomootConnector, Tour, UploadResult
+from kompy import Coordinate, KomootConnector, Tour, UploadResult
 from kompy.constants import PrivacyStatus, SupportedActivities
 from kompy.exceptions import (
     AuthenticationError,
@@ -20,11 +20,12 @@ from kompy.exceptions import (
     ServerError,
     UploadStatusError,
 )
-from tests.conftest import API, EXAMPLE_GPX, json_body, query_of
+from tests.conftest import API, EXAMPLE_GPX, json_body, query_of, read_api_fixture
 from tests.connector._fit import fit_bytes
 
 UPLOAD_URL = f'{API}/tours/'
 TOUR_URL = f'{API}/tours/42'
+ROUTING_URL = 'https://www.komoot.com/api/routing/tour'
 
 
 @pytest.fixture
@@ -273,6 +274,132 @@ def test_upload_status_patch_failure_names_the_tour(
 
 def test_upload_result_status_ignores_non_strings() -> None:
     assert UploadResult(tour_id=1, created=True, raw={'status': 3}).status is None
+
+
+# ----------------------------------------------------------------- plan
+
+
+ROUTE = {'type': 'tour_planned', 'sport': 'hike', 'distance': 21438.2, 'duration': 3457.9, 'result_status': 'OK'}
+
+
+@pytest.fixture
+def planned(mocked_responses: responses.RequestsMock) -> responses.RequestsMock:
+    mocked_responses.post(ROUTING_URL, json=ROUTE)
+    mocked_responses.post(UPLOAD_URL, status=201, json=read_api_fixture('tour_planned_by_id'))
+    return mocked_responses
+
+
+def test_plan_tour_routes_then_saves(connector: KomootConnector, planned: responses.RequestsMock) -> None:
+    tour = connector.plan_tour(
+        [(53.14, 8.21), {'lat': 53.08, 'lng': 8.31}, {'lat': 53.1, 'lon': 8.2}, Coordinate(lat=53.14, lon=8.21)],
+        'Weekend loop',
+        SupportedActivities.HIKING,
+        constitution=4,
+        date='2026-11-01T09:30:00+01:00',
+        status=PrivacyStatus.PRIVATE,
+    )
+
+    assert isinstance(tour, Tour)
+    assert tour.id == 1000000002
+    routing, save = planned.calls[1].request, planned.calls[2].request
+    assert query_of(routing) == {'sport': ['hike'], '_embedded': ['coordinates,way_types,surfaces,directions']}
+    assert json_body(routing) == {
+        'sport': 'hike',
+        'constitution': 4,
+        'path': [
+            {'location': {'lat': 53.14, 'lng': 8.21}},
+            {'location': {'lat': 53.08, 'lng': 8.31}},
+            {'location': {'lat': 53.1, 'lng': 8.2}},
+            {'location': {'lat': 53.14, 'lng': 8.21}},
+        ],
+        'segments': [{'type': 'Routed', 'geometry': []}] * 3,
+    }
+    assert routing.headers['User-Agent'].startswith('kompy/')
+    assert json_body(save) == {
+        'type': 'tour_planned',
+        'sport': 'hike',
+        'distance': 21438.2,
+        'duration': 3457.9,
+        'name': 'Weekend loop',
+        'status': 'private',
+        'date': '2026-11-01T08:30:00.000Z',
+        'custom_tags': [],
+    }  # the whole route, without its result_status
+
+
+def test_plan_tour_defaults(connector: KomootConnector, planned: responses.RequestsMock) -> None:
+    connector.plan_tour([(53.14, 8.21), (53.08, 8.31)], 'Ride')
+
+    routing, save = json_body(planned.calls[1].request), json_body(planned.calls[2].request)
+    assert routing['sport'] == 'racebike'
+    assert routing['constitution'] == 3
+    assert save['status'] == 'friends'
+    assert save['date'].endswith('Z')
+
+
+def test_plan_tour_naive_date_is_utc(connector: KomootConnector, planned: responses.RequestsMock) -> None:
+    connector.plan_tour([(53.14, 8.21), (53.08, 8.31)], 'Ride', date='2026-11-01')
+
+    assert json_body(planned.calls[2].request)['date'] == '2026-11-01T00:00:00.000Z'
+
+
+@pytest.mark.parametrize(
+    ('waypoints', 'message'),
+    [
+        ([(53.14, 8.21)], 'At least 2 waypoints'),
+        ([], 'At least 2 waypoints'),
+        ([(53.14, 8.21), {'lat': 53.08}], 'needs "lat" and "lng"'),
+        ([(53.14, 8.21), (91, 8.31)], 'outside the valid'),
+        ([(53.14, 8.21), (53.08, 181)], 'outside the valid'),
+        ([(53.14, 8.21), ('north', 8.31)], 'must be numbers'),
+        ([(53.14, 8.21), (53.08, 8.31, 10)], 'must be a Coordinate'),
+        ([(53.14, 8.21), '53.08,8.31'], 'must be a Coordinate'),
+    ],
+)
+def test_plan_tour_invalid_waypoints(connector: KomootConnector, waypoints: list[object], message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        connector.plan_tour(waypoints, 'Ride')  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize('constitution', [0, 6, True, 2.5])
+def test_plan_tour_invalid_constitution(connector: KomootConnector, constitution: object) -> None:
+    with pytest.raises(ValueError, match='constitution'):
+        connector.plan_tour([(53.14, 8.21), (53.08, 8.31)], 'Ride', constitution=constitution)  # type: ignore[arg-type]
+
+
+def test_plan_tour_invalid_status_and_date(connector: KomootConnector) -> None:
+    with pytest.raises(ValueError, match='status'):
+        connector.plan_tour([(53.14, 8.21), (53.08, 8.31)], 'Ride', status='secret')
+    with pytest.raises(ValueError, match='not a date'):
+        connector.plan_tour([(53.14, 8.21), (53.08, 8.31)], 'Ride', date='someday')
+
+
+def test_plan_tour_unknown_sport_is_sent_with_warning(
+    connector: KomootConnector, planned: responses.RequestsMock, caplog: pytest.LogCaptureFixture
+) -> None:
+    with caplog.at_level(logging.WARNING, logger='kompy'):
+        connector.plan_tour([(53.14, 8.21), (53.08, 8.31)], 'Ride', 'hoverboard')
+
+    assert json_body(planned.calls[1].request)['sport'] == 'hoverboard'
+    assert 'hoverboard' in caplog.text
+
+
+def test_plan_tour_unroutable(connector: KomootConnector, mocked_responses: responses.RequestsMock) -> None:
+    mocked_responses.post(ROUTING_URL, status=400, json={'status': 400, 'error': 'Validation', 'message': 'no route'})
+
+    with pytest.raises(KomootAPIError) as caught:
+        connector.plan_tour([(40, -40), (41, -41)], 'Swim')
+
+    assert caught.value.status_code == 400
+    assert len(mocked_responses.calls) == 2  # nothing was saved
+
+
+def test_plan_tour_unparsable_saved_tour(connector: KomootConnector, mocked_responses: responses.RequestsMock) -> None:
+    mocked_responses.post(ROUTING_URL, json=ROUTE)
+    mocked_responses.post(UPLOAD_URL, status=201, json={'name': 'no id'})
+
+    with pytest.raises(KomootResponseError, match='could not be parsed'):
+        connector.plan_tour([(53.14, 8.21), (53.08, 8.31)], 'Ride')
 
 
 # ----------------------------------------------------------------- change

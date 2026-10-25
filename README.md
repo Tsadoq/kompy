@@ -7,10 +7,10 @@
 [![Docs](https://img.shields.io/badge/docs-pdoc-informational)](https://tsadoq.github.io/kompy/)
 
 **kompy** is a typed Python client for [Komoot](https://www.komoot.com). Use it to list and search your tours,
-download them as GPX or FIT files (one at a time or as a whole-account backup), upload activities, rename them,
-change their visibility, delete them, and read user profiles and highlights. Results come back as Python objects
-(`Tour`, `Coordinate`, `User`, `Highlight`, ...) with timezone-aware dates and proper units. kompy also handles
-pagination, timeouts, retries and typed errors, and includes a small `kompy` command-line tool.
+download them as GPX or FIT files (one at a time or as a whole-account backup), upload activities, plan new
+routes, rename tours, change their visibility, delete them, and read user profiles and highlights. Results come
+back as Python objects (`Tour`, `Coordinate`, `User`, `Highlight`, ...) with timezone-aware dates and proper units.
+kompy also handles pagination, timeouts, retries and typed errors, and includes a small `kompy` command-line tool.
 
 > **Unofficial project.** kompy is not affiliated with, endorsed by or supported by Komoot GmbH. It uses the
 > same undocumented API as the Komoot apps (`api.komoot.de`, with basic authentication). Komoot's
@@ -298,6 +298,25 @@ untouched: neither its name nor its visibility is changed.
 
 `activity_type` applies to GPX uploads only: FIT and TCX files carry their own sport (change it afterwards with
 `change_tour()`). For GPX and TCX files you can also pass `time_in_motion` (in seconds). FIT files carry their own.
+
+### Planning: `plan_tour`
+
+`plan_tour()` routes a tour between waypoints with Komoot's route planner, like the planner on the website, and saves
+it as a planned tour:
+
+```python
+home = (52.52, 13.405)  # (lat, lon); a Coordinate or {'lat': ..., 'lng': ...} works too
+tour = connector.plan_tour(
+    [home, (52.45, 13.29), home],  # repeat the first waypoint for a round trip
+    tour_name='Grunewald loop',
+    sport=SupportedActivities.ROAD_CYCLING,  # the default
+    constitution=3,  # fitness level 1-5, used for the time estimate
+    status=PrivacyStatus.PRIVATE,  # default: PrivacyStatus.FRIENDS
+)
+print(tour.url, tour.distance_km)
+```
+
+If Komoot cannot route between the waypoints (for example, one is in the sea), it raises `KomootAPIError`.
 
 ### Editing and deleting: `change_tour` and `delete_tour`
 
