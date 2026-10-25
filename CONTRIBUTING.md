@@ -19,7 +19,7 @@ kompy uses [uv](https://docs.astral.sh/uv/) to manage the development environmen
 git clone https://github.com/<you>/kompy.git
 cd kompy
 uv sync                      # creates .venv with kompy (editable) and the dev tools
-uv run pre-commit install    # optional: run the linters on every commit
+uv run pre-commit install    # linters before each commit, and the commit message check
 ```
 
 `uv sync` installs the `dev` dependency group from `pyproject.toml`: pytest, responses, ruff, mypy and pre-commit.
@@ -91,8 +91,8 @@ CI runs all of these and fails on any finding.
 ## Coding guidelines
 
 - **Keep backward compatibility.** kompy is on PyPI, so public names, method names and keyword arguments stay. If
-  you have to change behaviour, deprecate the old way first with a `DeprecationWarning`, and list the change in
-  `CHANGELOG.md`.
+  you have to change behaviour, deprecate the old way first with a `DeprecationWarning`, and mark the commit as
+  breaking (`feat!:`) with a `BREAKING CHANGE:` footer that says what users must do.
 - **Type everything.** The package ships `py.typed`, and mypy runs in strict mode. Use modern syntax (`list[str]`,
   `X | None`).
 - **Document everything public** with reStructuredText docstrings (`:param x:`, `:return:`, `:raises:`). The API
@@ -105,8 +105,8 @@ CI runs all of these and fails on any finding.
   secrets. Only `kompy/cli.py` prints.
 - **Import fit_tool lazily**, inside functions, because importing it configures the root logger.
 - **Test every change.** Bug fixes come with a regression test.
-- **Update the docs.** If you change behaviour, update `README.md` and add an entry to the `Unreleased` section of
-  `CHANGELOG.md`.
+- **Update the docs.** If you change behaviour, update `README.md`. Do not edit `CHANGELOG.md` by hand: release-please
+  writes it from the commit messages.
 
 ## API documentation
 
@@ -126,33 +126,53 @@ The `Docs` workflow builds the reference for every pull request and deploys it t
 Before you open a pull request:
 
 1. Run `uv run pytest --cov`, `uv run ruff check .`, `uv run ruff format --check .` and `uv run mypy`.
-2. Add tests, and update the README and CHANGELOG where relevant.
-3. Fill in the pull request template.
+2. Add tests, and update the README where relevant.
+3. Check that every commit message, and the pull request title, follows [Conventional Commits](#commit-messages).
+4. Fill in the pull request template.
 
-The "All checks passed" CI job must be green before a pull request is merged.
+The "All checks passed" and "Conventional commits" checks must be green before a pull request is merged.
+
+## Commit messages
+
+kompy uses [Conventional Commits](https://www.conventionalcommits.org): release-please reads the commit messages to
+pick the next version and to write the changelog. The first line of every commit is
+`<type>[(scope)][!]: <description>`, at most 100 characters:
+
+| Type | Use it for | Release |
+|---|---|---|
+| `feat` | a new feature | minor (`0.2.0` -> `0.3.0`) |
+| `fix` | a bug fix | patch (`0.2.0` -> `0.2.1`) |
+| `perf` | a performance improvement | patch |
+| `docs` | documentation only | none, but listed in the changelog |
+| `refactor`, `test`, `build`, `ci`, `chore`, `style` | everything else | none |
+
+Add `!` after the type (`feat!: ...`) or a `BREAKING CHANGE: ...` footer for a breaking change; while kompy is below
+1.0 it bumps the minor version. The scope is optional and lowercase, for example `fix(cli): ...`. Write the
+description for users, since it ends up in the changelog: `feat: add plan_tour() to create planned tours`.
+
+`uv run pre-commit install` installs a commit-msg hook that rejects other messages before the commit is made. CI
+checks every commit of a pull request and its title (which becomes the message of a squash merge) with the same
+script, `scripts/check_commit_message.py`. To fix a message: `git commit --amend` for the last commit, or
+`git rebase -i` for older ones.
 
 ## Releasing (maintainers)
 
-Releases are automatic. The [publish workflow](.github/workflows/publish.yml) runs on every push to `main` that
-changes `kompy/__init__.py`; when `__version__` names a version that has no `vX.Y.Z` tag yet, it runs the tests,
-builds the sdist and the wheel, uploads them to PyPI with
-[Trusted Publishing](https://docs.pypi.org/trusted-publishers/) (no API token is needed), then creates the tag and a
-GitHub release whose notes are the version's section of `CHANGELOG.md`. Merges that do not bump the version publish
-nothing.
+Releases are automatic, driven by [release-please](https://github.com/googleapis/release-please) in the
+[publish workflow](.github/workflows/publish.yml):
 
-To release:
-
-1. Pick the version, following [Semantic Versioning](https://semver.org/) (while kompy is below 1.0, a breaking
-   change bumps the minor version).
-2. In a pull request (on its own or as part of a feature):
-   - set `__version__` in `kompy/__init__.py` (the single source of the version; `uv.lock` does not record it, so
-     run `uv lock` only if dependencies changed);
-   - in `CHANGELOG.md`, rename `Unreleased` to the version and date (`## [0.2.0] - 2026-11-30`), start a new empty
-     `## [Unreleased]` section above it, and update the links at the bottom. The workflow refuses to release a
-     version without its own changelog section.
-3. Merge it once CI is green. The release appears on PyPI and on the GitHub releases page a few minutes later.
+1. On every push to `main`, release-please opens or updates a pull request titled `chore(main): release X.Y.Z`. It
+   bumps `__version__` in `kompy/__init__.py` and adds the changelog entry, both computed from the commit messages
+   since the last release. Commits that do not trigger a release (`docs`, `ci`, `chore`, ...) do not open one.
+2. When you want to release, merge that pull request (review the version and the changelog first; edit the pull
+   request branch if you want to reword an entry).
+3. release-please then creates the `vX.Y.Z` tag and the GitHub release, and the workflow tests and builds the
+   package, uploads it to PyPI with [Trusted Publishing](https://docs.pypi.org/trusted-publishers/) (no API token
+   is needed) and attaches the files to the release.
 4. Check the new version on <https://pypi.org/project/kompy/>, and try `pip install kompy==X.Y.Z` in a clean
    environment.
+
+To force a specific version, add a commit with a `Release-As: X.Y.Z` footer, for example
+`git commit --allow-empty -m "chore: release 1.0.0" -m "Release-As: 1.0.0"`.
 
 ### One-time repository setup
 
@@ -165,11 +185,14 @@ These settings live on GitHub and PyPI, not in the repository. Check them before
   but without any protection, so the environment is only "protected" once you configure this.
 - **`komoot-live` environment**: create it with the secrets `KOMOOT_EMAIL` and `KOMOOT_PASSWORD` of a dedicated
   test account, for the live contract workflow (it fails, by design, while they are missing).
-- **Old secret**: delete the repository secret `PYPI_API_TOKEN`, which the previous publish workflow used.
+- **Release pull requests and CI**: pull requests opened with the default `GITHUB_TOKEN` do not trigger workflows,
+  so the required checks never run on the release pull request and it has to be merged by an admin. To run CI on
+  it, add a fine-grained personal access token (this repository only; contents and pull requests: read and write)
+  as the repository secret `RELEASE_PLEASE_TOKEN`; the workflow uses it when it exists.
 
-If the workflow fails, fix the problem on `main` and run it again from the Actions tab ("Run workflow"): a version
-that is already tagged is skipped, and files already on PyPI are not uploaded twice. A version number that has been uploaded to PyPI cannot be reused, so if a broken version was uploaded, release a
-new patch version.
+If a job fails after the release was created, fix the cause (for example the PyPI setup) and use "Re-run failed
+jobs" on that workflow run: files already on PyPI are not uploaded twice. A version number that has been uploaded to
+PyPI cannot be reused, so if a broken version was uploaded, merge a `fix:` and release a new patch version.
 
 ## License
 

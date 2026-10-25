@@ -1,4 +1,7 @@
-# Install once with `uv run pre-commit install`; run on everything with `uv run pre-commit run --all-files`.
+# Install once with `uv run pre-commit install` (installs the pre-commit and commit-msg hooks);
+# run on everything with `uv run pre-commit run --all-files`.
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit, pre-merge-commit, manual]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -29,6 +32,12 @@ repos:
         language: system
         types_or: [python, pyi]
         require_serial: true
+      # Same check as CI: commit messages follow Conventional Commits, which release-please needs.
+      - id: conventional-commit
+        name: conventional commit message
+        entry: uv run --no-sync python scripts/check_commit_message.py
+        language: system
+        stages: [commit-msg]
 
   # Keeps uv.lock in sync with pyproject.toml.
   - repo: https://github.com/astral-sh/uv-pre-commit

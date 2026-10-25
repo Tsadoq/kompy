@@ -4,6 +4,8 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    commit-message:
+      prefix: ci # Conventional Commits: no release for workflow updates
     groups:
       github-actions:
         patterns: ["*"]
@@ -12,6 +14,10 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    commit-message:
+      prefix: fix # runtime dependency updates ship in a patch release
+      prefix-development: chore # dev tooling updates do not
+      include: scope
     groups:
       # Dev tooling (pytest, ruff, mypy, ...) moves fast; batch it into one PR.
       dev-dependencies:

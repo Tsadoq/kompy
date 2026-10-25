@@ -137,6 +137,7 @@ ignore = [
 ]
 "kompy/cli.py" = ["T20"]  # a CLI prints by design
 "examples/**" = ["T20"]  # example scripts print their results
+"scripts/**" = ["T20"]  # maintenance scripts report to the terminal
 
 [tool.ruff.lint.pylint]
 max-args = 8
@@ -155,7 +156,7 @@ docstring-code-format = true
 
 [tool.mypy]
 python_version = "3.11"
-files = ["kompy"]
+files = ["kompy", "scripts"]
 strict = true
 warn_unreachable = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]

@@ -1,0 +1,37 @@
+name: Commits
+
+# release-please computes versions and the changelog from commit messages, so every commit of a pull request (and
+# its title, which becomes the commit message of a squash merge) must follow Conventional Commits.
+# The same check runs locally as a commit-msg hook: `uv run pre-commit install`.
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  conventional:
+    name: Conventional commits
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check the pull request title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: python3 scripts/check_commit_message.py --message "$TITLE"
+      - name: Check every commit of the pull request
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: python3 scripts/check_commit_message.py --range "$BASE..$HEAD"
