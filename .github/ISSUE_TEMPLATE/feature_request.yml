@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest a new feature or an improvement to kompy.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe your use case. What are you trying to do, and what is missing or hard today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How would you like it to work? A sketch of the API you have in mind is welcome.
+      render: python
+
+  - type: textarea
+    id: api
+    attributes:
+      label: Komoot API details
+      description: |
+        If the feature needs a Komoot endpoint kompy does not use yet, link to documentation or describe the request
+        (method, URL, parameters) and a redacted response, if you have them.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds or other approaches you have tried.
+
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribution
+      options:
+        - label: I would like to open a pull request for this.

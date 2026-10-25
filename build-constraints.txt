@@ -1,0 +1,2 @@
+# Pins the build backend used by `uv build` in CI and in the release job (bump together with build-system.requires).
+hatchling==1.32.4
